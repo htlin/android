@@ -1,5 +1,6 @@
 package org.easycomm.vocab;
 
+import org.easycomm.MainActivity;
 import org.easycomm.R;
 
 import android.app.Activity;
@@ -13,7 +14,7 @@ import android.widget.GridView;
 public class VocabFragment extends Fragment {
 
 	public interface VocabActionListener {
-		void onVocabButtonClick(String text);
+		void onVocabButtonClick(String key);
 	}
 
 	private VocabActionListener mCallback;
@@ -34,7 +35,8 @@ public class VocabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.vocab, container, false);
 		
 		GridView gv = (GridView) view.findViewById(R.id.vocab_grid);
-		gv.setAdapter(new ButtonAdapter(getActivity(), mCallback));
+		MainActivity activity = (MainActivity) getActivity();
+		gv.setAdapter(new ButtonAdapter(activity.getButtonFactory(), mCallback));
 		
 		return view;
 	}

@@ -2,8 +2,10 @@ package org.easycomm.sentense;
 
 import java.util.List;
 
+import org.easycomm.MainActivity;
 import org.easycomm.R;
 import org.easycomm.util.CUtil;
+import org.easycomm.vocab.ButtonFactory;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -13,21 +15,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 
 public class SentenseFragment extends Fragment {
 
 	public interface SentenseActionListener {
-		void onSentenseButtonClick(String text);
-		void onSentenseBarClick(String text);
+		void onSentenseButtonClick(String key);
+		void onSentenseBarClick(List<String> keys);
 	}
 
+	private ButtonFactory mButtonFactory;
 	private SentenseActionListener mCallback;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.sentense, container, false);
+		
+		MainActivity activity = (MainActivity) getActivity();
+		mButtonFactory = activity.getButtonFactory();
 		
 		Button delete = (Button) view.findViewById(R.id.delete);
 		delete.setOnClickListener(new OnClickListener() {
@@ -44,6 +49,7 @@ public class SentenseFragment extends Fragment {
 				onBackgroundClick(v);
 			}
 		});
+		
 		return view;
 	}
 	
@@ -58,18 +64,15 @@ public class SentenseFragment extends Fragment {
         }
 	}
 
-	public void addButton(String text) {
+	public void addButton(String key) {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
-		Button button = new Button(getActivity());
-		int side = getResources().getDimensionPixelSize(R.dimen.button_side);
-		button.setLayoutParams(new GridView.LayoutParams(side, side));
-		button.setText(text);
-		button.setOnClickListener(new OnClickListener() {
+		Button button = mButtonFactory.get(key, new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onVocabClick(v);
 			}
 		});
+		
 		ll.addView(button);
 	}
 	
@@ -83,33 +86,26 @@ public class SentenseFragment extends Fragment {
 
 	private void onVocabClick(View v) {
 		Button button = (Button) v;
-		String text = button.getText().toString();
-		mCallback.onSentenseButtonClick(text);
+		String key = (String) button.getTag();
+		mCallback.onSentenseButtonClick(key);
 	}
 	
 	private void onBackgroundClick(View v) {
 		LinearLayout ll = (LinearLayout) v;
-		List<Button> buttons = getButtons(ll);
-		String text = getSentense(buttons);
-		mCallback.onSentenseButtonClick(text);
+		List<String> keys = getButtonKeys(ll);
+		mCallback.onSentenseBarClick(keys);
 	}
 	
-	private List<Button> getButtons(LinearLayout ll) {
-		List<Button> buttons = CUtil.makeList();
+	private List<String> getButtonKeys(LinearLayout ll) {
+		List<String> keys = CUtil.makeList();
 		for (int i = 0; i < ll.getChildCount(); i++) {
 			Button b = (Button) ll.getChildAt(i);
-			buttons.add(b);
+			String key = (String) b.getTag();
+			keys.add(key);
 		}
-		return buttons;
+		return keys;
 	}
 
-	private String getSentense(List<Button> buttons) {
-		StringBuffer buf = new StringBuffer();
-		for (Button b : buttons) {
-			buf.append(b.getText());
-			buf.append(" ");
-		}
-		return buf.toString();
-	}
+	
 
 }

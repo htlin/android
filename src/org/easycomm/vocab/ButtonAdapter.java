@@ -1,43 +1,26 @@
 package org.easycomm.vocab;
 
-import org.easycomm.R;
 import org.easycomm.vocab.VocabFragment.VocabActionListener;
 
-import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 
-public class ButtonAdapter extends BaseAdapter implements OnClickListener {
+public class ButtonAdapter extends BaseAdapter {
 
-	private final String[] mButtonTexts = new String[] {
-			"I",
-			"You",
-			"Me",
-			"He",
-			"She",
-			"Her",
-			"His",
-			"Love",
-			"Android",
-			"To",
-			"Get",
-	};
-	
-	private Context mContext;
+	private ButtonFactory mButtonFactory;
 	private VocabActionListener mCallback;
 
-	public ButtonAdapter(Context c, VocabActionListener callback) {
-		mContext = c;
+	public ButtonAdapter(ButtonFactory buttonFactory, VocabActionListener callback) {
+		mButtonFactory = buttonFactory;
 		mCallback = callback;
 	}
 
 	@Override
 	public int getCount() {
-		return mButtonTexts.length;
+		return mButtonFactory.size();
 	}
 
 	@Override
@@ -52,26 +35,23 @@ public class ButtonAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Button button;
+		OnClickListener onClickListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onVocabClick(v);
+			}
+		};
+		
         if (convertView == null) {  // if it's not recycled, initialize some attributes
-        	button = new Button(mContext);
-        	int side = mContext.getResources().getDimensionPixelSize(R.dimen.button_side);
-        	button.setLayoutParams(new GridView.LayoutParams(side, side));
-        	button.setPadding(0, 0, 0, 0);
+        	return mButtonFactory.get(position, onClickListener);
         } else {
-        	button = (Button) convertView;
+        	return mButtonFactory.get((Button) convertView, position, onClickListener);
         }
-
-        button.setText(mButtonTexts[position]);
-        button.setOnClickListener(this);
-        return button;
 	}
 
-	@Override
-	public void onClick(View view) {
-		Button button = (Button) view;
-		String text = button.getText().toString();
-		mCallback.onVocabButtonClick(text);
+	private void onVocabClick(View view) {
+		String key = (String) view.getTag();
+		mCallback.onVocabButtonClick(key);
 	}
 
 }

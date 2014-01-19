@@ -1,9 +1,11 @@
 package org.easycomm;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.easycomm.sentense.SentenseFragment;
 import org.easycomm.sentense.SentenseFragment.SentenseActionListener;
+import org.easycomm.vocab.ButtonFactory;
 import org.easycomm.vocab.VocabFragment.VocabActionListener;
 
 import android.app.Activity;
@@ -15,13 +17,16 @@ import android.view.Menu;
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenseActionListener {
 
 	private TextToSpeech mTTS;
+	private ButtonFactory mButtonFactory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
+		
 		mTTS = new TextToSpeech(this, this);
+		mButtonFactory = new ButtonFactory(this);
+		
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override
@@ -53,26 +58,41 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	
+	public ButtonFactory getButtonFactory() {
+		return mButtonFactory;
+	}
+	
 
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
 	}
 
 	@Override
-	public void onVocabButtonClick(String text) {
-		speak(text);
+	public void onVocabButtonClick(String key) {
+		speak(mButtonFactory.getText(key));
 		SentenseFragment sentenseFrag = (SentenseFragment) getFragmentManager().findFragmentById(R.id.frag_sentense);
-		sentenseFrag.addButton(text);
+		sentenseFrag.addButton(key);
 	}
 
 	@Override
-	public void onSentenseButtonClick(String text) {
-		speak(text);
+	public void onSentenseButtonClick(String key) {
+		speak(mButtonFactory.getText(key));
 	}
 
 	@Override
-	public void onSentenseBarClick(String text) {
-		speak(text);
+	public void onSentenseBarClick(List<String> keys) {
+		speak(getSentense(keys));
 	}
 
+	private String getSentense(List<String> keys) {
+		StringBuffer buf = new StringBuffer();
+		for (String key : keys) {
+			buf.append(mButtonFactory.getText(key));
+			buf.append(" ");
+		}
+		return buf.toString();
+	}
+	
 }

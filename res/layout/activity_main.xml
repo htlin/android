@@ -6,11 +6,11 @@
     android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/frag_sentense"
-        android:name="org.easycomm.sentense.SentenseFragment"
+        android:id="@+id/frag_sentence"
+        android:name="org.easycomm.sentence.SentenceFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/sentense" />
+        tools:layout="@layout/sentence" />
 
     <fragment
         android:id="@+id/frag_vocab"

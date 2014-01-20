@@ -3,8 +3,8 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
-import org.easycomm.sentense.SentenseFragment;
-import org.easycomm.sentense.SentenseFragment.SentenseActionListener;
+import org.easycomm.sentence.SentenceFragment;
+import org.easycomm.sentence.SentenceFragment.SentenceActionListener;
 import org.easycomm.vocab.ButtonFactory;
 import org.easycomm.vocab.VocabFragment.VocabActionListener;
 
@@ -14,7 +14,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 
-public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenseActionListener {
+public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenceActionListener {
 
 	private TextToSpeech mTTS;
 	private ButtonFactory mButtonFactory;
@@ -72,17 +72,17 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	@Override
 	public void onVocabButtonClick(String key) {
 		speak(mButtonFactory.getText(key));
-		SentenseFragment sentenseFrag = (SentenseFragment) getFragmentManager().findFragmentById(R.id.frag_sentense);
+		SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
 		sentenseFrag.addButton(key);
 	}
 
 	@Override
-	public void onSentenseButtonClick(String key) {
+	public void onSentenceButtonClick(String key) {
 		speak(mButtonFactory.getText(key));
 	}
 
 	@Override
-	public void onSentenseBarClick(List<String> keys) {
+	public void onSentenceBarClick(List<String> keys) {
 		speak(getSentense(keys));
 	}
 

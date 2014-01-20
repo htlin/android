@@ -13,7 +13,7 @@ public final class R {
     public static final class color {
         /**  Default screen margins, per the Android Design guidelines. 
          */
-        public static final int sentenseBackground=0x7f040000;
+        public static final int sentenceBackground=0x7f040000;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -32,14 +32,14 @@ public final class R {
     public static final class id {
         public static final int action_settings=0x7f090005;
         public static final int delete=0x7f090003;
-        public static final int frag_sentense=0x7f090000;
+        public static final int frag_sentence=0x7f090000;
         public static final int frag_vocab=0x7f090001;
-        public static final int sentense=0x7f090002;
+        public static final int sentence=0x7f090002;
         public static final int vocab_grid=0x7f090004;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int sentense=0x7f030001;
+        public static final int sentence=0x7f030001;
         public static final int vocab=0x7f030002;
     }
     public static final class menu {

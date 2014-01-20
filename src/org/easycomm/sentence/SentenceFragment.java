@@ -1,4 +1,4 @@
-package org.easycomm.sentense;
+package org.easycomm.sentence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,24 +18,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class SentenseFragment extends Fragment {
+public class SentenceFragment extends Fragment {
 
-	public interface SentenseActionListener {
-		void onSentenseButtonClick(String key);
-		void onSentenseBarClick(List<String> keys);
+	public interface SentenceActionListener {
+		void onSentenceButtonClick(String key);
+		void onSentenceBarClick(List<String> keys);
 	}
 
 	private static final String BUTTON_KEYS = "button_keys";
 
 	private ButtonFactory mButtonFactory;
-	private SentenseActionListener mCallback;
+	private SentenceActionListener mCallback;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-            mCallback = (SentenseActionListener) activity;
+            mCallback = (SentenceActionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity + " must implement SentenseActionListener");
         }
@@ -43,7 +43,7 @@ public class SentenseFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.sentense, container, false);
+		View view = inflater.inflate(R.layout.sentence, container, false);
 
 		MainActivity activity = (MainActivity) getActivity();
 		mButtonFactory = activity.getButtonFactory();
@@ -56,7 +56,7 @@ public class SentenseFragment extends Fragment {
 			}
 		});
 		
-		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentense);
+		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentence);
 		ll.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -83,7 +83,7 @@ public class SentenseFragment extends Fragment {
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		
 		ArrayList<String> buttonKeys = (ArrayList<String>) getButtonKeys(ll);
 		outState.putStringArrayList(BUTTON_KEYS, buttonKeys);
@@ -92,7 +92,7 @@ public class SentenseFragment extends Fragment {
 	}
 	
 	public void addButton(String key) {
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		Button button = mButtonFactory.get(key, new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -104,7 +104,7 @@ public class SentenseFragment extends Fragment {
 	}
 	
 	private void onDeleteClick(View v) {
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		int size = ll.getChildCount();
 		if (size > 0) {
 			ll.removeViewAt(size - 1);
@@ -114,13 +114,13 @@ public class SentenseFragment extends Fragment {
 	private void onVocabClick(View v) {
 		Button button = (Button) v;
 		String key = (String) button.getTag();
-		mCallback.onSentenseButtonClick(key);
+		mCallback.onSentenceButtonClick(key);
 	}
 	
 	private void onBackgroundClick(View v) {
 		LinearLayout ll = (LinearLayout) v;
 		List<String> keys = getButtonKeys(ll);
-		mCallback.onSentenseBarClick(keys);
+		mCallback.onSentenceBarClick(keys);
 	}
 	
 	private List<String> getButtonKeys(LinearLayout ll) {

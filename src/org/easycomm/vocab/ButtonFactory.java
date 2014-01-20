@@ -70,16 +70,13 @@ public class ButtonFactory {
 	}
 
 	public Button get(int pos, OnClickListener onClickListener) {
-		return get(new Button(mContext), pos, onClickListener);
-	}
-
-	public Button get(Button button, int position, OnClickListener onClickListener) {
-    	button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
-    	button.setText(mButtonTexts.get(position));
+		Button button = new Button(mContext);
+		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
+    	button.setText(mButtonTexts.get(pos));
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
-        button.setCompoundDrawablesWithIntrinsicBounds(null, mButtonImages.get(position), null, null);
+        button.setCompoundDrawablesWithIntrinsicBounds(null, mButtonImages.get(pos), null, null);
         button.setOnClickListener(onClickListener);
-        button.setTag(mButtonKeys.get(position));
+        button.setTag(mButtonKeys.get(pos));
 		return button;
 	}
 

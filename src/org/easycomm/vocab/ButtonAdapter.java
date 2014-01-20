@@ -42,11 +42,7 @@ public class ButtonAdapter extends BaseAdapter {
 			}
 		};
 		
-        if (convertView == null) {  // if it's not recycled, initialize some attributes
-        	return mButtonFactory.get(position, onClickListener);
-        } else {
-        	return mButtonFactory.get((Button) convertView, position, onClickListener);
-        }
+		return mButtonFactory.get(position, onClickListener);
 	}
 
 	private void onVocabClick(View view) {

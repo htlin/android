@@ -22,7 +22,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		mTTS = new TextToSpeech(this, this);
 		mButtonFactory = new ButtonFactory(this);
 		

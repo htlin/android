@@ -77,6 +77,7 @@ public class ButtonFactory {
         button.setCompoundDrawablesWithIntrinsicBounds(null, mButtonImages.get(pos), null, null);
         button.setOnClickListener(onClickListener);
         button.setTag(mButtonKeys.get(pos));
+        button.setId(pos);
 		return button;
 	}
 

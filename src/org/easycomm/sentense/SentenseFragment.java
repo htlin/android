@@ -1,5 +1,6 @@
 package org.easycomm.sentense;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.easycomm.MainActivity;
@@ -24,13 +25,26 @@ public class SentenseFragment extends Fragment {
 		void onSentenseBarClick(List<String> keys);
 	}
 
+	private static final String BUTTON_KEYS = "button_keys";
+
 	private ButtonFactory mButtonFactory;
 	private SentenseActionListener mCallback;
-	
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+            mCallback = (SentenseActionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity + " must implement SentenseActionListener");
+        }
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.sentense, container, false);
-		
+
 		MainActivity activity = (MainActivity) getActivity();
 		mButtonFactory = activity.getButtonFactory();
 		
@@ -49,21 +63,34 @@ public class SentenseFragment extends Fragment {
 				onBackgroundClick(v);
 			}
 		});
-		
+				
 		return view;
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		
-		try {
-            mCallback = (SentenseActionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity + " must implement SentenseActionListener");
-        }
+		if (savedInstanceState != null) {
+			ArrayList<String> buttonKeys = savedInstanceState.getStringArrayList(BUTTON_KEYS);
+			if (buttonKeys != null) {
+				for (String key : buttonKeys) {
+					addButton(key);
+				}
+			}
+		}
 	}
-
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
+		
+		ArrayList<String> buttonKeys = (ArrayList<String>) getButtonKeys(ll);
+		outState.putStringArrayList(BUTTON_KEYS, buttonKeys);
+		
+		super.onSaveInstanceState(outState);
+	}
+	
 	public void addButton(String key) {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentense);
 		Button button = mButtonFactory.get(key, new OnClickListener() {

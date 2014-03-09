@@ -6,15 +6,8 @@
     android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/frag_sentence"
-        android:name="org.easycomm.main.SentenceFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/sentence" />
-
-    <fragment
-        android:id="@+id/frag_vocab"
-        android:name="org.easycomm.main.VocabFragment"
+        android:id="@+id/frag_config_vocab"
+        android:name="org.easycomm.config.VocabFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

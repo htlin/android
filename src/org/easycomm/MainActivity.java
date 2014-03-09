@@ -3,16 +3,18 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
-import org.easycomm.sentence.SentenceFragment;
-import org.easycomm.sentence.SentenceFragment.SentenceActionListener;
-import org.easycomm.vocab.ButtonFactory;
-import org.easycomm.vocab.VocabFragment.VocabActionListener;
+import org.easycomm.main.ButtonFactory;
+import org.easycomm.main.SentenceFragment;
+import org.easycomm.main.SentenceFragment.SentenceActionListener;
+import org.easycomm.main.VocabFragment.VocabActionListener;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenceActionListener {
 
@@ -59,7 +61,22 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+        case R.id.action_config:
+            startConfig();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+		}
+	}
 	
+	private void startConfig() {
+		Intent intent = new Intent(this, ConfigActivity.class);
+		startActivity(intent);
+	}
+
 	public ButtonFactory getButtonFactory() {
 		return mButtonFactory;
 	}

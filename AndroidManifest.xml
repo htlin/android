@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="org.easycomm.ConfigActivity"
+            android:label="@string/action_config"
+            android:parentActivityName="org.easycomm.MainActivity" >
+        </activity>
     </application>
 
 </manifest>

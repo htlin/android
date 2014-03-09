@@ -2,5 +2,6 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <color name="sentenceBackground">#B0E0E6</color>
+    <color name="sentenceDisabledBackground">#545454</color>
 
 </resources>

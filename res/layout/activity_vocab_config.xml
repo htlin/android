@@ -5,6 +5,13 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:id="@+id/sentenceDisabled"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_side"
+        android:background="@color/sentenceDisabledBackground"
+        android:orientation="horizontal" />
+    
     <fragment
         android:id="@+id/frag_config_vocab"
         android:name="org.easycomm.config.VocabFragment"

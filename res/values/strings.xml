@@ -4,9 +4,14 @@
     <string name="app_name">EasyComm</string>
     <string name="action_config">Settings</string>
     <string name="button_delete">Delete</string>
+    
 	<string name="action_new">Add</string>
     <string name="action_edit">Modify</string>
     <string name="action_remove">Remove</string>
     <string name="action_save">Save</string>
+    
+    <string name="dialog_confirm_message">Layout has been modified, save changes?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
     
 </resources>

@@ -45,8 +45,8 @@ public class ButtonAdapter extends BaseAdapter {
 	}
 
 	private void onVocabClick(View view) {
-		String key = (String) view.getTag();
-		mCallback.onVocabButtonClick(key);
+		String id = (String) view.getTag();
+		mCallback.onVocabButtonClick(id);
 	}
 
 }

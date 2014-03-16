@@ -20,11 +20,11 @@ import android.widget.LinearLayout;
 public class SentenceFragment extends Fragment {
 
 	public interface SentenceActionListener {
-		void onSentenceButtonClick(String key);
-		void onSentenceBarClick(List<String> keys);
+		void onSentenceButtonClick(String id);
+		void onSentenceBarClick(List<String> ids);
 	}
 
-	private static final String BUTTON_KEYS = "button_keys";
+	private static final String BUTTON_IDS = "button_ids";
 
 	private ButtonFactory mButtonFactory;
 	private SentenceActionListener mCallback;
@@ -71,10 +71,10 @@ public class SentenceFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		if (savedInstanceState != null) {
-			ArrayList<String> buttonKeys = savedInstanceState.getStringArrayList(BUTTON_KEYS);
-			if (buttonKeys != null) {
-				for (String key : buttonKeys) {
-					addButton(key);
+			ArrayList<String> buttonIDs = savedInstanceState.getStringArrayList(BUTTON_IDS);
+			if (buttonIDs != null) {
+				for (String id : buttonIDs) {
+					addButton(id);
 				}
 			}
 		}
@@ -84,8 +84,8 @@ public class SentenceFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		
-		ArrayList<String> buttonKeys = (ArrayList<String>) getButtonKeys(ll);
-		outState.putStringArrayList(BUTTON_KEYS, buttonKeys);
+		ArrayList<String> buttonIDs = (ArrayList<String>) getButtonIDs(ll);
+		outState.putStringArrayList(BUTTON_IDS, buttonIDs);
 		
 		super.onSaveInstanceState(outState);
 	}
@@ -112,26 +112,24 @@ public class SentenceFragment extends Fragment {
 
 	private void onVocabClick(View v) {
 		Button button = (Button) v;
-		String key = (String) button.getTag();
-		mCallback.onSentenceButtonClick(key);
+		String id = (String) button.getTag();
+		mCallback.onSentenceButtonClick(id);
 	}
 	
 	private void onBackgroundClick(View v) {
 		LinearLayout ll = (LinearLayout) v;
-		List<String> keys = getButtonKeys(ll);
-		mCallback.onSentenceBarClick(keys);
+		List<String> ids = getButtonIDs(ll);
+		mCallback.onSentenceBarClick(ids);
 	}
 	
-	private List<String> getButtonKeys(LinearLayout ll) {
-		List<String> keys = CUtil.makeList();
+	private List<String> getButtonIDs(LinearLayout ll) {
+		List<String> ids = CUtil.makeList();
 		for (int i = 0; i < ll.getChildCount(); i++) {
 			Button b = (Button) ll.getChildAt(i);
-			String key = (String) b.getTag();
-			keys.add(key);
+			String id = (String) b.getTag();
+			ids.add(id);
 		}
-		return keys;
+		return ids;
 	}
-
-	
 
 }

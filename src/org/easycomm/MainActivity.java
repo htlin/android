@@ -3,6 +3,7 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
+import org.easycomm.db.VocabDatabase;
 import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
@@ -19,14 +20,16 @@ import android.view.MenuItem;
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenceActionListener {
 
 	private TextToSpeech mTTS;
+	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mTTS = new TextToSpeech(this, this);
-		mButtonFactory = new ButtonFactory(this);
+		mVocabDB = VocabDatabase.init(getResources().getAssets());
+		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		
 		setContentView(R.layout.activity_main);
 	}
@@ -77,9 +80,14 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		startActivity(intent);
 	}
 
+	public VocabDatabase getVocabDatabase() {
+		return mVocabDB;
+	}
+	
 	public ButtonFactory getButtonFactory() {
 		return mButtonFactory;
 	}
+	
 	
 
 	private void speak(String text) {
@@ -87,26 +95,26 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	}
 
 	@Override
-	public void onVocabButtonClick(String key) {
-		speak(mButtonFactory.getText(key));
+	public void onVocabButtonClick(String id) {
+		speak(mVocabDB.getText(id));
 		SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
-		sentenseFrag.addButton(key);
+		sentenseFrag.addButton(id);
 	}
 
 	@Override
-	public void onSentenceButtonClick(String key) {
-		speak(mButtonFactory.getText(key));
+	public void onSentenceButtonClick(String id) {
+		speak(mVocabDB.getText(id));
 	}
 
 	@Override
-	public void onSentenceBarClick(List<String> keys) {
-		speak(getSentense(keys));
+	public void onSentenceBarClick(List<String> ids) {
+		speak(getSentense(ids));
 	}
 
-	private String getSentense(List<String> keys) {
+	private String getSentense(List<String> ids) {
 		StringBuffer buf = new StringBuffer();
-		for (String key : keys) {
-			buf.append(mButtonFactory.getText(key));
+		for (String id : ids) {
+			buf.append(mVocabDB.getText(id));
 			buf.append(" ");
 		}
 		return buf.toString();

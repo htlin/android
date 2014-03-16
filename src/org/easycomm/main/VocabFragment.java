@@ -14,7 +14,7 @@ import android.widget.GridView;
 public class VocabFragment extends Fragment {
 
 	public interface VocabActionListener {
-		void onVocabButtonClick(String key);
+		void onVocabButtonClick(String id);
 	}
 
 	private VocabActionListener mCallback;
@@ -40,6 +40,5 @@ public class VocabFragment extends Fragment {
 		
 		return view;
 	}
-	
-	
+		
 }

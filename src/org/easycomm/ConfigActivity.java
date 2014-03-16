@@ -1,8 +1,9 @@
 package org.easycomm;
 
+import org.easycomm.config.ButtonFactory;
 import org.easycomm.config.ConfirmBackDialogFragment;
 import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
-import org.easycomm.main.ButtonFactory;
+import org.easycomm.db.VocabDatabase;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,14 +14,16 @@ import android.view.MenuItem;
 
 public class ConfigActivity extends Activity implements ConfirmBackDialogListener {
 
+	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
 	private boolean mLayoutChanged;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mButtonFactory = new ButtonFactory(this);
+		mVocabDB = VocabDatabase.getInstance();
+		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		
 		setContentView(R.layout.activity_vocab_config);
 		

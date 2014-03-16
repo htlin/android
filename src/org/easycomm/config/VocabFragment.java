@@ -1,5 +1,6 @@
 package org.easycomm.config;
 
+import org.easycomm.ConfigActivity;
 import org.easycomm.R;
 
 import android.app.Activity;
@@ -22,7 +23,8 @@ public class VocabFragment extends Fragment {
 		View view = inflater.inflate(R.layout.vocab, container, false);
 		
 		GridView gv = (GridView) view.findViewById(R.id.vocab_grid);
-		
+		ConfigActivity activity = (ConfigActivity) getActivity();
+		gv.setAdapter(new ButtonAdapter(activity.getButtonFactory()));
 		return view;
 	}
 	

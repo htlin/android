@@ -20,12 +20,15 @@ public class VocabDatabase {
 	private List<Vocab> mVocabs;
 	private Map<String, Vocab> mVocabMap;
 
-	public static VocabDatabase init(AssetManager assets) {
-		Singleton = new VocabDatabase(assets);
-		return Singleton;
-	}
+	//Temporary to mock persistent files
+	private List<Vocab> mLastVocabs;
+	private Map<String, Vocab> mLastVocabMap;
 	
-	public static VocabDatabase getInstance() {
+	public static VocabDatabase getInstance(AssetManager assets) {
+		if (Singleton == null) {
+			Singleton = new VocabDatabase(assets);
+		}
+		
 		return Singleton;
 	}
 	
@@ -47,6 +50,8 @@ public class VocabDatabase {
 		for (Vocab v : mVocabs) {
 			mVocabMap.put(v.getID(), v);
 		}
+		
+		save();
 	}
 	
 	public int size() {
@@ -63,6 +68,21 @@ public class VocabDatabase {
 
 	public String getText(String id) {
 		return mVocabMap.get(id).getText();
+	}
+
+	public void remove(String id) {
+		Vocab v = mVocabMap.remove(id);
+		mVocabs.remove(v);
+	}
+
+	public void save() {
+		mLastVocabs = CUtil.makeList(mVocabs);
+		mLastVocabMap = CUtil.makeMap(mVocabMap);
+	}
+
+	public void revert() {
+		mVocabs = CUtil.makeList(mLastVocabs);
+		mVocabMap = CUtil.makeMap(mLastVocabMap);
 	}
 
 }

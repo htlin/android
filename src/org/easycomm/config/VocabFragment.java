@@ -13,9 +13,23 @@ import android.widget.GridView;
 
 public class VocabFragment extends Fragment {
 
+	public interface VocabActionListener {
+		void onVocabButtonClick(String id, View v);
+		void onVocabDragDrop(String sourceID, String targetID);
+	}
+
+	private VocabActionListener mCallback;
+	private ButtonAdapter mButtonAdapter;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
+		try {
+            mCallback = (VocabActionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity + " must implement VocabActionListener");
+        }
 	}
 	
 	@Override
@@ -24,9 +38,14 @@ public class VocabFragment extends Fragment {
 		
 		GridView gv = (GridView) view.findViewById(R.id.vocab_grid);
 		ConfigActivity activity = (ConfigActivity) getActivity();
-		gv.setAdapter(new ButtonAdapter(activity.getButtonFactory()));
+		mButtonAdapter = new ButtonAdapter(activity.getButtonFactory(), mCallback);
+		gv.setAdapter(mButtonAdapter);
+		
 		return view;
 	}
-	
-	
+
+	public void invalidate() {
+		mButtonAdapter.notifyDataSetChanged();
+	}
+		
 }

@@ -26,4 +26,17 @@ public class Vocab {
 		return mImage;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Vocab)) return false;
+		
+		Vocab o = (Vocab) obj;
+		return mID.equals(o.mID);
+	}
+
+	@Override
+	public int hashCode() {
+		return mID.hashCode();
+	}
+	
 }

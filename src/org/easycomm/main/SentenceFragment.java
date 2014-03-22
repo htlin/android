@@ -6,6 +6,7 @@ import java.util.List;
 import org.easycomm.MainActivity;
 import org.easycomm.R;
 import org.easycomm.util.CUtil;
+import org.easycomm.util.Constant;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,8 +24,6 @@ public class SentenceFragment extends Fragment {
 		void onSentenceButtonClick(String id);
 		void onSentenceBarClick(List<String> ids);
 	}
-
-	private static final String BUTTON_IDS = "button_ids";
 
 	private ButtonFactory mButtonFactory;
 	private SentenceActionListener mCallback;
@@ -71,7 +70,7 @@ public class SentenceFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		if (savedInstanceState != null) {
-			ArrayList<String> buttonIDs = savedInstanceState.getStringArrayList(BUTTON_IDS);
+			ArrayList<String> buttonIDs = savedInstanceState.getStringArrayList(Constant.BUTTON_IDS);
 			if (buttonIDs != null) {
 				for (String id : buttonIDs) {
 					addButton(id);
@@ -85,7 +84,7 @@ public class SentenceFragment extends Fragment {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		
 		ArrayList<String> buttonIDs = (ArrayList<String>) getButtonIDs(ll);
-		outState.putStringArrayList(BUTTON_IDS, buttonIDs);
+		outState.putStringArrayList(Constant.BUTTON_IDS, buttonIDs);
 		
 		super.onSaveInstanceState(outState);
 	}
@@ -130,6 +129,15 @@ public class SentenceFragment extends Fragment {
 			ids.add(id);
 		}
 		return ids;
+	}
+
+	private void deleteAll() {
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
+		ll.removeAllViews();
+	}
+
+	public void invalidate() {
+		deleteAll();
 	}
 
 }

@@ -18,6 +18,7 @@ public class VocabFragment extends Fragment {
 	}
 
 	private VocabActionListener mCallback;
+	private ButtonAdapter mButtonAdapter;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -36,9 +37,14 @@ public class VocabFragment extends Fragment {
 		
 		GridView gv = (GridView) view.findViewById(R.id.vocab_grid);
 		MainActivity activity = (MainActivity) getActivity();
-		gv.setAdapter(new ButtonAdapter(activity.getButtonFactory(), mCallback));
+		mButtonAdapter = new ButtonAdapter(activity.getButtonFactory(), mCallback);
+		gv.setAdapter(mButtonAdapter);
 		
 		return view;
+	}
+
+	public void invalidate() {
+		mButtonAdapter.notifyDataSetChanged();
 	}
 		
 }

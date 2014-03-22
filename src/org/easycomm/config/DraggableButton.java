@@ -72,4 +72,10 @@ public class DraggableButton extends Button implements DragSource, DropTarget {
 		
 	}
 
+	@Override
+	public String getID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

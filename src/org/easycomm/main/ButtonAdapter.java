@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class ButtonAdapter extends BaseAdapter {
+public class ButtonAdapter extends BaseAdapter implements OnClickListener {
 
 	private ButtonFactory mButtonFactory;
 	private VocabActionListener mCallback;
@@ -34,18 +34,12 @@ public class ButtonAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		OnClickListener onClickListener = new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onVocabClick(v);
-			}
-		};
-		
-		return mButtonFactory.get(position, onClickListener);
+		return mButtonFactory.get(position, this);
 	}
 
-	private void onVocabClick(View view) {
-		String id = (String) view.getTag();
+	@Override
+	public void onClick(View v) {
+		String id = (String) v.getTag();
 		mCallback.onVocabButtonClick(id);
 	}
 

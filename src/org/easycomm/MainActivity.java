@@ -7,7 +7,9 @@ import org.easycomm.db.VocabDatabase;
 import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
+import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
+import org.easycomm.util.Constant;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,12 +30,30 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		super.onCreate(savedInstanceState);
 
 		mTTS = new TextToSpeech(this, this);
-		mVocabDB = VocabDatabase.init(getResources().getAssets());
+		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		
 		setContentView(R.layout.activity_main);
 	}
-
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch(requestCode) { 
+		case (Constant.STATIC_INTEGER_VALUE):
+			if (resultCode == Activity.RESULT_OK) { 
+				VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_vocab);
+				vocab.invalidate();
+				
+				SentenceFragment sentence = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
+				sentence.invalidate();
+			} 
+			break;
+			
+		default:
+		} 
+	}
+	
 	@Override
 	protected void onDestroy() {
 		if (mTTS != null) {
@@ -77,7 +97,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	
 	private void startConfig() {
 		Intent intent = new Intent(this, ConfigActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, Constant.STATIC_INTEGER_VALUE);
 	}
 
 	public VocabDatabase getVocabDatabase() {

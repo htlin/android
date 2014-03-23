@@ -1,10 +1,12 @@
 package org.easycomm.config;
 
+import org.easycomm.R;
 import org.easycomm.dragdrop.DragSource;
 import org.easycomm.dragdrop.DropTarget;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,68 +16,75 @@ public class DraggableButton extends Button implements DragSource, DropTarget {
 		super(context);
 	}
 
+	private void setFilter() {
+		getBackground().setColorFilter(R.color.buttonNearlyEmpty, PorterDuff.Mode.DARKEN);
+	}
+
+	private void clearFilter() {
+		getBackground().clearColorFilter();
+	}
+	
 	//DragSource methods
 	
 	@Override
 	public boolean isDragAllowed() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public ClipData getClipDataForDragDrop() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public View getDragDropView() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
 	public void onDragStarted() {
-		// TODO Auto-generated method stub
-		
+		setFilter();
 	}
-
+	
 	@Override
 	public void onDropCompleted(DropTarget target, boolean success) {
-		// TODO Auto-generated method stub
-		
+		clearFilter();
 	}
 	
 	
+
 	//DropTarget Methods
 	@Override
 	public boolean isDropAllowedFrom(DragSource source) {
-		// TODO Auto-generated method stub
-		return false;
+		if (source == this) return false;
+		
+		return true;
 	}
 
 	@Override
 	public void onDrop(DragSource source) {
-		// TODO Auto-generated method stub
+		if (source == this) return;
 		
+		clearFilter();
 	}
 
 	@Override
 	public void onDragEnter(DragSource source) {
-		// TODO Auto-generated method stub
+		if (source == this) return;
 		
+		setFilter();
 	}
 
 	@Override
 	public void onDragExit(DragSource source) {
-		// TODO Auto-generated method stub
+		if (source == this) return;
 		
+		clearFilter();
 	}
 
 	@Override
 	public String getID() {
-		// TODO Auto-generated method stub
-		return null;
+		return (String) getTag();
 	}
 
 }

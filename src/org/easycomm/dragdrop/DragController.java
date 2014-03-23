@@ -42,7 +42,7 @@ public class DragController implements View.OnDragListener {
 	public boolean onDrag(View v, DragEvent event) {
 		// Check to see if the presenter object has drag-drop enabled.
 		if (mPresenter != null) {
-			if (!mPresenter.isDragDropEnabled ()) return false;
+			if (!mPresenter.isDragDropEnabled()) return false;
 		}
 
 		// Determine if the view is a DragSource, DropTarget, or both.
@@ -64,14 +64,13 @@ public class DragController implements View.OnDragListener {
 		final int action = event.getAction();
 
 		// Handles each of the expected events
-		switch(action) {
-
+		switch(action) {		
 		case DragEvent.ACTION_DRAG_STARTED:
 			// We want a call to mPresenter.onDragStarted once. So check to see if we are already dragging.
 			if (!mDragging) {
 				mDragging = true;
 				mDropSuccess = false;
-				if (mPresenter != null) mPresenter.onDragStarted (mDragSource);
+				if (mPresenter != null) mPresenter.onDragStarted(mDragSource);
 				Log.d(DragController.class.getName(), "Drag started.");
 			}
 
@@ -82,22 +81,22 @@ public class DragController implements View.OnDragListener {
 				// The view continues to see drag events if it is the source of the current drag
 				// or if it is a target itself.
 				if (source == mDragSource) {
-					if (source.isDragAllowed ()) {
+					if (source.isDragAllowed()) {
 						eventResult = true;
-						source.onDragStarted ();
+						source.onDragStarted();
 					}
 				} else {
-					eventResult = isDropTarget && target.isDropAllowedFrom (mDragSource);
+					eventResult = isDropTarget && target.isDropAllowedFrom(mDragSource);
 				}
 			} else if (isDropTarget) {
-				eventResult = target.isDropAllowedFrom (mDragSource);
+				eventResult = target.isDropAllowedFrom(mDragSource);
 			} else eventResult =  false;
 			break;
 
 		case DragEvent.ACTION_DRAG_ENTERED:
 			Log.d(DragController.class.getName(), "DragController.onDrag - entered view");
 			if (isDropTarget) {
-				target.onDragEnter (mDragSource);
+				target.onDragEnter(mDragSource);
 				mDropTarget = target;
 				eventResult = true;
 			} else eventResult = false;
@@ -107,7 +106,7 @@ public class DragController implements View.OnDragListener {
 			Log.d(DragController.class.getName(), "DragController.onDrag - exited view");
 			if (isDropTarget) {
 				mDropTarget = null;
-				target.onDragExit (mDragSource);
+				target.onDragExit(mDragSource);
 				eventResult = true;
 			} else eventResult = false;
 			break;
@@ -116,7 +115,7 @@ public class DragController implements View.OnDragListener {
 			Log.d(DragController.class.getName(), "DragController.onDrag - dropped");
 			if (isDropTarget) {
 				if (target.isDropAllowedFrom (mDragSource)) {
-					target.onDrop (mDragSource);
+					target.onDrop(mDragSource);
 					mDropTarget = target;
 					mDropSuccess = true;
 				}
@@ -138,9 +137,13 @@ public class DragController implements View.OnDragListener {
 			mDragSource = null;
 			mDropTarget = null;
 			break;
+			
+		case DragEvent.ACTION_DRAG_LOCATION:
+			//Workaround for bug: http://stackoverflow.com/questions/14377498/android-drag-and-drop-for-textview-causing-exception
+			eventResult = true;
+			break;
 		}
 		return eventResult;
-
 	}
 
 	public boolean startDrag(View v) {
@@ -154,9 +157,9 @@ public class DragController implements View.OnDragListener {
 		mDragSource = ds;
 		mDropTarget = null;
 
-		ClipData dragData = ds.getClipDataForDragDrop ();
-		View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
-		v.startDrag (dragData, shadowView, null, 0);
+		ClipData dragData = ds.getClipDataForDragDrop();
+		View.DragShadowBuilder shadowView = new View.DragShadowBuilder(v);
+		v.startDrag(dragData, shadowView, null, 0);
 		return true;
 	}
 

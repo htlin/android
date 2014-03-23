@@ -75,6 +75,17 @@ public class VocabDatabase {
 		mVocabs.remove(v);
 	}
 
+	public void move(String sourceID, String targetID) {
+		if (sourceID.equals(targetID)) return;
+		
+		Vocab sourceVocab = mVocabMap.get(sourceID);
+		Vocab targetVocab = mVocabMap.get(targetID);
+		
+		int targetIndex = mVocabs.indexOf(targetVocab);
+		mVocabs.remove(sourceVocab);
+		mVocabs.add(targetIndex, sourceVocab);
+	}
+
 	public void save() {
 		mLastVocabs = CUtil.makeList(mVocabs);
 		mLastVocabMap = CUtil.makeMap(mVocabMap);

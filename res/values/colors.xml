@@ -4,5 +4,6 @@
     <color name="sentenceBackground">#B0E0E6</color>
     <color name="sentenceDisabledBackground">#545454</color>
     <color name="buttonSelected">#FF8800</color>
+	<color name="buttonNearlyEmpty">#505050</color>
 
 </resources>

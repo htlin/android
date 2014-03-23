@@ -147,7 +147,13 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 
 	@Override
 	public void onVocabDragDrop(String sourceID, String targetID) {
+		if (!sourceID.equals(targetID)) {
+			mVocabDB.move(sourceID, targetID);
+			updateLayout();
+		}
 		
+		mSelector.deselect();
+		invalidateOptionsMenu();
 	}
 	
 }

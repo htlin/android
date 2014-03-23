@@ -7,7 +7,8 @@ import org.easycomm.db.VocabDatabase;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.widget.GridView;
 
 public class ButtonFactory {
@@ -30,23 +31,25 @@ public class ButtonFactory {
 		return mVocabDB.getText(id);
 	}
 	
-	public Button get(String id, OnClickListener onClickListener) {
+	public DraggableButton get(String id, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
 		Vocab v = mVocabDB.getVocab(id);
-		return get(v, onClickListener);
+		return get(v, onClickListener, onLongClickListener, onDragListener);
 	}
 
-	public Button get(int pos, OnClickListener onClickListener) {
+	public DraggableButton get(int pos, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
 		Vocab v = mVocabDB.getVocab(pos);
-		return get(v, onClickListener);
+		return get(v, onClickListener, onLongClickListener, onDragListener);
 	}
 	
-	public Button get(Vocab v, OnClickListener onClickListener) {
-		Button button = new Button(mContext);
+	public DraggableButton get(Vocab v, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
+		DraggableButton button = new DraggableButton(mContext);
 		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
     	button.setText(v.getText());
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
         button.setCompoundDrawablesWithIntrinsicBounds(null, v.getImage(), null, null);
         button.setOnClickListener(onClickListener);
+        button.setOnLongClickListener(onLongClickListener);
+        button.setOnDragListener(onDragListener);
         button.setTag(v.getID());
 		return button;
 	}

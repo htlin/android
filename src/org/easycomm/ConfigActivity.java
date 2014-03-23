@@ -57,9 +57,10 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		boolean isEnabled = mSelector.isSelected();
-        menu.findItem(R.id.action_modify).setEnabled(isEnabled);
-        menu.findItem(R.id.action_remove).setEnabled(isEnabled);
+		boolean isSelected = mSelector.isSelected();
+        menu.findItem(R.id.action_modify).setEnabled(isSelected);
+        menu.findItem(R.id.action_remove).setEnabled(isSelected);
+        menu.findItem(R.id.action_save).setEnabled(mLayoutChanged);
 	    return true;
 	}
 	
@@ -83,14 +84,14 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		case R.id.action_remove:
 			String selectedID = mSelector.getSelectedID();
 			mVocabDB.remove(selectedID);
-			updateLayout();
 			mSelector.deselect();
-			invalidateOptionsMenu();
+			updateLayout();
 			return true;
 			
 		case R.id.action_save:
 			mVocabDB.save();
 			mLayoutChanged = false;
+			invalidateOptionsMenu();
 			return true;
 			
 		default:
@@ -102,6 +103,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocab.invalidate();
 		mLayoutChanged = true;
+		invalidateOptionsMenu();
 	}
 
 	public ButtonFactory getButtonFactory() {
@@ -118,6 +120,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		if (mLayoutChanged) {
 			showConfirmBackDialog();
 		} else {
+			setResult(Activity.RESULT_OK);
 			super.onBackPressed();
 		}
 	}

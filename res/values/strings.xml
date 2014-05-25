@@ -3,7 +3,7 @@
 
     <string name="app_name">EasyComm</string>
     <string name="action_config">Settings</string>
-    <string name="button_delete">Delete</string>
+    <string name="button_delete">&#9664; Delete</string>
     
 	<string name="action_new">Add</string>
     <string name="action_edit">Modify</string>

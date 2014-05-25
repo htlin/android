@@ -33,12 +33,12 @@ public class ConfirmBackDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.dialog_confirm_message)
-		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mListener.onConfirmBackDialogPositiveClick(ConfirmBackDialogFragment.this);
 			}
 		})
-		.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+		.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				mListener.onConfirmBackDialogNegativeClick(ConfirmBackDialogFragment.this);
 			}

@@ -11,6 +11,8 @@
     <string name="action_save">Save</string>
     
     <string name="dialog_confirm_message">Layout has been modified, save changes?</string>
+ 	<string name="yes">Yes</string>
+ 	<string name="no">No</string>
  
     <string name="dialog_vocab_add">Add New Vocab</string>
     <string name="dialog_vocab_modify">Modify Vocab</string>

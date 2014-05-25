@@ -11,7 +11,11 @@
     <string name="action_save">Save</string>
     
     <string name="dialog_confirm_message">Layout has been modified, save changes?</string>
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
+ 
+    <string name="dialog_vocab_add">Add New Vocab</string>
+    <string name="dialog_vocab_modify">Modify Vocab</string>
+    <string name="display_text">Display Text:</string>
+    <string name="speech_text">Speech Text:</string>
+    <string name="vocab_image">Image:</string>
     
 </resources>

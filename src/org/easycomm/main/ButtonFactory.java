@@ -26,8 +26,8 @@ public class ButtonFactory {
 		return mVocabDB.size();
 	}
 	
-	public String getText(String id) {
-		return mVocabDB.getText(id);
+	public String getDisplayText(String id) {
+		return mVocabDB.getDisplayText(id);
 	}
 	
 	public Button get(String id, OnClickListener onClickListener) {
@@ -43,7 +43,7 @@ public class ButtonFactory {
 	public Button get(Vocab v, OnClickListener onClickListener) {
 		Button button = new Button(mContext);
 		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
-    	button.setText(v.getText());
+    	button.setText(v.getDisplayText());
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
         button.setCompoundDrawablesWithIntrinsicBounds(null, v.getImage(), null, null);
         button.setOnClickListener(onClickListener);

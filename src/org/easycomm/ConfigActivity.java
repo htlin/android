@@ -1,12 +1,16 @@
 package org.easycomm;
 
+import org.easycomm.config.AddModifyVocabDialogFragment;
+import org.easycomm.config.AddModifyVocabDialogFragment.AddVocabDialogListener;
 import org.easycomm.config.ButtonFactory;
 import org.easycomm.config.ConfirmBackDialogFragment;
 import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
 import org.easycomm.config.ViewSelector;
 import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
+import org.easycomm.db.Vocab;
 import org.easycomm.db.VocabDatabase;
+import org.easycomm.db.VocabReader;
 import org.easycomm.util.Constant;
 
 import android.app.ActionBar;
@@ -17,8 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class ConfigActivity extends Activity implements ConfirmBackDialogListener, VocabActionListener {
+public class ConfigActivity extends Activity implements ConfirmBackDialogListener, AddVocabDialogListener, VocabActionListener {
 
+	private VocabReader mVocabReader;
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
 	private ViewSelector mSelector;
@@ -28,6 +33,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mVocabReader = VocabReader.getInstance(getResources().getAssets());
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mSelector = new ViewSelector(getResources());
@@ -66,6 +72,8 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		String selectedID;
+		
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (mLayoutChanged) {
@@ -76,13 +84,16 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 			}
 			
 		case R.id.action_new:
+			showAddModifyDialog(null);
 			return true;
 			
 		case R.id.action_modify:
+			selectedID = mSelector.getSelectedID();
+			showAddModifyDialog(selectedID);
 			return true;
 			
 		case R.id.action_remove:
-			String selectedID = mSelector.getSelectedID();
+			selectedID = mSelector.getSelectedID();
 			mVocabDB.remove(selectedID);
 			mSelector.deselect();
 			updateLayout();
@@ -114,7 +125,17 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		DialogFragment newFragment = new ConfirmBackDialogFragment();
 	    newFragment.show(getFragmentManager(), "confirm");
 	}
-	
+
+	private void showAddModifyDialog(String selectedID) {
+		DialogFragment newFragment = new AddModifyVocabDialogFragment();
+		Bundle args = new Bundle();
+		if (selectedID != null) {
+			args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
+		}
+		newFragment.setArguments(args);
+	    newFragment.show(getFragmentManager(), "add");
+	}
+
 	@Override
 	public void onBackPressed() {
 		if (mLayoutChanged) {
@@ -126,19 +147,44 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 	}
 	
 	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
+	public void onConfirmBackDialogPositiveClick(DialogFragment dialog) {
 		mVocabDB.save();
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
 
 	@Override
-	public void onDialogNegativeClick(DialogFragment dialog) {
+	public void onConfirmBackDialogNegativeClick(DialogFragment dialog) {
 		mVocabDB.revert();
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
 
+	@Override
+	public void onAddVocabDialogPositiveClick(AddModifyVocabDialogFragment dialog) {
+		String displayText = dialog.getDisplayText();
+		String speechText = dialog.getSpeechText();
+		String vocabID = dialog.getVocabID();
+		
+		String selectedID = mSelector.getSelectedID();
+		if (selectedID == null) {
+			//Add
+			//TODO
+			Vocab vocab = mVocabReader.getVocab(vocabID).copy();
+			vocab.setDisplayText(displayText);
+			vocab.setSpeechText(speechText);
+			mVocabDB.add(vocab);
+			updateLayout();
+		} else {
+			//Modify
+			
+		}
+	}
+
+	@Override
+	public void onAddVocabDialogNegativeClick(AddModifyVocabDialogFragment dialog) {
+	}
+	
 	
 	@Override
 	public void onVocabButtonClick(String id, View v) {
@@ -158,5 +204,5 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		mSelector.deselect();
 		invalidateOptionsMenu();
 	}
-	
+
 }

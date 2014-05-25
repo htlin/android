@@ -1,0 +1,44 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:alignmentMode="alignMargins"
+    android:columnCount="2"
+    android:columnOrderPreserved="false"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:useDefaultMargins="true" >
+
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/display_text" />
+
+    <EditText
+        android:id="@+id/display_text"
+        android:layout_width="@dimen/dialog_width"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/speech_text" />
+
+    <EditText
+        android:id="@+id/speech_text"
+        android:layout_width="@dimen/dialog_width"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/vocab_image" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="fill_parent"
+        android:paddingBottom="@dimen/button_side_small"
+        android:choiceMode="singleChoice"
+        android:listSelector="@drawable/listview_selector" />
+
+</GridLayout>

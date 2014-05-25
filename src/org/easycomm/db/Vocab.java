@@ -5,12 +5,16 @@ import android.graphics.drawable.Drawable;
 public class Vocab {
 
 	private String mID;
-	private String mText;
+	private String mDisplayText;
+	private String mSpeechText;
+	private String mFilename;
 	private Drawable mImage;
 	
-	public Vocab(String id, String text, Drawable image) {
+	public Vocab(String id, String displayText, String speechText, String filename, Drawable image) {
 		mID = id;
-		mText = text;
+		mDisplayText = displayText;
+		mSpeechText = speechText;
+		mFilename = filename;
 		mImage = image;
 	}
 
@@ -18,12 +22,32 @@ public class Vocab {
 		return mID;
 	}
 	
-	public String getText() {
-		return mText;
+	public String getDisplayText() {
+		return mDisplayText;
+	}
+	
+	public String getSpeechText() {
+		return mSpeechText;
+	}
+	
+	public String getFilename() {
+		return mFilename;
 	}
 	
 	public Drawable getImage() {
 		return mImage;
+	}
+
+	public void setDisplayText(String v) {
+		mDisplayText = v;
+	}
+
+	public void setSpeechText(String v) {
+		mSpeechText = v;
+	}
+
+	public Vocab copy() {
+		return new Vocab(mID, mDisplayText, mSpeechText, mFilename, mImage);
 	}
 	
 	@Override
@@ -38,5 +62,5 @@ public class Vocab {
 	public int hashCode() {
 		return mID.hashCode();
 	}
-	
+
 }

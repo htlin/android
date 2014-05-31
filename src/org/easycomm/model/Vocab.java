@@ -1,4 +1,4 @@
-package org.easycomm.db;
+package org.easycomm.model;
 
 import android.graphics.drawable.Drawable;
 

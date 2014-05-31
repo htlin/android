@@ -1,8 +1,8 @@
 package org.easycomm.main;
 
 import org.easycomm.R;
-import org.easycomm.db.Vocab;
-import org.easycomm.db.VocabDatabase;
+import org.easycomm.model.Vocab;
+import org.easycomm.model.VocabDatabase;
 
 import android.content.Context;
 import android.view.Gravity;

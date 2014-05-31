@@ -3,12 +3,12 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
-import org.easycomm.db.VocabDatabase;
 import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
 import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
+import org.easycomm.model.VocabDatabase;
 import org.easycomm.util.Constant;
 
 import android.app.Activity;

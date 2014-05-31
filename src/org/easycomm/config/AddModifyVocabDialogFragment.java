@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.easycomm.R;
-import org.easycomm.db.Vocab;
-import org.easycomm.db.VocabDatabase;
-import org.easycomm.db.VocabReader;
+import org.easycomm.model.Vocab;
+import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.VocabReader;
 import org.easycomm.util.CUtil;
 
 import android.app.Activity;

@@ -1,4 +1,4 @@
-package org.easycomm.db;
+package org.easycomm.model;
 
 import java.util.List;
 import java.util.Map;

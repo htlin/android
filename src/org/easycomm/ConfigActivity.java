@@ -8,9 +8,9 @@ import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
 import org.easycomm.config.ViewSelector;
 import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
-import org.easycomm.db.Vocab;
-import org.easycomm.db.VocabDatabase;
-import org.easycomm.db.VocabReader;
+import org.easycomm.model.Vocab;
+import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.VocabReader;
 import org.easycomm.util.Constant;
 
 import android.app.ActionBar;

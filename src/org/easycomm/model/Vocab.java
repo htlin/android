@@ -4,11 +4,11 @@ import android.graphics.drawable.Drawable;
 
 public class Vocab {
 
-	private String mID;
-	private String mDisplayText;
-	private String mSpeechText;
-	private String mFilename;
-	private Drawable mImage;
+	protected String mID;
+	protected String mDisplayText;
+	protected String mSpeechText;
+	protected String mFilename;
+	protected Drawable mImage;
 	
 	public Vocab(String id, String displayText, String speechText, String filename, Drawable image) {
 		mID = id;
@@ -28,6 +28,10 @@ public class Vocab {
 	
 	public String getSpeechText() {
 		return mSpeechText;
+	}
+	
+	public boolean hasSpeechText() {
+		return mSpeechText == null || mSpeechText.isEmpty();
 	}
 	
 	public String getFilename() {

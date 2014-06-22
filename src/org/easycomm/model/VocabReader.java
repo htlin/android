@@ -35,7 +35,7 @@ public class VocabReader {
 		try {
 			for (String file : assets.list(ASSET_DIR)) {
 				InputStream in = assets.open(ASSET_DIR + "/" + file);
-				Drawable d = Drawable.createFromStream(in , null);
+				Drawable d = Drawable.createFromStream(in, null);
 				String displayName = FileUtil.getName(file);
 				String id = displayName;
 				mAllVocabs.add(new Vocab(id, displayName, displayName, file, d));

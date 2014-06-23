@@ -28,7 +28,7 @@ public class ButtonFactory {
 	}
 	
 	public String getDisplayText(String id) {
-		return mVocabDB.getDisplayText(id);
+		return mVocabDB.getVocab(id).getDisplayText();
 	}
 	
 	public DraggableButton get(String id, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {

@@ -3,6 +3,8 @@ package org.easycomm.model.tree;
 import java.util.Collections;
 import java.util.List;
 
+import org.easycomm.model.tree.visitor.NodeVisitor;
+
 public class Leaf<T> extends Node<T> {
 
 	@Override
@@ -10,8 +12,9 @@ public class Leaf<T> extends Node<T> {
 		return Collections.emptyList();
 	}
 
-	public void accept(NodeVisitor<T> v) {
-		v.visit(this);
+	@Override
+	public void traverseFolderWith(NodeVisitor<T> v) {
+		accept(v);
 	}
 	
 }

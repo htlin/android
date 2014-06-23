@@ -2,6 +2,8 @@ package org.easycomm.model.tree;
 
 import java.util.List;
 
+import org.easycomm.model.tree.visitor.NodeVisitor;
+
 public class Link<T> extends Node<T> {
 
 	protected Node<T> mLink;
@@ -15,8 +17,9 @@ public class Link<T> extends Node<T> {
 		return mLink.getChildren();
 	}
 
-	public void accept(NodeVisitor<T> v) {
-		v.visit(this);
+	@Override
+	public void traverseFolderWith(NodeVisitor<T> v) {
+		accept(v);
 	}
 	
 }

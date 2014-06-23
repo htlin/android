@@ -3,6 +3,7 @@ package org.easycomm.model;
 import java.util.List;
 import java.util.Map;
 
+import org.easycomm.model.tree.LinkedTree;
 import org.easycomm.util.CUtil;
 
 import android.content.res.AssetManager;
@@ -11,13 +12,10 @@ public class VocabDatabase {
 
 	private static VocabDatabase Singleton; 
 	
-	private List<Vocab> mVocabs;
-	private Map<String, Vocab> mVocabMap;
-
-	//Temporary to mock persistent files
-	private List<Vocab> mLastVocabs;
-	private Map<String, Vocab> mLastVocabMap;
-
+	private LinkedTree<Vocab> mVocabTree;
+	
+//	private List<Vocab> mVocabs;
+//	private Map<String, Vocab> mVocabMap;
 	
 	public static VocabDatabase getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -30,33 +28,23 @@ public class VocabDatabase {
 	
 	private VocabDatabase(AssetManager assets) {
 		//TODO - currently the same from readAll
-		mVocabs = VocabReader.getInstance(assets).getAllVocabs();
-		mVocabMap = CUtil.makeMap();
-		for (Vocab v : mVocabs) {
-			mVocabMap.put(v.getID(), v);
-		}
+		List<Vocab> vocabs = VocabReader.getInstance(assets).getAllVocabs();
+		
+		mVocabTree = new LinkedTree<Vocab>();
 		
 		save();
 	}
 	
 	public int size() {
-		return mVocabs.size();
+		return mVocabTree.size();
 	}
 	
 	public Vocab getVocab(String id) {
-		return mVocabMap.get(id);
+		return mVocabTree.getNode(id).getObject();
 	}
 	
 	public Vocab getVocab(int index) {
 		return mVocabs.get(index);
-	}
-
-	public String getDisplayText(String id) {
-		return mVocabMap.get(id).getDisplayText();
-	}
-
-	public String getSpeechText(String id) {
-		return mVocabMap.get(id).getSpeechText();
 	}
 
 	public void add(Vocab v) {
@@ -65,8 +53,7 @@ public class VocabDatabase {
 	}
 	
 	public void remove(String id) {
-		Vocab v = mVocabMap.remove(id);
-		mVocabs.remove(v);
+		mVocabTree.removeNode(id);
 	}
 
 	public void move(String sourceID, String targetID) {
@@ -81,13 +68,9 @@ public class VocabDatabase {
 	}
 
 	public void save() {
-		mLastVocabs = CUtil.makeList(mVocabs);
-		mLastVocabMap = CUtil.makeMap(mVocabMap);
 	}
 
 	public void revert() {
-		mVocabs = CUtil.makeList(mLastVocabs);
-		mVocabMap = CUtil.makeMap(mLastVocabMap);
 	}
 
 }

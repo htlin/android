@@ -2,6 +2,8 @@ package org.easycomm.model.tree;
 
 import java.util.List;
 
+import org.easycomm.model.tree.visitor.NodeVisitor;
+
 public abstract class Node<T> {
 
 	protected String mID;
@@ -14,8 +16,12 @@ public abstract class Node<T> {
 	public T getObject() {
 		return mObject;
 	}
+
+	public void accept(NodeVisitor<T> v) {
+		v.visit(this);
+	}
 	
 	public abstract List<Node<T>> getChildren();
-	public abstract void accept(NodeVisitor<T> v);
+	public abstract void traverseFolderWith(NodeVisitor<T> v);
 	
 }

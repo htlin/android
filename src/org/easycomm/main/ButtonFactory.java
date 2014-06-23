@@ -27,7 +27,7 @@ public class ButtonFactory {
 	}
 	
 	public String getDisplayText(String id) {
-		return mVocabDB.getDisplayText(id);
+		return mVocabDB.getVocab(id).getDisplayText();
 	}
 	
 	public Button get(String id, OnClickListener onClickListener) {

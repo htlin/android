@@ -35,38 +35,10 @@ public class VocabDatabase {
 		save();
 	}
 	
-	public int size() {
-		return mVocabTree.size();
+	public LinkedTree<Vocab> get() {
+		return mVocabTree;
 	}
 	
-	public Vocab getVocab(String id) {
-		return mVocabTree.getNode(id).getObject();
-	}
-	
-	public Vocab getVocab(int index) {
-		return mVocabs.get(index);
-	}
-
-	public void add(Vocab v) {
-		mVocabs.add(v);
-		mVocabMap.put(v.getID(), v);
-	}
-	
-	public void remove(String id) {
-		mVocabTree.removeNode(id);
-	}
-
-	public void move(String sourceID, String targetID) {
-		if (sourceID.equals(targetID)) return;
-		
-		Vocab sourceVocab = mVocabMap.get(sourceID);
-		Vocab targetVocab = mVocabMap.get(targetID);
-		
-		int targetIndex = mVocabs.indexOf(targetVocab);
-		mVocabs.remove(sourceVocab);
-		mVocabs.add(targetIndex, sourceVocab);
-	}
-
 	public void save() {
 	}
 

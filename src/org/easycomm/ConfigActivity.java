@@ -94,7 +94,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 			
 		case R.id.action_remove:
 			selectedID = mSelector.getSelectedID();
-			mVocabDB.remove(selectedID);
+			mVocabDB.get().remove(selectedID);
 			mSelector.deselect();
 			updateLayout();
 			return true;
@@ -173,7 +173,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 			Vocab vocab = mVocabReader.getVocab(vocabID).copy();
 			vocab.setDisplayText(displayText);
 			vocab.setSpeechText(speechText);
-			mVocabDB.add(vocab);
+			mVocabDB.get().add(vocab);
 			updateLayout();
 		} else {
 			//Modify
@@ -197,7 +197,7 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 	@Override
 	public void onVocabDragDrop(String sourceID, String targetID) {
 		if (!sourceID.equals(targetID)) {
-			mVocabDB.move(sourceID, targetID);
+			mVocabDB.get().move(sourceID, targetID);
 			updateLayout();
 		}
 		

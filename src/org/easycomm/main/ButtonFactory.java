@@ -23,20 +23,20 @@ public class ButtonFactory {
 	}
 
 	public int size() {
-		return mVocabDB.size();
+		return mVocabDB.get().size();
 	}
 	
 	public String getDisplayText(String id) {
-		return mVocabDB.getVocab(id).getDisplayText();
+		return mVocabDB.get().getVocab(id).getDisplayText();
 	}
 	
 	public Button get(String id, OnClickListener onClickListener) {
-		Vocab v = mVocabDB.getVocab(id);
+		Vocab v = mVocabDB.get().getVocab(id);
 		return get(v, onClickListener);
 	}
 
 	public Button get(int pos, OnClickListener onClickListener) {
-		Vocab v = mVocabDB.getVocab(pos);
+		Vocab v = mVocabDB.get().getVocab(pos);
 		return get(v, onClickListener);
 	}
 	

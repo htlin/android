@@ -117,7 +117,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 			listView.setItemChecked(0, true);
 		} else {
 			VocabDatabase vocabDB = VocabDatabase.getInstance(getResources().getAssets());
-			Vocab vocab = vocabDB.getVocab(mSelectedVocabID);
+			Vocab vocab = vocabDB.get().getVocab(mSelectedVocabID);
 			String text = vocab.getDisplayText();			
 			displayText.setText(text);
 			speechText.setText(text);

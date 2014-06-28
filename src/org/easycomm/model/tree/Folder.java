@@ -21,4 +21,21 @@ public class Folder<T> extends Node<T> {
 		}
 	}
 
+	public void add(Node<T> child) {
+	}
+	
+	public void remove(String id) {
+	}
+
+	public void move(String sourceID, String targetID) {
+//		if (sourceID.equals(targetID)) return;
+//		
+//		Vocab sourceVocab = mVocabMap.get(sourceID);
+//		Vocab targetVocab = mVocabMap.get(targetID);
+//		
+//		int targetIndex = mVocabs.indexOf(targetVocab);
+//		mVocabs.remove(sourceVocab);
+//		mVocabs.add(targetIndex, sourceVocab);
+	}
+
 }

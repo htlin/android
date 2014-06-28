@@ -16,13 +16,8 @@ public class LinkedTree<T> {
 	}
 	
 	
-	public int size(String folderID) {
-	}
-	
-	public T getVocab(String id) {
-	}
-	
-	public T getVocab(String folderID, int index) {
+	public Folder<T> getFolder() {
+		return null;
 	}
 
 	public void add(String folderID, Vocab v) {

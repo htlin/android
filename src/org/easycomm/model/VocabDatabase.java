@@ -1,8 +1,10 @@
 package org.easycomm.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.easycomm.model.tree.LinkedTree;
+import org.easycomm.util.CUtil;
 
 import android.content.res.AssetManager;
 
@@ -11,6 +13,7 @@ public class VocabDatabase {
 	private static VocabDatabase Singleton; 
 	
 	private LinkedTree<Vocab> mVocabTree;
+	private Map<String, Vocab> mVocabMap;
 	
 	public static VocabDatabase getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -27,11 +30,17 @@ public class VocabDatabase {
 		
 		mVocabTree = new LinkedTree<Vocab>();
 		
+		mVocabMap = CUtil.makeMap();
+		
 		save();
 	}
 	
-	public LinkedTree<Vocab> get() {
+	public LinkedTree<Vocab> getTree() {
 		return mVocabTree;
+	}
+	
+	public Map<String, Vocab> getMap() {
+		return mVocabMap;
 	}
 	
 	public void save() {

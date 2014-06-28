@@ -4,20 +4,18 @@
     <string name="app_name">EasyComm</string>
     <string name="action_config">Settings</string>
     <string name="button_delete">&#9664; Delete</string>
-    
-	<string name="action_new">Add</string>
+    <string name="action_new">Add</string>
     <string name="action_edit">Modify</string>
     <string name="action_remove">Remove</string>
     <string name="action_save">Save</string>
-    
     <string name="dialog_confirm_message">Layout has been modified, save changes?</string>
- 	<string name="yes">Yes</string>
- 	<string name="no">No</string>
- 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="dialog_vocab_add">Add New Vocab</string>
     <string name="dialog_vocab_modify">Modify Vocab</string>
     <string name="display_text">Display Text:</string>
     <string name="speech_text">Speech Text:</string>
     <string name="vocab_image">Image:</string>
-    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

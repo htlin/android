@@ -11,6 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/sentence" />
+    
+    <fragment
+        android:id="@+id/frag_navigation"
+        android:name="org.easycomm.main.NavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/navigation" />
 
     <fragment
         android:id="@+id/frag_vocab"

@@ -3,6 +3,8 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
+import org.easycomm.main.NavigationFragment;
+import org.easycomm.main.NavigationFragment.NavigationListener;
 import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
@@ -18,8 +20,10 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener, SentenceActionListener {
+public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener,
+	SentenceActionListener, NavigationListener {
 
 	private TextToSpeech mTTS;
 	private VocabDatabase mVocabDB;
@@ -138,6 +142,21 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 			buf.append(" ");
 		}
 		return buf.toString();
+	}
+	
+	@Override
+	public void onHomeButtonClick() {
+		//  To be implemented later
+		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
+
+		navigationFrag.displayCurrentFolder("Home pressed");
+		
+	}
+	
+	@Override
+	public void onBackButtonClick() {
+		//  To be implemented later
+		
 	}
 	
 }

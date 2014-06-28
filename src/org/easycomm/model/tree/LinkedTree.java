@@ -31,7 +31,7 @@ public class LinkedTree<T> {
 	public void remove(String id) {
 	}
 
-//	public void move(String sourceID, String targetID) {
+	public void move(String sourceID, String targetID) {
 //		if (sourceID.equals(targetID)) return;
 //		
 //		Vocab sourceVocab = mVocabMap.get(sourceID);

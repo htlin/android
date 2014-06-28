@@ -156,7 +156,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	@Override
 	public void onBackButtonClick() {
 		//  To be implemented later
-		
+		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
+
+		navigationFrag.displayCurrentFolder("Back pressed");
 	}
 	
 }

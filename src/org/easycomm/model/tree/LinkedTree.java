@@ -2,7 +2,6 @@ package org.easycomm.model.tree;
 
 import java.util.List;
 
-import org.easycomm.model.Vocab;
 import org.easycomm.model.tree.visitor.FolderCollector;
 
 public class LinkedTree<T> {
@@ -20,7 +19,7 @@ public class LinkedTree<T> {
 		return null;
 	}
 
-	public void add(String folderID, String childID) {
+	public void add(String folderID, Node<T> child) {
 	}
 	
 	public void remove(String id) {

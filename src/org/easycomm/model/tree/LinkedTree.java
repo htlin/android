@@ -20,7 +20,7 @@ public class LinkedTree<T> {
 		return null;
 	}
 
-	public void add(String folderID, Vocab v) {
+	public void add(String folderID, String childID) {
 	}
 	
 	public void remove(String id) {

@@ -16,7 +16,7 @@ public class LinkedTree<T> {
 	}
 	
 	
-	public Folder<T> getFolder() {
+	public Folder<T> getFolder(String folderID) {
 		return null;
 	}
 

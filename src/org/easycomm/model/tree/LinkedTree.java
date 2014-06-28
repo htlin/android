@@ -7,18 +7,16 @@ import org.easycomm.model.tree.visitor.FolderCollector;
 
 public class LinkedTree<T> {
 
-	private Node<T> mRoot;
+	private Folder<T> mRoot;
 	
 	public List<Folder<T>> getAllFolders() {
 		FolderCollector<T> v = new FolderCollector<T>();
 		mRoot.traverseFolderWith(v);
 		return v.getResult();
 	}
-
 	
 	
-	public int size() {
-		return mVocabTree.size();
+	public int size(String folderID) {
 	}
 	
 	public T getVocab(String id) {
@@ -29,7 +27,7 @@ public class LinkedTree<T> {
 		return mVocabs.get(index);
 	}
 
-	public void add(Vocab v) {
+	public void add(String folderID, Vocab v) {
 		mVocabs.add(v);
 		mVocabMap.put(v.getID(), v);
 	}
@@ -49,15 +47,4 @@ public class LinkedTree<T> {
 		mVocabs.add(targetIndex, sourceVocab);
 	}
 
-	
-	public Node<T> getNode(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void removeNode(String id) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

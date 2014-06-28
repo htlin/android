@@ -1,10 +1,8 @@
 package org.easycomm.model;
 
 import java.util.List;
-import java.util.Map;
 
 import org.easycomm.model.tree.LinkedTree;
-import org.easycomm.util.CUtil;
 
 import android.content.res.AssetManager;
 
@@ -13,9 +11,6 @@ public class VocabDatabase {
 	private static VocabDatabase Singleton; 
 	
 	private LinkedTree<Vocab> mVocabTree;
-	
-//	private List<Vocab> mVocabs;
-//	private Map<String, Vocab> mVocabMap;
 	
 	public static VocabDatabase getInstance(AssetManager assets) {
 		if (Singleton == null) {

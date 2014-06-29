@@ -87,6 +87,18 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 			showAddModifyDialog(null);
 			return true;
 			
+		case R.id.action_add_vocab:
+			showAddDialog(1);
+			return true;
+			
+		case R.id.action_add_folder:
+			showAddDialog(2);
+			return true;
+			
+		case R.id.action_add_link:
+			showAddDialog(3);
+			return true;
+			
 		case R.id.action_modify:
 			selectedID = mSelector.getSelectedID();
 			showAddModifyDialog(selectedID);
@@ -110,6 +122,12 @@ public class ConfigActivity extends Activity implements ConfirmBackDialogListene
 		}
 	}
 	
+	private void showAddDialog(int i) {
+		// TODO Auto-generated method stub
+		// to be implemented ...
+		
+	}
+
 	private void updateLayout() {
 		VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocab.invalidate();

@@ -23,5 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/button_delete" />
+    
+    <Button
+        android:id="@+id/delete_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/button_delete_all" />
 
 </LinearLayout>

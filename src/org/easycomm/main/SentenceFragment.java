@@ -54,6 +54,14 @@ public class SentenceFragment extends Fragment {
 			}
 		});
 		
+		Button deleteAll = (Button) view.findViewById(R.id.delete_all);
+		deleteAll.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onDeleteAllClick(v);
+			}
+		});
+		
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentence);
 		ll.setOnClickListener(new OnClickListener() {
 			@Override
@@ -65,6 +73,8 @@ public class SentenceFragment extends Fragment {
 		return view;
 	}
 	
+	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -107,6 +117,11 @@ public class SentenceFragment extends Fragment {
 		if (size > 0) {
 			ll.removeViewAt(size - 1);
 		}
+	}
+	
+	protected void onDeleteAllClick(View v) {
+		// TODO Auto-generated method stub
+		deleteAll();
 	}
 
 	private void onVocabClick(View v) {

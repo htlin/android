@@ -9,13 +9,15 @@
         android:id="@+id/home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home" />  
+        android:layout_gravity="center_vertical"
+        android:text="@string/button_home" />  
 
     <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back" />
+        android:layout_gravity="center_vertical"
+        android:text="@string/button_back" />
     
     <TextView
         android:id="@+id/current_folder"

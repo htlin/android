@@ -5,6 +5,26 @@
         android:icon="@drawable/ic_action_new"
         android:showAsAction="always|withText"
         android:title="@string/action_new" />
+    
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_action_new"
+        android:showAsAction="always|withText"
+        android:title="@string/action_add" >
+        <menu>
+            <item android:id="@+id/action_add_vocab"
+                  android:title="@string/action_add_vocab"/>
+            <item android:id="@+id/action_add_folder" 
+                  android:title="@string/action_add_folder"/>
+            <item android:id="@+id/action_add_link" 
+                  android:title="@string/action_add_link"/>
+        </menu>
+     </item>
+     
+    <item
+        android:id="@+id/action_open"
+        android:showAsAction="always|withText"
+        android:title="@string/action_open" />
 
     <item
         android:id="@+id/action_modify"

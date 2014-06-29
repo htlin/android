@@ -1,0 +1,63 @@
+package org.easycomm.util;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+public class ListSet<T> implements Iterable<T> {
+
+	private List<T> mList;
+	private Set<T> mSet;
+	
+	public ListSet() {
+		mList = new ArrayList<T>();
+		mSet = new HashSet<T>();
+	}
+	
+	public boolean contains(T a) {
+		return mSet.contains(a);
+	}
+	
+	public boolean add(T a) {
+		if (mSet.add(a)) {
+			mList.add(a);
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
+	public boolean add(int location, T a) {
+		if (mSet.contains(a)) {
+			return false;
+		} else {
+			mList.add(location, a);
+			mSet.add(a);
+			return true;
+		}		
+	}
+	
+	public boolean remove(T a) {
+		if (mSet.contains(a)) {
+			mList.remove(a);
+			mSet.remove(a);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public T remove(int location) {
+		T a = mList.remove(location);
+		mSet.remove(a);
+		return a;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return mList.iterator();
+	}
+	
+}

@@ -65,9 +65,9 @@ public class VocabReader {
 		return mAllVocabMap.get(id);
 	}
 	
-	public int getIndex(String id) {
+	public int indexOf(String id) {
 		for (int i = 0; i < mAllVocabs.size(); i++) {
-			if (id.equals(mAllVocabs.get(i).getID())) {
+			if (mAllVocabs.get(i).getID().equals(id)) {
 				return i;
 			}
 		}

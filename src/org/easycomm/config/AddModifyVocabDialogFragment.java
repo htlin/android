@@ -117,13 +117,13 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 			listView.setItemChecked(0, true);
 		} else {
 			VocabDatabase vocabDB = VocabDatabase.getInstance(getResources().getAssets());
-			Vocab vocab = vocabDB.get().getVocab(mSelectedVocabID);
+			Vocab vocab = vocabDB.getTree().getVocab(mSelectedVocabID);
 			String text = vocab.getDisplayText();			
 			displayText.setText(text);
 			speechText.setText(text);
 			
 			VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
-			int index = vocabReader.getIndex(mSelectedVocabID);
+			int index = vocabReader.indexOf(mSelectedVocabID);
 			if (index < 0) {
 				System.err.println("Vocab not found: " + mSelectedVocabID);
 			} else {

@@ -120,14 +120,14 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
 	@Override
 	public void onVocabButtonClick(String id) {
-		speak(mVocabDB.get().getVocab(id).getSpeechText());
+		speak(mVocabDB.getTree().getVocab(id).getSpeechText());
 		SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
 		sentenseFrag.addButton(id);
 	}
 
 	@Override
 	public void onSentenceButtonClick(String id) {
-		speak(mVocabDB.get().getVocab(id).getSpeechText());
+		speak(mVocabDB.getTree().getVocab(id).getSpeechText());
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	private String getSentense(List<String> ids) {
 		StringBuffer buf = new StringBuffer();
 		for (String id : ids) {
-			buf.append(mVocabDB.get().getVocab(id).getSpeechText());
+			buf.append(mVocabDB.getTree().getVocab(id).getSpeechText());
 			buf.append(" ");
 		}
 		return buf.toString();

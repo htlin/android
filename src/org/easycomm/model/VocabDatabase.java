@@ -1,6 +1,5 @@
 package org.easycomm.model;
 
-import java.util.List;
 import java.util.Map;
 
 import org.easycomm.model.tree.LinkedTree;
@@ -25,14 +24,32 @@ public class VocabDatabase {
 	
 	
 	private VocabDatabase(AssetManager assets) {
-		//TODO - currently the same from readAll
-		List<Vocab> vocabs = VocabReader.getInstance(assets).getAllVocabs();
-		
 		mVocabTree = new LinkedTree<Vocab>();
-		
 		mVocabMap = CUtil.makeMap();
 		
-		save();
+		VocabReader vocabReader = VocabReader.getInstance(assets);
+		Vocab[] animals = new Vocab[] {
+			vocabReader.getVocab("bird"),
+			vocabReader.getVocab("cat"),
+			vocabReader.getVocab("dog"),
+		};
+		
+		Vocab[] dirs = new Vocab[] {
+			vocabReader.getVocab("left"),
+			vocabReader.getVocab("right"),
+			vocabReader.getVocab("up"),
+			vocabReader.getVocab("down"),
+		};
+		
+		Vocab[] others = new Vocab[] {
+			vocabReader.getVocab("go"),
+			vocabReader.getVocab("eat"),
+			vocabReader.getVocab("drink"),
+			vocabReader.getVocab("yes"),
+			vocabReader.getVocab("no"),
+		};
+		
+		
 	}
 	
 	public LinkedTree<Vocab> getTree() {

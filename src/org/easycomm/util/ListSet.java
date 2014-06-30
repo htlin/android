@@ -16,6 +16,10 @@ public class ListSet<T> implements Iterable<T> {
 		mSet = new HashSet<T>();
 	}
 	
+	public T get(int location) {
+		return mList.get(location);
+	}
+	
 	public boolean contains(T a) {
 		return mSet.contains(a);
 	}
@@ -58,6 +62,18 @@ public class ListSet<T> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return mList.iterator();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object other) {
+		ListSet<T> o = (ListSet<T>) other;
+		return mList.equals(o.mList);
+	}
+	
+	@Override
+	public int hashCode() {
+		return mList.hashCode();
 	}
 	
 }

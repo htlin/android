@@ -54,4 +54,9 @@ public class DirectedOrderedGraph<T> {
 		return mGraph.hashCode();
 	}
 	
+	public static DirectedOrderedGraph<String> makeGraph(String graph) {
+		//TODO
+		return null;
+	}
+	
 }

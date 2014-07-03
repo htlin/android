@@ -15,7 +15,15 @@ public class ListSet<T> implements Iterable<T> {
 		mList = new ArrayList<T>();
 		mSet = new HashSet<T>();
 	}
-	
+
+	public List<T> getList() {
+		return mList;
+	}
+
+	public Set<T> getSet() {
+		return mSet;
+	}
+
 	public T get(int location) {
 		return mList.get(location);
 	}
@@ -75,5 +83,5 @@ public class ListSet<T> implements Iterable<T> {
 	public int hashCode() {
 		return mList.hashCode();
 	}
-	
+
 }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class DirectedOrderedGraph<T> {
@@ -21,23 +22,19 @@ public class DirectedOrderedGraph<T> {
 		return mGraph.size();
 	}
 
-	public ListSet<T> getOutgoingEdgesOf(T vertex) {
-		return mGraph.get(vertex);
+	public List<T> getOutgoingEdgesOf(T vertex) {
+		return mGraph.get(vertex).getList();
 	}
 
 	public List<T> getIncomingEdgesOf(T vertex) {
-		// TODO Auto-generated method stub
-		List<T> parentList = new ArrayList<T>();
-		Set<T> keys = mGraph.keySet();
-		Iterator<T> iter = keys.iterator();
-		while(iter.hasNext()) {
-			T v = iter.next();
-			ListSet<T> list = getOutgoingEdgesOf(v);
-			if(list.contains(vertex)){
-				parentList.add(v);
+		List<T> parentList = CUtil.makeList();
+		for (Entry<T, ListSet<T>> entry : mGraph.entrySet()) {
+			T key = entry.getKey();
+			ListSet<T> list = entry.getValue();
+			if (list.contains(vertex)) {
+				parentList.add(key);
 			}
 		}
-
 		return parentList;
 	}
 
@@ -51,10 +48,9 @@ public class DirectedOrderedGraph<T> {
 
 	public void addEdge(T parent, T child) {
 		if(mGraph.containsKey(parent)){
-			ListSet<T> children = getOutgoingEdgesOf(parent);
+			ListSet<T> children = mGraph.get(parent);
 			children.add(child);
-		}
-		else {
+		} else {
 			// parent not exist !!!
 			// to be clarified
 		}
@@ -62,10 +58,9 @@ public class DirectedOrderedGraph<T> {
 
 	public void removeEdge(T parent, T child) {
 		if(mGraph.containsKey(parent)){
-			ListSet<T> children = getOutgoingEdgesOf(parent);
+			ListSet<T> children = mGraph.get(parent);
 			children.remove(child);
-		}
-		else {
+		} else {
 			// parent not exist !!!
 			// to be clarified
 		}

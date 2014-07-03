@@ -48,5 +48,20 @@ public class DirectedOrderedGraphTest {
 		assertEquals(mGraph, mOther);
 		buffer.close();
 	}
+	
+	@Test
+	public void testAdd() {
+		mOther = new DirectedOrderedGraph<String>();
+		mOther.addVertex("root");
+		mOther.addVertex("fa");
+		mOther.addVertex("vb");
+		mOther.addVertex("vc");
+		mOther.addVertex("vd");
+		mOther.addEdge("root", "fa");
+		mOther.addEdge("root", "vb");
+		mOther.addEdge("fa", "vc");
+		mOther.addEdge("fa", "vd");
+		assertEquals(mGraph, mOther);
+	}
 
 }

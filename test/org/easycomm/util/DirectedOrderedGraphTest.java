@@ -59,11 +59,11 @@ public class DirectedOrderedGraphTest {
 		assertEquals(CUtil.makeList(), mGraph.getOutgoingEdgesOf("vc"));
 		assertEquals(CUtil.makeList(), mGraph.getOutgoingEdgesOf("vd"));
 		
-		assertEquals(CUtil.makeList(), mGraph.getIncomingEdgesOf("root"));
-		assertEquals(Arrays.asList("root"), mGraph.getIncomingEdgesOf("fa"));
-		assertEquals(Arrays.asList("root"), mGraph.getIncomingEdgesOf("vb"));
-		assertEquals(Arrays.asList("fa"), mGraph.getIncomingEdgesOf("vc"));
-		assertEquals(Arrays.asList("fa"), mGraph.getIncomingEdgesOf("vd"));
+		assertEquals(CUtil.makeSet(), mGraph.getIncomingEdgesOf("root"));
+		assertEquals(CUtil.asSet("root"), mGraph.getIncomingEdgesOf("fa"));
+		assertEquals(CUtil.asSet("root"), mGraph.getIncomingEdgesOf("vb"));
+		assertEquals(CUtil.asSet("fa"), mGraph.getIncomingEdgesOf("vc"));
+		assertEquals(CUtil.asSet("fa"), mGraph.getIncomingEdgesOf("vd"));
 	}
 	
 	@Test

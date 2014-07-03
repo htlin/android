@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class DirectedOrderedGraph<T> {
 
@@ -23,16 +24,16 @@ public class DirectedOrderedGraph<T> {
 		return mGraph.get(vertex).getList();
 	}
 
-	public List<T> getIncomingEdgesOf(T vertex) {
-		List<T> parentList = CUtil.makeList();
+	public Set<T> getIncomingEdgesOf(T vertex) {
+		Set<T> parentSet = CUtil.makeSet();
 		for (Entry<T, ListSet<T>> entry : mGraph.entrySet()) {
 			T key = entry.getKey();
 			ListSet<T> list = entry.getValue();
 			if (list.contains(vertex)) {
-				parentList.add(key);
+				parentSet.add(key);
 			}
 		}
-		return parentList;
+		return parentSet;
 	}
 
 	public void addVertex(T vertex) {

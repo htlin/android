@@ -110,8 +110,7 @@ public class DirectedOrderedGraph<T> {
 	 *			VL is a vertex list
 	 *			V is a vertex
 	 *			T is the type of a vertex
-	 */
-	
+	 */	
 	public static DirectedOrderedGraph<String> makeGraph(String graph) {
 		return makeGraph(graph.split(";"));
 	}

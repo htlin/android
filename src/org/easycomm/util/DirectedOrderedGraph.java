@@ -36,15 +36,16 @@ public class DirectedOrderedGraph<T> {
 		return parentSet;
 	}
 
-	public void addVertex(T vertex) {
+	public boolean addVertex(T vertex) {
 		mGraph.put(vertex, new ListSet<T>());
+		return false;
 	}
 
 	private void putVertex(T vertex, ListSet<T> list) {
 		mGraph.put(vertex, list);
 	}
 
-	public void addEdge(T parent, T child) {
+	public boolean addEdge(T parent, T child) {
 		if(mGraph.containsKey(parent)){
 			ListSet<T> children = mGraph.get(parent);
 			children.add(child);
@@ -52,6 +53,7 @@ public class DirectedOrderedGraph<T> {
 			// parent not exist !!!
 			// to be clarified
 		}
+		return false;
 	}
 
 	public void removeEdge(T parent, T child) {

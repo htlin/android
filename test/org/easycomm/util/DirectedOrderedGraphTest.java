@@ -1,12 +1,14 @@
 package org.easycomm.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,4 +83,26 @@ public class DirectedOrderedGraphTest {
 		assertEquals(mGraph, mOther);
 	}
 
+	@Test
+	public void testAddVertexExists() {
+		mOther = new DirectedOrderedGraph<String>();
+		assertTrue(mOther.addVertex("root"));
+		assertFalse(mOther.addVertex("root"));
+	}
+	
+	@Test
+	public void testAddEdgeExists() {
+		mOther = new DirectedOrderedGraph<String>();
+		assertTrue(mOther.addVertex("va"));
+		assertTrue(mOther.addVertex("vb"));
+		assertTrue(mOther.addEdge("va", "vb"));
+		assertFalse(mOther.addEdge("va", "vb"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddEdgeNotExists() {
+		mOther = new DirectedOrderedGraph<String>();
+		mOther.addEdge("va", "vb");
+	}
+	
 }

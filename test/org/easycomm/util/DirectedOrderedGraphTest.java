@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +49,21 @@ public class DirectedOrderedGraphTest {
 		mOther = DirectedOrderedGraph.readGraph(buffer);
 		assertEquals(mGraph, mOther);
 		buffer.close();
+	}
+	
+	@Test
+	public void testGet() {
+		assertEquals(Arrays.asList("fa", "vb"), mGraph.getOutgoingEdgesOf("root"));
+		assertEquals(Arrays.asList("vc", "vd"), mGraph.getOutgoingEdgesOf("fa"));
+		assertEquals(CUtil.makeList(), mGraph.getOutgoingEdgesOf("vb"));
+		assertEquals(CUtil.makeList(), mGraph.getOutgoingEdgesOf("vc"));
+		assertEquals(CUtil.makeList(), mGraph.getOutgoingEdgesOf("vd"));
+		
+		assertEquals(CUtil.makeList(), mGraph.getIncomingEdgesOf("root"));
+		assertEquals(Arrays.asList("root"), mGraph.getIncomingEdgesOf("fa"));
+		assertEquals(Arrays.asList("root"), mGraph.getIncomingEdgesOf("vb"));
+		assertEquals(Arrays.asList("fa"), mGraph.getIncomingEdgesOf("vc"));
+		assertEquals(Arrays.asList("fa"), mGraph.getIncomingEdgesOf("vd"));
 	}
 	
 	@Test

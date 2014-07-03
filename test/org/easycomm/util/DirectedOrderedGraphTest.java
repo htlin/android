@@ -2,56 +2,51 @@ package org.easycomm.util;
 
 import static org.junit.Assert.*;
 
-import org.junit.Test;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-import java.io.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DirectedOrderedGraphTest {
 
-	DirectedOrderedGraph<String> myGraph, other;
+	private DirectedOrderedGraph<String> mGraph;
+	private DirectedOrderedGraph<String> mOther;
 
-	public void setUp(){
-		String g1 = "(root): (fa), (vb); (fa): (vc), (vd); (vb): ; (vc): ; (vd): ";
-		myGraph = DirectedOrderedGraph.makeGraph(g1);
-		System.out.println("myGraph order = " +myGraph.order());
+	@Before
+	public void setUp() {
+		String g = "(root): (fa), (vb); (fa): (vc), (vd); (vb): ; (vc): ; (vd): ";
+		mGraph = DirectedOrderedGraph.makeGraph(g);
+		mOther = null;
 	}
 
-	public void test1(){
-		String g2 = "(root): (fa), (vb); (fa): (vc), (vd); (vb):; (vc):; (vd): ";
-		other = DirectedOrderedGraph.makeGraph(g2);
-		System.out.println("compare with g2 = "+myGraph.equals(other));
-
-		String g3 = "(fa): (vc), (vd); (root): (fa), (vb); (vb):; (vd):; (vc): ";
-		other = DirectedOrderedGraph.makeGraph(g3);
-		System.out.println("compare with g3 = "+myGraph.equals(other));
-		try{
-			System.out.println("reading graph from file ...");
-			BufferedReader buffer = new BufferedReader(new FileReader("graph3.txt"));
-
-			other = DirectedOrderedGraph.readGraph(buffer);
-			System.out.println("compare with graph3.txt = "+myGraph.equals(other));
-		}
-		catch(Exception e){
-			System.out.println("Error... "+e.getMessage());
-		}
-
-		String g4 = "(root): (vb), (fa); (fa): (vc), (vd); (vb):; (vc):; (vd): ";
-		other = DirectedOrderedGraph.makeGraph(g4);
-		System.out.println("compare with g4 = "+myGraph.equals(other));
+	@Test
+	public void testOrder() {
+		assertEquals(5, mGraph.getOrder());
 	}
 
+	@Test
+	public void testEquals() {
+		String g = "(root): (fa), (vb); (fa): (vc), (vd); (vb):; (vc):; (vd): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertEquals(mGraph, mOther);
 
-	public void start(){
-		setUp();
-		test1();
+		g = "(fa): (vc), (vd); (root): (fa), (vb); (vb):; (vd):; (vc): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertEquals(mGraph, mOther);
+
+		g = "(root): (vb), (fa); (fa): (vc), (vd); (vb):; (vc):; (vd): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertNotEquals(mGraph, mOther);
 	}
 
-
-
-	public static void main(String[] args) {
-      DirectedOrderedGraphTest prog = new DirectedOrderedGraphTest();
-
-      prog.start();
-   }
+	@Test
+	public void testReadGraph() throws IOException {
+		BufferedReader buffer = new BufferedReader(new FileReader("test_data\\graph3.txt"));
+		mOther = DirectedOrderedGraph.readGraph(buffer);
+		assertEquals(mGraph, mOther);
+		buffer.close();
+	}
 
 }

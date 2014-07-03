@@ -1,0 +1,5 @@
+(fa): (vc), (vd)
+(root): (fa), (vb)
+(vb):
+(vd):
+(vc):

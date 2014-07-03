@@ -1,14 +1,13 @@
 package org.easycomm.util;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DirectedOrderedGraph<T> {
 
@@ -18,8 +17,11 @@ public class DirectedOrderedGraph<T> {
 		mGraph = new HashMap<T, ListSet<T>>();
 	}
 
-	public ListSet<T> getOutgoingEdgesOf(T vertex) {
+	public int getOrder(){
+		return mGraph.size();
+	}
 
+	public ListSet<T> getOutgoingEdgesOf(T vertex) {
 		return mGraph.get(vertex);
 	}
 
@@ -40,17 +42,14 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public void addVertex(T vertex) {
-
 		mGraph.put(vertex, new ListSet<T>());
 	}
 
-	public void addVertex(T vertex, ListSet<T> list) {
-
+	private void putVertex(T vertex, ListSet<T> list) {
 		mGraph.put(vertex, list);
 	}
 
 	public void addEdge(T parent, T child) {
-
 		if(mGraph.containsKey(parent)){
 			ListSet<T> children = getOutgoingEdgesOf(parent);
 			children.add(child);
@@ -59,11 +58,9 @@ public class DirectedOrderedGraph<T> {
 			// parent not exist !!!
 			// to be clarified
 		}
-
 	}
 
 	public void removeEdge(T parent, T child) {
-
 		if(mGraph.containsKey(parent)){
 			ListSet<T> children = getOutgoingEdgesOf(parent);
 			children.remove(child);
@@ -75,16 +72,11 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public void removeVertex(T vertex) {
-
 		mGraph.remove(vertex);
 	}
 
 	public void move(T parent, T source, T target) {
 		// TODO Auto-generated method stub
-	}
-
-	public int order(){
-		return mGraph.size();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,127 +91,87 @@ public class DirectedOrderedGraph<T> {
 		return mGraph.hashCode();
 	}
 
-/*
- *	The context-free grammar of the representation of a DirectedOrderedGraph:
- *
- *	S :- VP ; S | VP
- *	VP :- V : OG
- *	OG :- null | VL
- *	VL := V , VL | V
- *	V :- (   T   )
- *
- *	where	S is a sentence
- *			VP is vertex phrase
- *			OG is a outgoing list
- *			VL is a vertex list
- *			V is a vertex
- *			T is the type of a vertex
- *
- */
-
+	public static DirectedOrderedGraph<String> readGraph(BufferedReader buffer) throws IOException {
+		List<String> lines = CUtil.makeList();
+		while (true) {
+			String line = buffer.readLine();
+			if (line == null) break;
+			
+			lines.add(line);
+		}
+		
+		String[] lineArray = new String[lines.size()];
+		lines.toArray(lineArray);
+		return makeGraph(lineArray);
+	}
+	
+	/**
+	 *	The context-free grammar of the representation of a DirectedOrderedGraph:
+	 *	S :- VP ; S | VP
+	 *	VP :- V : OG
+	 *	OG :- null | VL
+	 *	VL := V , VL | V
+	 *	V :- (   T   )
+	 *	where	S is a sentence
+	 *			VP is vertex phrase
+	 *			OG is a outgoing list
+	 *			VL is a vertex list
+	 *			V is a vertex
+	 *			T is the type of a vertex
+	 */
+	
 	public static DirectedOrderedGraph<String> makeGraph(String graph) {
-
+		return makeGraph(graph.split(";"));
+	}
+	
+	public static DirectedOrderedGraph<String> makeGraph(String[] vertexPhrase) {
 		DirectedOrderedGraph<String> dog = new DirectedOrderedGraph<String>();
-		// split sentence into array of vertex phrase
-		String[] vertex_phrase = graph.split(";");
-
-//debug("vertex_phrase", vertex_phrase);
-
-		for(String vp : vertex_phrase){
+		for (String vp : vertexPhrase) {
 			// split vertex phrase into vertex and outgoing list
-			String[] v_list = vp.trim().split(":");
-//debug("v_list", v_list);
+			String[] vList = vp.trim().split(":");
+			//debug("vList", vList);
 
-			String nodeFrom = parseType(v_list[0]);
+			String nodeFrom = parseType(vList[0]);
 
 			// check whether outgoing list is empty
-			if(v_list.length > 1 ) {
+			if (vList.length > 1) {
 				ListSet<String> list = new ListSet<String>();
 
 				// split outgoing list into vertex array
-				String[] listNode = v_list[1].trim().split(",");
-//debug("listNode", listNode);
+				String[] listNode = vList[1].trim().split(",");
+				//debug("listNode", listNode);
 
-				for(String nodeTo : listNode){
+				for (String nodeTo : listNode) {
 					// extract the information
 					// and construct into the required type T
 					String node = parseType(nodeTo);
 					list.add(node);
 				}
-				dog.addVertex(nodeFrom, list);
-			}
-			else {
+				dog.putVertex(nodeFrom, list);
+			} else {
 				dog.addVertex(nodeFrom);
 			}
 		}
 		return dog;
 	}
 
-	public static DirectedOrderedGraph<String> readGraph(BufferedReader buffer) {
-
-		DirectedOrderedGraph<String> dog = new DirectedOrderedGraph<String>();
-
-		try
-        {
-        	while(true){
-        		String line = buffer.readLine();
-        		if(line == null) break;
-
-	        	// split each line into vertex and outgoing list
-				String[] v_list = line.trim().split(":");
-debug("v_list", v_list);
-
-				String nodeFrom = parseType(v_list[0]);
-
-				// check whether outgoing list is empty
-				if(v_list.length > 1 ) {
-					ListSet<String> list = new ListSet<String>();
-
-					// split outgoing list into vertex array
-					String[] listNode = v_list[1].trim().split(",");
-debug("listNode", listNode);
-
-					for(String nodeTo : listNode){
-						// extract the information
-						// and construct into the required type T
-						String node = parseType(nodeTo);
-						list.add(node);
-					}
-					dog.addVertex(nodeFrom, list);
-				}
-				else {
-					dog.addVertex(nodeFrom);
-				}
-        	}
-        	return dog;
-
-        }
-        catch (IOException x)
-        {
-            throw new Error("bad input stream");
-        }
-
-	}
-
-	/*
-	 *		parser of the type of the vertex
-	 *
+	/**
+	 * parser of the type of the vertex
 	 */
-	private static String parseType(String node){
+	private static String parseType(String node) {
 		String str = node.trim();
-		int lastIndex = str.length()-1;
-		if(str.charAt(0) == '(' && str.charAt(lastIndex) == ')'){
+		int lastIndex = str.length() - 1;
+		if (str.charAt(0) == '(' && str.charAt(lastIndex) == ')') {
 			str = str.substring(1, lastIndex);
-		}
-		else {
-			System.out.println("vertex type parsing error!");
+		} else {
+			throw new IllegalArgumentException("vertex type parsing error!");
 		}
 		return str.trim();
 	}
 
-	private static void debug(String heading, String[] content){
-		System.out.println(heading + "\t length = "+content.length);
-		for(int i=0; i<content.length; i++){
+	private static void debug(String heading, String[] content) {
+		System.out.println(heading + "\t length = " + content.length);
+		for(int i = 0; i < content.length; i++){
 			System.out.println(content[i]);
 		}
 	}

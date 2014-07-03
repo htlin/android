@@ -22,7 +22,7 @@ public class DirectedOrderedGraphTest {
 	public void setUp() {
 		String g = "(root): (fa), (vb); (fa): (vc), (vd); (vb): ; (vc): ; (vd): ";
 		mGraph = DirectedOrderedGraph.makeGraph(g);
-		mOther = null;
+		mOther = new DirectedOrderedGraph<String>();
 	}
 
 	@Test
@@ -70,7 +70,6 @@ public class DirectedOrderedGraphTest {
 	
 	@Test
 	public void testAdd() {
-		mOther = new DirectedOrderedGraph<String>();
 		mOther.addVertex("root");
 		mOther.addVertex("fa");
 		mOther.addVertex("vb");
@@ -85,14 +84,12 @@ public class DirectedOrderedGraphTest {
 
 	@Test
 	public void testAddVertexExists() {
-		mOther = new DirectedOrderedGraph<String>();
 		assertTrue(mOther.addVertex("root"));
 		assertFalse(mOther.addVertex("root"));
 	}
 	
 	@Test
 	public void testAddEdgeExists() {
-		mOther = new DirectedOrderedGraph<String>();
 		assertTrue(mOther.addVertex("va"));
 		assertTrue(mOther.addVertex("vb"));
 		assertTrue(mOther.addEdge("va", "vb"));
@@ -101,7 +98,6 @@ public class DirectedOrderedGraphTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddEdgeNotExists() {
-		mOther = new DirectedOrderedGraph<String>();
 		mOther.addEdge("va", "vb");
 	}
 	

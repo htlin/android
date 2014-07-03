@@ -3,11 +3,12 @@ package org.easycomm.model.graph;
 import java.util.List;
 import java.util.Map;
 
-import org.easycomm.model.Vocab;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.DirectedOrderedGraph;
 
 public class VocabGraph {
+	
+	public static final String ROOT_ID = "root";
 	
 	private DirectedOrderedGraph<String> mGraph;
 	private Map<String, Vocab> mMap;
@@ -15,6 +16,10 @@ public class VocabGraph {
 	public VocabGraph() {
 		mGraph = new DirectedOrderedGraph<String>();
 		mMap = CUtil.makeMap();
+		
+		Folder root = new Folder(ROOT_ID, ROOT_ID, null, null, null);
+		mGraph.addVertex(ROOT_ID);
+		mMap.put(ROOT_ID, root);
 	}
 	
 	public List<Folder> getAllFolders() {

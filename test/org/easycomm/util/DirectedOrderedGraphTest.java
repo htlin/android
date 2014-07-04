@@ -101,4 +101,25 @@ public class DirectedOrderedGraphTest {
 		mOther.addEdge("va", "vb");
 	}
 	
+	@Test
+	public void testRemoveEdge() {
+		assertTrue(mGraph.removeEdge("root", "fa"));
+		assertFalse(mGraph.removeEdge("root", "fa"));
+		assertFalse(mGraph.removeEdge("ghost", "vb"));
+		assertFalse(mGraph.removeEdge("vb", "ghost"));
+		String g = "(root): (vb); (fa): (vc), (vd); (vb): ; (vc): ; (vd): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertEquals(mOther, mGraph);
+	}
+	
+	@Test
+	public void testRemoveVertex() {
+		assertFalse(mGraph.removeVertex("ghost"));
+		assertTrue(mGraph.removeVertex("vd"));
+		assertTrue(mGraph.removeVertex("vb"));
+		String g = "(root): (fa); (fa): (vc); (vc): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertEquals(mOther, mGraph);
+	}
+	
 }

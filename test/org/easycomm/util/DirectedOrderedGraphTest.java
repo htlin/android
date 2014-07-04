@@ -129,6 +129,7 @@ public class DirectedOrderedGraphTest {
 		assertFalse(mGraph.move("ghost", "va", "vb"));
 		assertFalse(mGraph.move("root", "ghost", "vb"));
 		assertFalse(mGraph.move("root", "va", "ghost"));
+		assertFalse(mGraph.move("va", "vb", "vc"));
 		assertTrue(mGraph.move("root", "va", "vb"));
 		assertTrue(mGraph.move("root", "vc", "va"));
 		assertTrue(mGraph.move("root", "vd", "vb"));

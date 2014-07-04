@@ -1,5 +1,6 @@
 package org.easycomm.model;
 
+import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 
 import android.content.res.AssetManager;
@@ -44,6 +45,10 @@ public class VocabDatabase {
 		};
 		
 		
+	}
+	
+	public Vocab getVocab(String id) {
+		return mVocabGraph.getVocab(id);
 	}
 	
 	public void save() {

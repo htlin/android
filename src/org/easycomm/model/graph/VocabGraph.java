@@ -24,6 +24,10 @@ public class VocabGraph {
 		mMap.put(ROOT_ID, root);
 	}
 	
+	public Vocab getVocab(String id) {
+		return mMap.get(id);
+	}
+	
 	public List<Folder> getAllFolders() {
 		List<Folder> list = CUtil.makeList();
 		Collection<Vocab> allVocab = mMap.values();

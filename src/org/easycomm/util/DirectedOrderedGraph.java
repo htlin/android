@@ -37,12 +37,11 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public boolean addVertex(T vertex) {
-		if( mGraph.containsKey(vertex)) return false;
+		if (mGraph.containsKey(vertex)) return false;
 		else {
 			mGraph.put(vertex, new ListSet<T>());
 			return true;
-		}
-		
+		}		
 	}
 
 	private void putVertex(T vertex, ListSet<T> list) {
@@ -50,15 +49,13 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public boolean addEdge(T parent, T child) throws IllegalArgumentException {
-		if(mGraph.containsKey(parent) && mGraph.containsKey(child)){
+		if (mGraph.containsKey(parent) && mGraph.containsKey(child)) {
 			ListSet<T> children = mGraph.get(parent);
 			return children.add(child);
-
 		} else {
 			// parent or child vertex not exist !!!
 			throw new IllegalArgumentException("Source or Destination vertex does not exist.");  
-		}
-		
+		}		
 	}
 
 	public boolean removeVertex(T vertex) {
@@ -67,7 +64,7 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public boolean removeEdge(T parent, T child) {
-		if(mGraph.containsKey(parent)){
+		if (mGraph.containsKey(parent)) {
 			ListSet<T> children = mGraph.get(parent);
 			children.remove(child);
 		} else {

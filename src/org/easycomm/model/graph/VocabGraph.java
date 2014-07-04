@@ -25,11 +25,10 @@ public class VocabGraph {
 	}
 	
 	public List<Folder> getAllFolders() {
-
 		List<Folder> list = CUtil.makeList();
 		Collection<Vocab> allVocab = mMap.values();
-		for(Vocab v : allVocab){
-			if ( v instanceof Folder){
+		for (Vocab v : allVocab) {
+			if (v instanceof Folder) {
 				list.add((Folder)v);
 			}
 		}
@@ -37,16 +36,14 @@ public class VocabGraph {
 	}
 
 	public List<Link> getSourceLinks(String folderID) {
-		//TODO
 		Set<String> fromNodes = mGraph.getIncomingEdgesOf(folderID);
 		List<Link> result = CUtil.makeList();
-		for(String from : fromNodes){
+		for (String from : fromNodes) {
 			Vocab v = mMap.get(from);
-			if ( v instanceof Link){
+			if (v instanceof Link) {
 				result.add((Link)v);
 			}
 		}	
-		
 		return result;
 	}
 	

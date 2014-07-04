@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.easycomm.model.VocabData;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.DirectedOrderedGraph;
 
@@ -19,7 +20,8 @@ public class VocabGraph {
 		mGraph = new DirectedOrderedGraph<String>();
 		mMap = CUtil.makeMap();
 		
-		Folder root = new Folder(ROOT_ID, ROOT_ID, null, null, null);
+		VocabData rootData = new VocabData(ROOT_ID, ROOT_ID, null, null);
+		Folder root = makeFolder(rootData);
 		mGraph.addVertex(ROOT_ID);
 		mMap.put(ROOT_ID, root);
 	}
@@ -64,6 +66,19 @@ public class VocabGraph {
 
 	public void move(String folderID, String sourceID, String targetID) {
 		mGraph.move(folderID, sourceID, targetID);
+	}
+	
+	
+	public Folder makeFolder(VocabData data) {
+		return null;
+	}
+	
+	public Leaf makeLeaf(VocabData data) {
+		return null;
+	}
+	
+	public Link makeLink(VocabData data) {
+		return null;
 	}
 	
 }

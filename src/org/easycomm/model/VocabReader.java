@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.FileUtil;
 
@@ -20,8 +19,8 @@ public class VocabReader {
 	
 	private static VocabReader Singleton; 
 	
-	private List<Vocab> mAllVocabs;
-	private Map<String, Vocab> mAllVocabMap;
+	private List<VocabData> mAllVocabs;
+	private Map<String, VocabData> mAllVocabMap;
 	
 	public static VocabReader getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -38,37 +37,36 @@ public class VocabReader {
 				InputStream in = assets.open(ASSET_DIR + "/" + file);
 				Drawable d = Drawable.createFromStream(in, null);
 				String displayName = FileUtil.getName(file);
-				String id = displayName;
-				mAllVocabs.add(new Vocab(id, displayName, displayName, file, d));
+				mAllVocabs.add(new VocabData(displayName, displayName, file, d));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		Collections.sort(mAllVocabs, new Comparator<Vocab>() {
+		Collections.sort(mAllVocabs, new Comparator<VocabData>() {
 			@Override
-			public int compare(Vocab o1, Vocab o2) {
+			public int compare(VocabData o1, VocabData o2) {
 				return o1.getFilename().compareTo(o2.getFilename());
 			}
 		});
 		
 		mAllVocabMap = CUtil.makeMap();
-		for (Vocab v : mAllVocabs) {
-			mAllVocabMap.put(v.getID(), v);
+		for (VocabData v : mAllVocabs) {
+			mAllVocabMap.put(v.getDisplayText(), v);
 		}
 	}
 	
-	public List<Vocab> getAllVocabs() {
+	public List<VocabData> getAllVocabData() {
 		return mAllVocabs;
 	}
 
-	public Vocab getVocab(String id) {
-		return mAllVocabMap.get(id);
+	public VocabData getVocabData(String text) {
+		return mAllVocabMap.get(text);
 	}
 	
-	public int indexOf(String id) {
+	public int indexOf(String text) {
 		for (int i = 0; i < mAllVocabs.size(); i++) {
-			if (mAllVocabs.get(i).getID().equals(id)) {
+			if (mAllVocabs.get(i).getDisplayText().equals(text)) {
 				return i;
 			}
 		}

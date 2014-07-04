@@ -23,25 +23,25 @@ public class VocabDatabase {
 		mVocabGraph = new VocabGraph();
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
-		Vocab[] animals = new Vocab[] {
-			vocabReader.getVocab("bird"),
-			vocabReader.getVocab("cat"),
-			vocabReader.getVocab("dog"),
+		VocabData[] animals = new VocabData[] {
+			vocabReader.getVocabData("bird"),
+			vocabReader.getVocabData("cat"),
+			vocabReader.getVocabData("dog"),
 		};
 		
-		Vocab[] dirs = new Vocab[] {
-			vocabReader.getVocab("left"),
-			vocabReader.getVocab("right"),
-			vocabReader.getVocab("up"),
-			vocabReader.getVocab("down"),
+		VocabData[] dirs = new VocabData[] {
+			vocabReader.getVocabData("left"),
+			vocabReader.getVocabData("right"),
+			vocabReader.getVocabData("up"),
+			vocabReader.getVocabData("down"),
 		};
 		
-		Vocab[] others = new Vocab[] {
-			vocabReader.getVocab("go"),
-			vocabReader.getVocab("eat"),
-			vocabReader.getVocab("drink"),
-			vocabReader.getVocab("yes"),
-			vocabReader.getVocab("no"),
+		VocabData[] others = new VocabData[] {
+			vocabReader.getVocabData("go"),
+			vocabReader.getVocabData("eat"),
+			vocabReader.getVocabData("drink"),
+			vocabReader.getVocabData("yes"),
+			vocabReader.getVocabData("no"),
 		};
 		
 		

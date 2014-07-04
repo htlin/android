@@ -80,8 +80,8 @@ public class DirectedOrderedGraph<T> {
 		}
 	}
 
-	public void move(T parent, T source, T target) {
-		// TODO Auto-generated method stub
+	public boolean move(T parent, T source, T target) {
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")

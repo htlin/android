@@ -122,4 +122,20 @@ public class DirectedOrderedGraphTest {
 		assertEquals(mOther, mGraph);
 	}
 	
+	@Test
+	public void testMove() {
+		String g = "(root): (va), (vb), (vc), (vd); (va): (vc), (vd); (vb): ; (vc): ; (vd): ";
+		mGraph = DirectedOrderedGraph.makeGraph(g);
+		assertFalse(mGraph.move("ghost", "va", "vb"));
+		assertFalse(mGraph.move("root", "ghost", "vb"));
+		assertFalse(mGraph.move("root", "va", "ghost"));
+		assertTrue(mGraph.move("root", "va", "vb"));
+		assertTrue(mGraph.move("root", "vc", "va"));
+		assertTrue(mGraph.move("root", "vd", "vb"));
+		assertTrue(mGraph.move("va", "vc", "vc"));
+		g = "(root): (vd), (vb), (vc), (va); (va): (vc), (vd); (vb): ; (vc): ; (vd): ";
+		mOther = DirectedOrderedGraph.makeGraph(g);
+		assertEquals(mOther, mGraph);
+	}
+	
 }

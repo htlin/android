@@ -1,9 +1,6 @@
 package org.easycomm.model;
 
-import java.util.Map;
-
-import org.easycomm.model.tree.LinkedTree;
-import org.easycomm.util.CUtil;
+import org.easycomm.model.graph.VocabGraph;
 
 import android.content.res.AssetManager;
 
@@ -11,8 +8,7 @@ public class VocabDatabase {
 
 	private static VocabDatabase Singleton; 
 	
-	private LinkedTree<Vocab> mVocabTree;
-	private Map<String, Vocab> mVocabMap;
+	private VocabGraph mVocabGraph;
 	
 	public static VocabDatabase getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -21,11 +17,9 @@ public class VocabDatabase {
 		
 		return Singleton;
 	}
-	
-	
+		
 	private VocabDatabase(AssetManager assets) {
-		mVocabTree = new LinkedTree<Vocab>();
-		mVocabMap = CUtil.makeMap();
+		mVocabGraph = new VocabGraph();
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
 		Vocab[] animals = new Vocab[] {
@@ -50,14 +44,6 @@ public class VocabDatabase {
 		};
 		
 		
-	}
-	
-	public LinkedTree<Vocab> getTree() {
-		return mVocabTree;
-	}
-	
-	public Map<String, Vocab> getMap() {
-		return mVocabMap;
 	}
 	
 	public void save() {

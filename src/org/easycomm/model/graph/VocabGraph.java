@@ -1,5 +1,6 @@
 package org.easycomm.model.graph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,25 +25,15 @@ public class VocabGraph {
 	}
 	
 	public List<Folder> getAllFolders() {
-		//TODO
+
 		List<Folder> list = CUtil.makeList();
-		getAllFolders(ROOT_ID, list);
-		return list;
-	}
-	
-	private void getAllFolders(String parent,  List<Folder> list){
-		
-		List<String>  children = mGraph.getOutgoingEdgesOf(parent);
-		for(String child : children) {
-			Vocab v = mMap.get(child);
+		Collection<Vocab> allVocab = mMap.values();
+		for(Vocab v : allVocab){
 			if ( v instanceof Folder){
 				list.add((Folder)v);
-				String folderID = v.getID();
-				getAllFolders(folderID, list);
 			}
 		}
-		
-		return;
+		return list;
 	}
 
 	public List<Link> getSourceLinks(String folderID) {

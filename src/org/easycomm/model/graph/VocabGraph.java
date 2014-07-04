@@ -2,6 +2,7 @@ package org.easycomm.model.graph;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.easycomm.util.CUtil;
 import org.easycomm.util.DirectedOrderedGraph;
@@ -24,12 +25,38 @@ public class VocabGraph {
 	
 	public List<Folder> getAllFolders() {
 		//TODO
-		return null;
+		List<Folder> list = CUtil.makeList();
+		getAllFolders(ROOT_ID, list);
+		return list;
+	}
+	
+	private void getAllFolders(String parent,  List<Folder> list){
+		
+		List<String>  children = mGraph.getOutgoingEdgesOf(parent);
+		for(String child : children) {
+			Vocab v = mMap.get(child);
+			if ( v instanceof Folder){
+				list.add((Folder)v);
+				String folderID = v.getID();
+				getAllFolders(folderID, list);
+			}
+		}
+		
+		return;
 	}
 
 	public List<Link> getSourceLinks(String folderID) {
 		//TODO
-		return null;
+		Set<String> fromNodes = mGraph.getIncomingEdgesOf(folderID);
+		List<Link> result = CUtil.makeList();
+		for(String from : fromNodes){
+			Vocab v = mMap.get(from);
+			if ( v instanceof Link){
+				result.add((Link)v);
+			}
+		}	
+		
+		return result;
 	}
 	
 	public void add(String folderID, Vocab child) {

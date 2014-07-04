@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.easycomm.model.tree.Node;
+
 public class ListSet<T> implements Iterable<T> {
 
 	private List<T> mList;
@@ -65,6 +67,24 @@ public class ListSet<T> implements Iterable<T> {
 		T a = mList.remove(location);
 		mSet.remove(a);
 		return a;
+	}
+	
+	private int indexOf(T a) {
+		for (int i = 0; i < mList.size(); i++) {
+			if (mList.get(i).equals(a)) {
+				return i;
+			}
+		}		
+		return -1;
+	}
+	
+	public void move(T source, T target) {
+		int sourceIndex = indexOf(source);
+		int targetIndex = indexOf(target);
+		if (sourceIndex == targetIndex) return;
+		
+		T sourceNode = mList.remove(sourceIndex);
+		mList.add(targetIndex, sourceNode);
 	}
 
 	@Override

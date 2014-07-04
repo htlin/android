@@ -81,7 +81,13 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public boolean move(T parent, T source, T target) {
-		return false;
+		if (mGraph.containsKey(parent) && mGraph.containsKey(source) && mGraph.containsKey(target)) {
+			ListSet<T> children = mGraph.get(parent);
+			children.move(source, target);
+			return true;
+		}
+		else
+			return false;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -3,9 +3,9 @@ package org.easycomm;
 import java.util.List;
 import java.util.Locale;
 
+import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.NavigationFragment;
 import org.easycomm.main.NavigationFragment.NavigationListener;
-import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
 import org.easycomm.main.VocabFragment;
@@ -20,7 +20,6 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener,
 	SentenceActionListener, NavigationListener {

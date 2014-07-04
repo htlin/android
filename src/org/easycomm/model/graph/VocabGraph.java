@@ -13,17 +13,25 @@ public class VocabGraph {
 	
 	public static final String ROOT_ID = "root";
 	
+	// Currently the largest vertex ID in this graph
+	private static int mlastID;
+	
 	private DirectedOrderedGraph<String> mGraph;
 	private Map<String, Vocab> mMap;
 
+	/*
+	 *		A new Vocab graph created
+	 */
 	public VocabGraph() {
 		mGraph = new DirectedOrderedGraph<String>();
 		mMap = CUtil.makeMap();
+		mlastID = 0;
 		
 		VocabData rootData = new VocabData(ROOT_ID, ROOT_ID, null, null);
 		Folder root = makeFolder(rootData);
 		mGraph.addVertex(ROOT_ID);
-		mMap.put(ROOT_ID, root);
+		mMap.put(ROOT_ID, root);	
+		
 	}
 	
 	public Vocab getVocab(String id) {
@@ -69,16 +77,21 @@ public class VocabGraph {
 	}
 	
 	
-	public Folder makeFolder(VocabData data) {
-		return null;
+	public Folder makeFolder(VocabData data) {	
+		return new Folder( getID(), data);
 	}
 	
 	public Leaf makeLeaf(VocabData data) {
-		return null;
+		return new Leaf( getID(), data);
 	}
 	
 	public Link makeLink(VocabData data) {
-		return null;
+		return new Link( getID(), data);
+	}
+	
+	private String getID(){
+		mlastID++;
+		return Integer.toString(mlastID) ;
 	}
 	
 }

@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.easycomm.model.tree.Node;
-
 public class ListSet<T> implements Iterable<T> {
 
 	private List<T> mList;

@@ -59,31 +59,25 @@ public class DirectedOrderedGraph<T> {
 	}
 
 	public boolean removeVertex(T vertex) {
-		if( mGraph.containsKey(vertex)) {
-			Set<T> fromVertices  =  getIncomingEdgesOf(vertex);
-			for(T incoming : fromVertices){
+		if (mGraph.containsKey(vertex)) {
+			Set<T> fromVertices = getIncomingEdgesOf(vertex);
+			for (T incoming : fromVertices) {
 				removeEdge(incoming, vertex);
 			}
 			mGraph.remove(vertex);
 			return true;
-		}
-		else {
-			
+		} else {
 			return false;
 		}
-		
-		
 	}
 
 	public boolean removeEdge(T parent, T child) {
 		if (mGraph.containsKey(parent) && mGraph.containsKey(child) ) {
 			ListSet<T> children = mGraph.get(parent);
 			return children.remove(child);
-
 		} else {
 			return false;
 		}
-		
 	}
 
 	public void move(T parent, T source, T target) {

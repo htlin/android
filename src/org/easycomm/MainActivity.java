@@ -1,5 +1,6 @@
 package org.easycomm;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	private TextToSpeech mTTS;
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
+	private ArrayList<String> mFolderPath;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,20 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		
+		if (savedInstanceState == null) {
+			mFolderPath = new ArrayList<String>();
+		} else {
+			mFolderPath = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
+		}
+		
 		setContentView(R.layout.activity_main);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putStringArrayList(Constant.FOLDER_PATH, mFolderPath);
+		
+		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

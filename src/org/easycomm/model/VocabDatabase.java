@@ -45,12 +45,16 @@ public class VocabDatabase {
 				vocabReader.getVocabData("yes"),
 				vocabReader.getVocabData("no")
 			);
+		mVocabGraph.add(mVocabGraph.getRoot().getID(), animal.getID());
+		mVocabGraph.add(mVocabGraph.getRoot().getID(), dir.getID());
+		
+		
 	}
 	
 	private void addToFolder(Folder folder, VocabData ... data) {
 		for (VocabData d : data) {
 			Leaf leaf = mVocabGraph.makeLeaf(d);
-			mVocabGraph.add(folder.getID(), leaf);
+			mVocabGraph.add(folder.getID(), leaf.getID());
 		}
 	}
 

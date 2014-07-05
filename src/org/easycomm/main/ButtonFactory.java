@@ -1,5 +1,8 @@
 package org.easycomm.main;
 
+import java.util.List;
+
+import org.easycomm.MainActivity;
 import org.easycomm.R;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.graph.Vocab;
@@ -12,19 +15,38 @@ import android.widget.GridView;
 
 public class ButtonFactory {
 
-	private Context mContext;
+	//private Context mContext;
+	private MainActivity mActivity;
 	private VocabDatabase mVocabDB;
 	private int mSideSize;
+	private List<Vocab> currentVocabList;
 	
-	public ButtonFactory(Context c, VocabDatabase vocabDB) {
-		mContext = c;
+	//public ButtonFactory(Context c, VocabDatabase vocabDB) {
+	public ButtonFactory(MainActivity act, VocabDatabase vocabDB) {
+		//mContext = c;
+		mActivity = act;
 		mVocabDB = vocabDB;
-		mSideSize = c.getResources().getDimensionPixelSize(R.dimen.button_side);
+		mSideSize = mActivity.getResources().getDimensionPixelSize(R.dimen.button_side);
 	}
 
+		
+
 	public int size() {
-		return mVocabDB.getTree().size();
+		String currentFolderString = mActivity.getCurrentFolder();
+		String currentFolderID; 
+		if( currentFolderString == null) {
+			Vocab currentFolder = mVocabDB.getGraph().getRoot();
+			currentFolderID = currentFolder.getID();
+		}
+		else {
+			currentFolderID = currentFolderString;
+		}
+		currentVocabList = mVocabDB.getGraph().getChildren(currentFolderID);
+		return currentVocabList.size();
 	}
+
+	
+	
 	
 	public String getDisplayText(String id) {
 		return mVocabDB.getVocabData(id).getDisplayText();
@@ -35,13 +57,16 @@ public class ButtonFactory {
 		return get(v, onClickListener);
 	}
 
+		
+
 	public Button get(int pos, OnClickListener onClickListener) {
-		Vocab v = mVocabDB.getTree().getVocab(pos);
+		Vocab v = currentVocabList.get(pos);
 		return get(v, onClickListener);
 	}
+
 	
 	public Button get(Vocab v, OnClickListener onClickListener) {
-		Button button = new Button(mContext);
+		Button button = new Button(mActivity);
 		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
     	button.setText(v.getData().getDisplayText());
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);

@@ -71,10 +71,8 @@ public class VocabGraph {
 		return result;
 	}
 	
-	public void add(String folderID, Vocab child) {
-		mGraph.addVertex(child.getID());
-		mGraph.addEdge(folderID, child.getID());
-		mMap.put(child.getID(), child);
+	public void add(String folderID, String  childID) {
+		mGraph.addEdge(folderID, childID);
 	}
 	
 	public void remove(String id) {
@@ -87,16 +85,25 @@ public class VocabGraph {
 	}
 	
 	
-	public Folder makeFolder(VocabData data) {	
-		return new Folder(getNewID(), data);
+	public Folder makeFolder(VocabData data) {
+		Folder folder = new Folder(getNewID(), data);
+		mGraph.addVertex(folder.getID());
+		mMap.put(folder.getID(), folder);
+		return folder;
 	}
 	
 	public Leaf makeLeaf(VocabData data) {
-		return new Leaf(getNewID(), data);
+		Leaf leaf = new Leaf(getNewID(), data);
+		mGraph.addVertex(leaf.getID());
+		mMap.put(leaf.getID(), leaf);
+		return leaf;
 	}
 	
 	public Link makeLink(VocabData data) {
-		return new Link(getNewID(), data);
+		Link link = new Link(getNewID(), data);
+		mGraph.addVertex(link.getID());
+		mMap.put(link.getID(), link);
+		return link;
 	}
 	
 	private String getNewID() {

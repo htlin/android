@@ -126,7 +126,11 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		return mButtonFactory;
 	}
 	
-	
+	public String getCurrentFolder(){
+		int count = mFolderPath.size();
+		if(count == 0) return null;
+		else return mFolderPath.get(count-1);		
+	}
 
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);

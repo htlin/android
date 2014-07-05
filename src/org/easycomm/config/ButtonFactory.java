@@ -24,21 +24,25 @@ public class ButtonFactory {
 	}
 
 	public int size() {
-		return mVocabDB.getTree().size();
+//		return mVocabDB.getTree().size();
+		return -1;
 	}
 	
 	public String getDisplayText(String id) {
-		return mVocabDB.getTree().getVocab(id).getDisplayText();
+//		return mVocabDB.getTree().getVocab(id).getDisplayText();
+		return null;
 	}
 	
 	public DraggableButton get(String id, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
-		Vocab v = mVocabDB.getTree().getVocab(id);
-		return get(v, onClickListener, onLongClickListener, onDragListener);
+//		Vocab v = mVocabDB.getTree().getVocab(id);
+//		return get(v, onClickListener, onLongClickListener, onDragListener);
+		return null;
 	}
 
 	public DraggableButton get(int pos, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
-		Vocab v = mVocabDB.getTree().getVocab(pos);
-		return get(v, onClickListener, onLongClickListener, onDragListener);
+//		Vocab v = mVocabDB.getTree().getVocab(pos);
+//		return get(v, onClickListener, onLongClickListener, onDragListener);
+		return null;
 	}
 	
 	public DraggableButton get(Vocab v, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {

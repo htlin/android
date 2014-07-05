@@ -14,14 +14,11 @@ public class VocabGraph {
 	public static final String ROOT_ID = "root";
 	
 	// Currently the largest vertex ID in this graph
-	private static int mlastID;
+	private int mlastID;
 	
 	private DirectedOrderedGraph<String> mGraph;
 	private Map<String, Vocab> mMap;
 
-	/*
-	 *		A new Vocab graph created
-	 */
 	public VocabGraph() {
 		mGraph = new DirectedOrderedGraph<String>();
 		mMap = CUtil.makeMap();
@@ -31,9 +28,12 @@ public class VocabGraph {
 		Folder root = makeFolder(rootData);
 		mGraph.addVertex(ROOT_ID);
 		mMap.put(ROOT_ID, root);	
-		
 	}
-	
+
+	public Folder getRoot() {
+		return (Folder) getVocab(ROOT_ID);
+	}
+
 	public Vocab getVocab(String id) {
 		return mMap.get(id);
 	}
@@ -49,6 +49,16 @@ public class VocabGraph {
 		return list;
 	}
 
+	public List<Vocab> getChildren(String folderID) {
+		List<String> toNodes = mGraph.getOutgoingEdgesOf(folderID);
+		List<Vocab> result = CUtil.makeList();
+		for (String to : toNodes) {
+			Vocab v = mMap.get(to);
+			result.add(v);
+		}	
+		return result;
+	}
+	
 	public List<Link> getSourceLinks(String folderID) {
 		Set<String> fromNodes = mGraph.getIncomingEdgesOf(folderID);
 		List<Link> result = CUtil.makeList();
@@ -78,20 +88,20 @@ public class VocabGraph {
 	
 	
 	public Folder makeFolder(VocabData data) {	
-		return new Folder( getID(), data);
+		return new Folder(getNewID(), data);
 	}
 	
 	public Leaf makeLeaf(VocabData data) {
-		return new Leaf( getID(), data);
+		return new Leaf(getNewID(), data);
 	}
 	
 	public Link makeLink(VocabData data) {
-		return new Link( getID(), data);
+		return new Link(getNewID(), data);
 	}
 	
-	private String getID(){
+	private String getNewID() {
 		mlastID++;
-		return Integer.toString(mlastID) ;
+		return Integer.toString(mlastID);
 	}
-	
+
 }

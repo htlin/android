@@ -1,8 +1,8 @@
 package org.easycomm.config;
 
 import org.easycomm.R;
-import org.easycomm.model.Vocab;
 import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.graph.Vocab;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -44,9 +44,9 @@ public class ButtonFactory {
 	public DraggableButton get(Vocab v, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
 		DraggableButton button = new DraggableButton(mContext);
 		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
-    	button.setText(v.getDisplayText());
+    	button.setText(v.getData().getDisplayText());
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
-        button.setCompoundDrawablesWithIntrinsicBounds(null, v.getImage(), null, null);
+        button.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);
         button.setOnClickListener(onClickListener);
         button.setOnLongClickListener(onLongClickListener);
         button.setOnDragListener(onDragListener);

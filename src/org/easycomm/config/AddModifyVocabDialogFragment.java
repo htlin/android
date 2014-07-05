@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.easycomm.R;
-import org.easycomm.model.Vocab;
+import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
+import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.CUtil;
 
 import android.app.Activity;
@@ -117,8 +118,8 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 			listView.setItemChecked(0, true);
 		} else {
 			VocabDatabase vocabDB = VocabDatabase.getInstance(getResources().getAssets());
-			Vocab vocab = vocabDB.getTree().getVocab(mSelectedVocabID);
-			String text = vocab.getDisplayText();			
+			Vocab vocab = vocabDB.getGraph().getVocab(mSelectedVocabID);
+			String text = vocab.getData().getDisplayText();			
 			displayText.setText(text);
 			speechText.setText(text);
 			
@@ -140,10 +141,10 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 	private SimpleAdapter getAdapter() {
 		VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
 		List<Map<String, Object>> aList = CUtil.makeList();
-		for (Vocab vocab : vocabReader.getAllVocabs()) {
+		for (VocabData vocabData : vocabReader.getAllVocabData()) {
 			Map<String, Object> map = CUtil.makeMap();
-			map.put("name", vocab.getFilename());
-			map.put("image", vocab.getImage());
+			map.put("name", vocabData.getFilename());
+			map.put("image", vocabData.getImage());
 			aList.add(map);
 		}
 

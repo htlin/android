@@ -119,14 +119,14 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
 	@Override
 	public void onVocabButtonClick(String id) {
-		speak(mVocabDB.getTree().getVocab(id).getSpeechText());
+		speak(mVocabDB.getVocabData(id).getSpeechText());
 		SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
 		sentenseFrag.addButton(id);
 	}
 
 	@Override
 	public void onSentenceButtonClick(String id) {
-		speak(mVocabDB.getTree().getVocab(id).getSpeechText());
+		speak(mVocabDB.getVocabData(id).getSpeechText());
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	private String getSentense(List<String> ids) {
 		StringBuffer buf = new StringBuffer();
 		for (String id : ids) {
-			buf.append(mVocabDB.getTree().getVocab(id).getSpeechText());
+			buf.append(mVocabDB.getVocabData(id).getSpeechText());
 			buf.append(" ");
 		}
 		return buf.toString();
@@ -145,7 +145,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	
 	@Override
 	public void onHomeButtonClick() {
-		//  To be implemented later
+		//TODO  To be implemented later
 		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
 
 		navigationFrag.displayCurrentFolder("Home pressed");
@@ -154,7 +154,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 	
 	@Override
 	public void onBackButtonClick() {
-		//  To be implemented later
+		//TODO  To be implemented later
 		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
 
 		navigationFrag.displayCurrentFolder("Back pressed");

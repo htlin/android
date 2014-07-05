@@ -1,8 +1,8 @@
 package org.easycomm.main;
 
 import org.easycomm.R;
-import org.easycomm.model.Vocab;
 import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.graph.Vocab;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -27,11 +27,11 @@ public class ButtonFactory {
 	}
 	
 	public String getDisplayText(String id) {
-		return mVocabDB.getTree().getVocab(id).getDisplayText();
+		return mVocabDB.getVocabData(id).getDisplayText();
 	}
 	
 	public Button get(String id, OnClickListener onClickListener) {
-		Vocab v = mVocabDB.getTree().getVocab(id);
+		Vocab v = mVocabDB.getGraph().getVocab(id);
 		return get(v, onClickListener);
 	}
 
@@ -43,9 +43,9 @@ public class ButtonFactory {
 	public Button get(Vocab v, OnClickListener onClickListener) {
 		Button button = new Button(mContext);
 		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
-    	button.setText(v.getDisplayText());
+    	button.setText(v.getData().getDisplayText());
         button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
-        button.setCompoundDrawablesWithIntrinsicBounds(null, v.getImage(), null, null);
+        button.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);
         button.setOnClickListener(onClickListener);
         button.setTag(v.getID());
 		return button;

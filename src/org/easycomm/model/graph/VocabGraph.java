@@ -1,11 +1,11 @@
 package org.easycomm.model.graph;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.easycomm.model.VocabData;
+import org.easycomm.model.visitor.VocabSorter;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.DirectedOrderedGraph;
 
@@ -25,7 +25,7 @@ public class VocabGraph {
 		mlastID = 0;
 		
 		VocabData rootData = new VocabData(ROOT_ID, ROOT_ID, null, null);
-		Folder root = makeFolder(rootData);
+		Folder root = new Folder(ROOT_ID, rootData);
 		mGraph.addVertex(ROOT_ID);
 		mMap.put(ROOT_ID, root);	
 	}
@@ -39,14 +39,11 @@ public class VocabGraph {
 	}
 	
 	public List<Folder> getAllFolders() {
-		List<Folder> list = CUtil.makeList();
-		Collection<Vocab> allVocab = mMap.values();
-		for (Vocab v : allVocab) {
-			if (v instanceof Folder) {
-				list.add((Folder)v);
-			}
+		VocabSorter.INSTANCE.clear();
+		for (Vocab v : mMap.values()) {
+			v.accept(VocabSorter.INSTANCE);
 		}
-		return list;
+		return VocabSorter.INSTANCE.getFolders();
 	}
 
 	public List<Vocab> getChildren(String folderID) {
@@ -60,15 +57,13 @@ public class VocabGraph {
 	}
 	
 	public List<Link> getSourceLinks(String folderID) {
+		VocabSorter.INSTANCE.clear();
 		Set<String> fromNodes = mGraph.getIncomingEdgesOf(folderID);
-		List<Link> result = CUtil.makeList();
 		for (String from : fromNodes) {
 			Vocab v = mMap.get(from);
-			if (v instanceof Link) {
-				result.add((Link)v);
-			}
+			v.accept(VocabSorter.INSTANCE);
 		}	
-		return result;
+		return VocabSorter.INSTANCE.getLinks();
 	}
 
 	public void addChild(Vocab folder, Vocab child) {

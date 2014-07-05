@@ -35,13 +35,13 @@ public class NavigationFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.sentence, container, false);
+		View view = inflater.inflate(R.layout.navigation, container, false);
 
 		Button home = (Button) view.findViewById(R.id.home);
 		home.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onHomeClick(v);
+				mCallback.onHomeButtonClick();
 			}
 		});
 		
@@ -49,7 +49,7 @@ public class NavigationFragment extends Fragment {
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onBackClick(v);
+				mCallback.onBackButtonClick();
 			}
 		});
 		
@@ -78,16 +78,8 @@ public class NavigationFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 	}
 	
-
-	protected void onBackClick(View v) {
-		mCallback.onBackButtonClick();
-	}
-
-	protected void onHomeClick(View v) {
-		mCallback.onHomeButtonClick();
-	}
 	
-	public void displayCurrentFolder(String s){
+	public void setCurrentFolder(String s) {
 		TextView textview = (TextView) getView().findViewById(R.id.current_folder);
 		textview.setText(s);
 	}

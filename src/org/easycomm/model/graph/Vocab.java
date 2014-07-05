@@ -1,6 +1,7 @@
 package org.easycomm.model.graph;
 
 import org.easycomm.model.VocabData;
+import org.easycomm.model.visitor.VocabVisitor;
 
 
 public abstract class Vocab {
@@ -37,5 +38,7 @@ public abstract class Vocab {
 	public int hashCode() {
 		return mID.hashCode();
 	}
+
+	public abstract void accept(VocabVisitor v);
 	
 }

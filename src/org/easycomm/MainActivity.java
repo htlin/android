@@ -11,8 +11,11 @@ import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
 import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
+import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
+import org.easycomm.model.visitor.FolderChanger;
 import org.easycomm.util.Constant;
 
 import android.app.Activity;
@@ -52,7 +55,6 @@ public class MainActivity extends Activity implements
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mButtonFactory.setCurrentFolder(getCurrentFolder());
-		
 		setContentView(R.layout.activity_main);
 	}
 	
@@ -145,9 +147,28 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onVocabButtonClick(String id) {
-		speak(mVocabDB.getVocabData(id).getSpeechText());
-		SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
-		sentenseFrag.addButton(id);
+		Vocab vocab = mVocabDB.getVocab(id);
+		VocabData vocabData = vocab.getData();
+		if (vocabData.hasSpeechText()) {
+			speak(vocabData.getSpeechText());
+			SentenceFragment sentenseFrag = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
+			sentenseFrag.addButton(id);
+		}
+		
+		FolderChanger.INSTANCE.init(mVocabDB);
+		vocab.accept(FolderChanger.INSTANCE);
+		String newID = FolderChanger.INSTANCE.getResult();
+		if (newID != null) {
+			mFolderPath.add(newID);
+			mButtonFactory.setCurrentFolder(newID);
+			
+			String newFolderText = mVocabDB.getVocabData(newID).getDisplayText();
+			NavigationFragment navFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
+			navFrag.setCurrentFolder(newFolderText);
+			
+			VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_vocab);
+			vocabFrag.invalidate();
+		}
 	}
 
 	@Override
@@ -172,18 +193,15 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onHomeButtonClick() {
 		//TODO  To be implemented later
-		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
-
-		navigationFrag.displayCurrentFolder("Home pressed");
-		
+		NavigationFragment navFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
+		navFrag.setCurrentFolder("Home pressed");
 	}
 	
 	@Override
 	public void onBackButtonClick() {
 		//TODO  To be implemented later
-		NavigationFragment navigationFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
-
-		navigationFrag.displayCurrentFolder("Back pressed");
+		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
+		navFrag.setCurrentFolder("Back pressed");
 	}
 	
 }

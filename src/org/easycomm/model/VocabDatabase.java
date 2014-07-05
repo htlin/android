@@ -2,6 +2,7 @@ package org.easycomm.model;
 
 import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
+import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 
 import android.content.res.AssetManager;
@@ -24,13 +25,24 @@ public class VocabDatabase {
 		mVocabGraph = new VocabGraph();
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
-		Folder animal = mVocabGraph.makeFolder(vocabReader.getVocabData("bird"));
+		
+		VocabData animalData = vocabReader.getVocabData("bird").clone();
+		animalData.setDisplayText("Animal");
+		animalData.setSpeechText(null);
+		Folder animal = mVocabGraph.makeFolder(animalData);
+		
+		VocabData dirData = vocabReader.getVocabData("up").clone();
+		dirData.setDisplayText("Direction");
+		dirData.setSpeechText(null);
+		Folder dir = mVocabGraph.makeFolder(dirData);		
+
+		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
+		mVocabGraph.addChild(mVocabGraph.getRoot(), dir);	
 		addToFolder(animal,
 				vocabReader.getVocabData("bird"),
 				vocabReader.getVocabData("cat"),
 				vocabReader.getVocabData("dog")
 			);
-		Folder dir = mVocabGraph.makeFolder(vocabReader.getVocabData("up"));
 		addToFolder(dir,
 				vocabReader.getVocabData("left"),
 				vocabReader.getVocabData("right"),
@@ -44,8 +56,6 @@ public class VocabDatabase {
 				vocabReader.getVocabData("yes"),
 				vocabReader.getVocabData("no")
 			);
-		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
-		mVocabGraph.addChild(mVocabGraph.getRoot(), dir);		
 	}
 	
 	private void addToFolder(Folder folder, VocabData ... data) {
@@ -57,6 +67,10 @@ public class VocabDatabase {
 
 	public VocabGraph getGraph() {
 		return mVocabGraph;
+	}
+	
+	public Vocab getVocab(String id) {
+		return mVocabGraph.getVocab(id);
 	}
 	
 	public VocabData getVocabData(String id) {

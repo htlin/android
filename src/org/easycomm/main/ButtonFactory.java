@@ -41,7 +41,7 @@ public class ButtonFactory {
 	}
 	
 	public Button get(String id, OnClickListener onClickListener) {
-		Vocab v = mVocabDB.getGraph().getVocab(id);
+		Vocab v = mVocabDB.getVocab(id);
 		return get(v, onClickListener);
 	}
 

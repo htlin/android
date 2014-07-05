@@ -26,7 +26,7 @@ public class VocabData {
 	}
 	
 	public boolean hasSpeechText() {
-		return mSpeechText == null || mSpeechText.isEmpty();
+		return mSpeechText != null && !mSpeechText.isEmpty();
 	}
 	
 	public String getFilename() {
@@ -45,4 +45,8 @@ public class VocabData {
 		mSpeechText = v;
 	}
 
+	public VocabData clone() {
+		return new VocabData(mDisplayText, mSpeechText, mFilename, mImage);
+	}
+	
 }

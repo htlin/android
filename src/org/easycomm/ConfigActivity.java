@@ -10,7 +10,6 @@ import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
-import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.Constant;
 
 import android.app.ActionBar;
@@ -21,7 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class ConfigActivity extends Activity implements ConfirmBackDialogListener, AddVocabDialogListener, VocabActionListener {
+public class ConfigActivity extends Activity implements
+		ConfirmBackDialogListener,
+		AddVocabDialogListener,
+		VocabActionListener {
 
 	private VocabReader mVocabReader;
 	private VocabDatabase mVocabDB;

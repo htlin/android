@@ -12,6 +12,7 @@ import org.easycomm.main.SentenceFragment.SentenceActionListener;
 import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
 import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.util.Constant;
 
 import android.app.Activity;
@@ -22,27 +23,35 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity implements TextToSpeech.OnInitListener, VocabActionListener,
-	SentenceActionListener, NavigationListener {
+public class MainActivity extends Activity implements
+		TextToSpeech.OnInitListener,
+		VocabActionListener,
+		SentenceActionListener,
+		NavigationListener {
 
 	private TextToSpeech mTTS;
 	private VocabDatabase mVocabDB;
-	private ButtonFactory mButtonFactory;
 	private ArrayList<String> mFolderPath;
+	private ButtonFactory mButtonFactory;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mTTS = new TextToSpeech(this, this);
-		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
-		mButtonFactory = new ButtonFactory(this, mVocabDB);
-		
 		if (savedInstanceState == null) {
 			mFolderPath = new ArrayList<String>();
 		} else {
 			mFolderPath = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
 		}
+		
+		if (mFolderPath.isEmpty()) {
+			mFolderPath.add(VocabGraph.ROOT_ID);
+		}
+		
+		mTTS = new TextToSpeech(this, this);
+		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
+		mButtonFactory = new ButtonFactory(this, mVocabDB);
+		mButtonFactory.setCurrentFolder(getCurrentFolder());
 		
 		setContentView(R.layout.activity_main);
 	}
@@ -126,10 +135,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 		return mButtonFactory;
 	}
 	
-	public String getCurrentFolder(){
-		int count = mFolderPath.size();
-		if(count == 0) return null;
-		else return mFolderPath.get(count-1);		
+	public String getCurrentFolder() {
+		return mFolderPath.get(mFolderPath.size() - 1);
 	}
 
 	private void speak(String text) {

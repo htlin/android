@@ -2,7 +2,6 @@ package org.easycomm.model;
 
 import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
-import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 
 import android.content.res.AssetManager;
@@ -45,16 +44,14 @@ public class VocabDatabase {
 				vocabReader.getVocabData("yes"),
 				vocabReader.getVocabData("no")
 			);
-		mVocabGraph.add(mVocabGraph.getRoot().getID(), animal.getID());
-		mVocabGraph.add(mVocabGraph.getRoot().getID(), dir.getID());
-		
-		
+		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
+		mVocabGraph.addChild(mVocabGraph.getRoot(), dir);		
 	}
 	
 	private void addToFolder(Folder folder, VocabData ... data) {
 		for (VocabData d : data) {
 			Leaf leaf = mVocabGraph.makeLeaf(d);
-			mVocabGraph.add(folder.getID(), leaf.getID());
+			mVocabGraph.addChild(folder, leaf);
 		}
 	}
 

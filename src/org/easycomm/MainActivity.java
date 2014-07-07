@@ -127,6 +127,7 @@ public class MainActivity extends Activity implements
 	
 	private void startConfig() {
 		Intent intent = new Intent(this, ConfigActivity.class);
+		intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
 		startActivityForResult(intent, Constant.STATIC_INTEGER_VALUE);
 	}
 

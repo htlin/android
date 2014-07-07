@@ -13,6 +13,14 @@
         android:orientation="horizontal" />
     
     <fragment
+        android:id="@+id/frag_config_navigation"
+        android:name="org.easycomm.config.NavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/navigation" />
+    
+    
+    <fragment
         android:id="@+id/frag_config_vocab"
         android:name="org.easycomm.config.VocabFragment"
         android:layout_width="match_parent"

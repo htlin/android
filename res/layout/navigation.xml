@@ -1,7 +1,9 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+	android:layout_height="wrap_content"
+    android:background="@color/navigationBackground"
     android:orientation="horizontal" >
 
     <Button
@@ -19,12 +21,10 @@
         android:text="@string/button_back" />
     
     <TextView
-        android:id="@+id/current_folder"
+        android:id="@+id/current_path"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
-
-        <requestFocus />
-   
+        android:layout_gravity="center_vertical"
+        android:text="@string/path_separator" />
 
 </LinearLayout>

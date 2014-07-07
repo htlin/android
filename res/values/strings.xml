@@ -26,8 +26,8 @@
     <string name="display_text">Display Text:</string>
     <string name="speech_text">Speech Text:</string>
     <string name="vocab_image">Image:</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-	<string name="button_home">Home</string>
+    <string name="button_home">Home</string>
 	<string name="button_back">Back</string>
+	<string name="path_separator">▶</string>
 	
 </resources>

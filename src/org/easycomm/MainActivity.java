@@ -16,6 +16,7 @@ import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
+import org.easycomm.util.CUtil;
 import org.easycomm.util.Constant;
 
 import android.app.Activity;
@@ -34,7 +35,7 @@ public class MainActivity extends Activity implements
 
 	private TextToSpeech mTTS;
 	private VocabDatabase mVocabDB;
-	private ArrayList<String> mFolderPath;
+	private ArrayList<String> mFolderPathIDs;
 	private ButtonFactory mButtonFactory;
 	
 	@Override
@@ -42,13 +43,13 @@ public class MainActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 
 		if (savedInstanceState == null) {
-			mFolderPath = new ArrayList<String>();
+			mFolderPathIDs = new ArrayList<String>();
 		} else {
-			mFolderPath = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
+			mFolderPathIDs = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
 		}
 		
-		if (mFolderPath.isEmpty()) {
-			mFolderPath.add(VocabGraph.ROOT_ID);
+		if (mFolderPathIDs.isEmpty()) {
+			mFolderPathIDs.add(VocabGraph.ROOT_ID);
 		}
 		
 		mTTS = new TextToSpeech(this, this);
@@ -60,7 +61,7 @@ public class MainActivity extends Activity implements
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putStringArrayList(Constant.FOLDER_PATH, mFolderPath);
+		outState.putStringArrayList(Constant.FOLDER_PATH, mFolderPathIDs);
 		
 		super.onSaveInstanceState(outState);
 	}
@@ -137,8 +138,10 @@ public class MainActivity extends Activity implements
 		return mButtonFactory;
 	}
 	
-	public String getCurrentFolder() {
-		return mFolderPath.get(mFolderPath.size() - 1);
+	public String getCurrentFolder(){
+		int count = mFolderPathIDs.size();
+		if(count == 0) return null;
+		else return mFolderPathIDs.get(count-1);		
 	}
 
 	private void speak(String text) {
@@ -159,15 +162,8 @@ public class MainActivity extends Activity implements
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
 		if (newID != null) {
-			mFolderPath.add(newID);
-			mButtonFactory.setCurrentFolder(newID);
-			
-			String newFolderText = mVocabDB.getVocabData(newID).getDisplayText();
-			NavigationFragment navFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
-			navFrag.setCurrentFolder(newFolderText);
-			
-			VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_vocab);
-			vocabFrag.invalidate();
+			mFolderPathIDs.add(newID);
+			updateFolderPath();
 		}
 	}
 
@@ -192,16 +188,36 @@ public class MainActivity extends Activity implements
 	
 	@Override
 	public void onHomeButtonClick() {
-		//TODO  To be implemented later
-		NavigationFragment navFrag =  (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
-		navFrag.setCurrentFolder("Home pressed");
+		if (mFolderPathIDs.size() > 1) {
+			mFolderPathIDs.clear();
+			mFolderPathIDs.add(VocabGraph.ROOT_ID);
+			updateFolderPath();
+		}
 	}
 	
 	@Override
 	public void onBackButtonClick() {
-		//TODO  To be implemented later
+		if (mFolderPathIDs.size() > 1) {
+			mFolderPathIDs.remove(mFolderPathIDs.size() - 1);
+			updateFolderPath();
+		}
+	}
+	
+	private void updateFolderPath() {
+		List<String> folderTexts = CUtil.makeList();
+		for (String id : mFolderPathIDs) {
+			String text = mVocabDB.getVocabData(id).getDisplayText();
+			folderTexts.add(text);
+		}
+		
 		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_navigation);
-		navFrag.setCurrentFolder("Back pressed");
+		navFrag.setCurrentPath(folderTexts);
+		
+		String currentFolder = mFolderPathIDs.get(mFolderPathIDs.size() - 1);
+		mButtonFactory.setCurrentFolder(currentFolder);
+		
+		VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_vocab);
+		vocabFrag.invalidate();
 	}
 	
 }

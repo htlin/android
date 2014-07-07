@@ -1,5 +1,7 @@
 package org.easycomm.main;
 
+import java.util.List;
+
 import org.easycomm.R;
 import org.easycomm.util.Constant;
 
@@ -63,7 +65,7 @@ public class NavigationFragment extends Fragment {
 		if (savedInstanceState != null) {
 			CharSequence  currentFolder = savedInstanceState.getCharSequence(Constant.CURRENT_FOLDER);
 			if (currentFolder != null) {
-				TextView textview = (TextView) getView().findViewById(R.id.current_folder);
+				TextView textview = (TextView) getView().findViewById(R.id.current_path);
 				textview.setText(currentFolder);
 			}
 		}
@@ -71,17 +73,26 @@ public class NavigationFragment extends Fragment {
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		TextView textview = (TextView) getView().findViewById(R.id.current_folder);
+		TextView textview = (TextView) getView().findViewById(R.id.current_path);
 		CharSequence  currentFolder = textview.getText();
 		outState.putCharSequence(Constant.CURRENT_FOLDER, currentFolder);
 
 		super.onSaveInstanceState(outState);
 	}
-	
-	
-	public void setCurrentFolder(String s) {
-		TextView textview = (TextView) getView().findViewById(R.id.current_folder);
-		textview.setText(s);
+		
+	public void setCurrentPath(List<String> folderTexts) {
+		final String PATH_SEPARATOR = getString(R.string.path_separator);
+		StringBuilder s = new StringBuilder();
+		for (int i = 1; i < folderTexts.size(); i++) {
+			s.append(PATH_SEPARATOR)
+			 .append(folderTexts.get(i));
+		}
+		if (s.length() == 0) {
+			s.append(PATH_SEPARATOR);
+		}
+		
+		TextView textview = (TextView) getView().findViewById(R.id.current_path);
+		textview.setText(s.toString());
 	}
 
 }

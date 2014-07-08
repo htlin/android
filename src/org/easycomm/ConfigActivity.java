@@ -23,6 +23,7 @@ import org.easycomm.util.Constant;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +40,7 @@ public class ConfigActivity extends Activity implements
 	private ButtonFactory mButtonFactory;
 	private ViewSelector mSelector;
 	private boolean mLayoutChanged;
-	private boolean folderSelected;
+//	private boolean folderSelected;
 	private ArrayList<String> mFolderPathIDs;
 	
 	@Override
@@ -53,13 +54,6 @@ public class ConfigActivity extends Activity implements
 		else {
 			mFolderPathIDs = getIntent().getStringArrayListExtra(Constant.FOLDER_PATH);
 		}
-		/*
-		else {
-			mLayoutChanged = false;
-			mFolderPathIDs = new ArrayList<String>();
-			mFolderPathIDs.add(VocabGraph.ROOT_ID);
-		}
-		*/
 		
 		
 		mVocabReader = VocabReader.getInstance(getResources().getAssets());
@@ -90,8 +84,9 @@ public class ConfigActivity extends Activity implements
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		boolean isSelected = mSelector.isSelected();		
-		menu.findItem(R.id.action_open).setEnabled(folderSelected);
+		boolean isSelected = mSelector.isSelected();
+		boolean isFolderSelected = mSelector.isFolderSelected();
+		menu.findItem(R.id.action_open).setEnabled(isFolderSelected);
 		
         menu.findItem(R.id.action_modify).setEnabled(isSelected);
         menu.findItem(R.id.action_remove).setEnabled(isSelected);
@@ -135,10 +130,7 @@ public class ConfigActivity extends Activity implements
 			return true;
 			
 		case R.id.action_remove:
-			selectedID = mSelector.getSelectedID();
-//			mVocabDB.getTree().remove(selectedID);
-			mSelector.deselect();
-			updateLayout();
+			removeVocab();
 			return true;
 			
 		case R.id.action_save:
@@ -153,19 +145,28 @@ public class ConfigActivity extends Activity implements
 	}
 	
 	private void openFolder(){
+		/*
 		String selectedID = mSelector.getSelectedID();
 		Vocab vocab = mVocabDB.getVocab(selectedID);
 		FolderChanger.INSTANCE.init(mVocabDB);
 		vocab.accept(FolderChanger.INSTANCE);
-		String newID = FolderChanger.INSTANCE.getResult();
-		mFolderPathIDs.add(newID);
+		*/
+		String folderID = mSelector.getFolderID();
+		mFolderPathIDs.add(folderID);
 		updateFolderPath();
-		folderSelected = false;
+		
 		mSelector.deselect();
 		VocabFragment vocabFragment = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocabFragment.invalidate();
 		invalidateOptionsMenu();
 		
+	}
+	
+	private void removeVocab(){
+		String selectedID = mSelector.getSelectedID();
+		mVocabDB.getGraph().remove(selectedID);
+		mSelector.deselect();
+		updateLayout();
 	}
 	
 	private void showAddDialog(int i) {
@@ -219,14 +220,20 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public void onConfirmBackDialogPositiveClick(DialogFragment dialog) {
 		mVocabDB.save();
-		setResult(Activity.RESULT_OK);
+		Intent intent = new Intent();
+		intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
+
+		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
 
 	@Override
 	public void onConfirmBackDialogNegativeClick(DialogFragment dialog) {
 		mVocabDB.revert();
-		setResult(Activity.RESULT_OK);
+		Intent intent = new Intent();
+		intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
+
+		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
 
@@ -264,12 +271,15 @@ public class ConfigActivity extends Activity implements
 		FolderChanger.INSTANCE.init(mVocabDB);
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
+		mSelector.setFolderID(newID);
+		/*
 		if (newID != null) {
 			folderSelected = true;
 		}
 		else {
 			folderSelected = false;
 		}
+		*/
 		
 		if (changed) {
 			invalidateOptionsMenu();
@@ -279,7 +289,8 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public void onVocabDragDrop(String sourceID, String targetID) {
 		if (!sourceID.equals(targetID)) {
-//			mVocabDB.getTree().move(sourceID, targetID);
+			String lastFolderID = mFolderPathIDs.get(mFolderPathIDs.size() - 1);
+			mVocabDB.getGraph().move(lastFolderID, sourceID, targetID);
 			updateLayout();
 		}
 		

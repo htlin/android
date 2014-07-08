@@ -71,11 +71,15 @@ public class MainActivity extends Activity implements
 		switch(requestCode) { 
 		case (Constant.STATIC_INTEGER_VALUE):
 			if (resultCode == Activity.RESULT_OK) { 
+				mFolderPathIDs = data.getStringArrayListExtra(Constant.FOLDER_PATH);
+				updateFolderPath();
+				/*
 				VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_vocab);
 				vocab.invalidate();
 				
 				SentenceFragment sentence = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
 				sentence.invalidate();
+				*/
 			} 
 			break;
 			

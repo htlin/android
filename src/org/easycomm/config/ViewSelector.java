@@ -11,6 +11,7 @@ public class ViewSelector {
 	private Resources mResources;
 	
 	private String mSelectedID;
+	private String folderID;
 	private View mSelectedView;
 	
 	public ViewSelector(Resources resources) {
@@ -23,6 +24,18 @@ public class ViewSelector {
 
 	public String getSelectedID() {
 		return mSelectedID;
+	}
+	
+	public boolean isFolderSelected(){
+		return folderID != null;
+	}
+	
+	public void setFolderID(String id){
+		folderID = id;
+	}
+	
+	public String getFolderID(){
+		return folderID;
 	}
 
 	public boolean select(String id, View v) {
@@ -41,6 +54,7 @@ public class ViewSelector {
 	public void deselect() {
 		mSelectedID = null;
 		mSelectedView = null;
+		folderID = null;
 	}
 	
 	private void updateView(View v, boolean isSelected) {

@@ -81,7 +81,7 @@ public class NavigationFragment extends Fragment {
 	}
 		
 	public void setCurrentPath(List<String> folderTexts) {
-		final String PATH_SEPARATOR = getString(R.string.path_separator);
+		final String PATH_SEPARATOR = getString(R.string.path_separator) + " ";
 		StringBuilder s = new StringBuilder();
 		for (int i = 1; i < folderTexts.size(); i++) {
 			s.append(PATH_SEPARATOR)

@@ -1,4 +1,4 @@
-package org.easycomm.main;
+package org.easycomm;
 
 import java.util.List;
 

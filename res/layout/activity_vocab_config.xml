@@ -14,7 +14,7 @@
     
     <fragment
         android:id="@+id/frag_config_navigation"
-        android:name="org.easycomm.config.NavigationFragment"
+        android:name="org.easycomm.NavigationFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/navigation" />

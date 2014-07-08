@@ -3,11 +3,10 @@ package org.easycomm;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.easycomm.NavigationFragment.NavigationListener;
 import org.easycomm.config.AddModifyVocabDialogFragment;
 import org.easycomm.config.AddModifyVocabDialogFragment.AddVocabDialogListener;
 import org.easycomm.config.ButtonFactory;
-import org.easycomm.config.NavigationFragment;
-import org.easycomm.config.NavigationFragment.NavigationListener;
 import org.easycomm.config.ConfirmBackDialogFragment;
 import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
 import org.easycomm.config.ViewSelector;

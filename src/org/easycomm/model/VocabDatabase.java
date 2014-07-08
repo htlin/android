@@ -26,22 +26,36 @@ public class VocabDatabase {
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
 		
+		VocabData whereData = vocabReader.getVocabData("go").clone();
+		whereData.setDisplayText("Where");
+		whereData.setSpeechText(null);
+		Folder where = mVocabGraph.makeFolder(whereData);
+		
+		VocabData dirData = vocabReader.getVocabData("up").clone();
+		dirData.setDisplayText("Direction");
+		dirData.setSpeechText(null);
+		Folder dir = mVocabGraph.makeFolder(dirData);
+
 		VocabData animalData = vocabReader.getVocabData("bird").clone();
 		animalData.setDisplayText("Animal");
 		animalData.setSpeechText(null);
 		Folder animal = mVocabGraph.makeFolder(animalData);
 		
-		VocabData dirData = vocabReader.getVocabData("up").clone();
-		dirData.setDisplayText("Direction");
-		dirData.setSpeechText(null);
-		Folder dir = mVocabGraph.makeFolder(dirData);		
-
+		mVocabGraph.addChild(mVocabGraph.getRoot(), where);
 		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
-		mVocabGraph.addChild(mVocabGraph.getRoot(), dir);	
-		addToFolder(animal,
-				vocabReader.getVocabData("bird"),
-				vocabReader.getVocabData("cat"),
-				vocabReader.getVocabData("dog")
+		addToFolder(mVocabGraph.getRoot(),
+				vocabReader.getVocabData("go"),
+				vocabReader.getVocabData("eat"),
+				vocabReader.getVocabData("drink"),
+				vocabReader.getVocabData("yes"),
+				vocabReader.getVocabData("no")
+			);
+		mVocabGraph.addChild(where, dir);
+		addToFolder(where,
+				vocabReader.getVocabData("home"),
+				vocabReader.getVocabData("toilet"),
+				vocabReader.getVocabData("tree"),
+				vocabReader.getVocabData("window")
 			);
 		addToFolder(dir,
 				vocabReader.getVocabData("left"),
@@ -49,12 +63,10 @@ public class VocabDatabase {
 				vocabReader.getVocabData("up"),
 				vocabReader.getVocabData("down")
 			);
-		addToFolder(mVocabGraph.getRoot(),
-				vocabReader.getVocabData("go"),
-				vocabReader.getVocabData("eat"),
-				vocabReader.getVocabData("drink"),
-				vocabReader.getVocabData("yes"),
-				vocabReader.getVocabData("no")
+		addToFolder(animal,
+				vocabReader.getVocabData("bird"),
+				vocabReader.getVocabData("cat"),
+				vocabReader.getVocabData("dog")
 			);
 	}
 	

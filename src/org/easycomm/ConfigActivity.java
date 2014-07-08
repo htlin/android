@@ -52,10 +52,16 @@ public class ConfigActivity extends Activity implements
 			mFolderPathIDs = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
 		}
 		else {
+			mFolderPathIDs = getIntent().getStringArrayListExtra(Constant.FOLDER_PATH);
+		}
+		/*
+		else {
 			mLayoutChanged = false;
 			mFolderPathIDs = new ArrayList<String>();
 			mFolderPathIDs.add(VocabGraph.ROOT_ID);
 		}
+		*/
+		
 		
 		mVocabReader = VocabReader.getInstance(getResources().getAssets());
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
@@ -67,6 +73,7 @@ public class ConfigActivity extends Activity implements
 		
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    updateFolderPath();
 	}
 	
 	@Override

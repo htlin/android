@@ -27,8 +27,8 @@ public class VocabDatabase {
 		VocabReader vocabReader = VocabReader.getInstance(assets);
 		
 		VocabData whereData = vocabReader.getVocabData("go").clone();
-		whereData.setDisplayText("Where");
-		whereData.setSpeechText(null);
+		whereData.setDisplayText("Go to");
+		whereData.setSpeechText("Go to");
 		Folder where = mVocabGraph.makeFolder(whereData);
 		
 		VocabData dirData = vocabReader.getVocabData("up").clone();
@@ -44,7 +44,6 @@ public class VocabDatabase {
 		mVocabGraph.addChild(mVocabGraph.getRoot(), where);
 		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
 		addToFolder(mVocabGraph.getRoot(),
-				vocabReader.getVocabData("go"),
 				vocabReader.getVocabData("eat"),
 				vocabReader.getVocabData("drink"),
 				vocabReader.getVocabData("yes"),

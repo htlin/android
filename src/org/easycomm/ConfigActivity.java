@@ -40,7 +40,6 @@ public class ConfigActivity extends Activity implements
 	private ButtonFactory mButtonFactory;
 	private ViewSelector mSelector;
 	private boolean mLayoutChanged;
-//	private boolean folderSelected;
 	private ArrayList<String> mFolderPathIDs;
 	
 	@Override
@@ -85,8 +84,8 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean isSelected = mSelector.isSelected();
-		boolean isFolderSelected = mSelector.isFolderSelected();
-		menu.findItem(R.id.action_open).setEnabled(isFolderSelected);
+		boolean hasFollowupFolder = mSelector.hasFollowupFolder();
+		menu.findItem(R.id.action_open).setEnabled(hasFollowupFolder);
 		
         menu.findItem(R.id.action_modify).setEnabled(isSelected);
         menu.findItem(R.id.action_remove).setEnabled(isSelected);
@@ -144,14 +143,8 @@ public class ConfigActivity extends Activity implements
 		}
 	}
 	
-	private void openFolder(){
-		/*
-		String selectedID = mSelector.getSelectedID();
-		Vocab vocab = mVocabDB.getVocab(selectedID);
-		FolderChanger.INSTANCE.init(mVocabDB);
-		vocab.accept(FolderChanger.INSTANCE);
-		*/
-		String folderID = mSelector.getFolderID();
+	private void openFolder() {
+		String folderID = mSelector.getFollowupFolderID();
 		mFolderPathIDs.add(folderID);
 		updateFolderPath();
 		
@@ -271,15 +264,7 @@ public class ConfigActivity extends Activity implements
 		FolderChanger.INSTANCE.init(mVocabDB);
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
-		mSelector.setFolderID(newID);
-		/*
-		if (newID != null) {
-			folderSelected = true;
-		}
-		else {
-			folderSelected = false;
-		}
-		*/
+		mSelector.setFollowupFolderID(newID);
 		
 		if (changed) {
 			invalidateOptionsMenu();

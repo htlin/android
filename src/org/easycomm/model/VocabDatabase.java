@@ -2,6 +2,7 @@ package org.easycomm.model;
 
 import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
+import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 
@@ -31,10 +32,10 @@ public class VocabDatabase {
 		whereData.setSpeechText("Go to");
 		Folder where = mVocabGraph.makeFolder(whereData);
 		
-		VocabData dirData = vocabReader.getVocabData("up").clone();
-		dirData.setDisplayText("Direction");
-		dirData.setSpeechText(null);
-		Folder dir = mVocabGraph.makeFolder(dirData);
+		VocabData arrowData = vocabReader.getVocabData("up").clone();
+		arrowData.setDisplayText("Arrow");
+		arrowData.setSpeechText(null);
+		Folder arrow = mVocabGraph.makeFolder(arrowData);
 
 		VocabData animalData = vocabReader.getVocabData("bird").clone();
 		animalData.setDisplayText("Animal");
@@ -43,20 +44,27 @@ public class VocabDatabase {
 		
 		mVocabGraph.addChild(mVocabGraph.getRoot(), where);
 		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
+		mVocabGraph.addChild(mVocabGraph.getRoot(), arrow);
 		addToFolder(mVocabGraph.getRoot(),
 				vocabReader.getVocabData("eat"),
 				vocabReader.getVocabData("drink"),
 				vocabReader.getVocabData("yes"),
 				vocabReader.getVocabData("no")
 			);
+		
+		VocabData dirData = vocabReader.getVocabData("up").clone();
+		dirData.setDisplayText("Direction");
+		dirData.setSpeechText(null);
+		Link dir = mVocabGraph.makeLink(dirData);
 		mVocabGraph.addChild(where, dir);
+		mVocabGraph.addChild(dir, arrow);
 		addToFolder(where,
 				vocabReader.getVocabData("home"),
 				vocabReader.getVocabData("toilet"),
 				vocabReader.getVocabData("tree"),
 				vocabReader.getVocabData("window")
 			);
-		addToFolder(dir,
+		addToFolder(arrow,
 				vocabReader.getVocabData("left"),
 				vocabReader.getVocabData("right"),
 				vocabReader.getVocabData("up"),

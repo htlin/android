@@ -58,6 +58,8 @@ public class ButtonFactory {
 		@Override
 		public void visit(Link v) {
 			makeButton(v);
+	        int folderColor = mContext.getResources().getColor(R.color.buttonFolderBackground);
+	        mResult.getBackground().setColorFilter(folderColor, PorterDuff.Mode.MULTIPLY);
 		}
 
 	}

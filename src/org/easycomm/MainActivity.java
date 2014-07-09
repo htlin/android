@@ -12,6 +12,7 @@ import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
+import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
@@ -80,6 +81,17 @@ public class MainActivity extends Activity implements
 			
 		default:
 		} 
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		/*
+		Folder root = mVocabDB.getGraph().getRoot();
+		List<Vocab> list = mVocabDB.getGraph().getChildren(root.getID());
+		Vocab v = list.get(list.size()-1);
+		mVocabDB.getGraph().remove(v.getID());
+		*/
 	}
 	
 	@Override

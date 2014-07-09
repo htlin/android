@@ -14,6 +14,8 @@ import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
+import org.easycomm.model.graph.Folder;
+import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
@@ -156,10 +158,46 @@ public class ConfigActivity extends Activity implements
 	}
 	
 	private void removeVocab(){
-		String selectedID = mSelector.getSelectedID();
-		mVocabDB.getGraph().remove(selectedID);
+		
+		// check whether the selected item is a folder or not 
+		Vocab vocab = mVocabDB.getVocab(mSelector.getSelectedID());
+		if (vocab instanceof Folder) {
+			// folder selected
+			String folderID = mSelector.getFollowupFolderID();
+			removeFolder( folderID );
+		
+		}
+		else {
+			// leaf or link selected
+			String selectedID = mSelector.getSelectedID();
+			mVocabDB.getGraph().remove(selectedID);
+		}
+		
+		
 		mSelector.deselect();
 		updateLayout();
+	}
+	
+	private void removeFolder(String folderID){
+		
+		List<Vocab> children = mVocabDB.getGraph().getChildren(folderID);
+		for( Vocab v : children){
+			if(v instanceof Folder){
+				removeFolder(v.getID());
+				mVocabDB.getGraph().remove(v.getID());
+			}
+			else {
+				mVocabDB.getGraph().remove(v.getID());
+			}
+			
+		}
+		
+		List<Link> sourceLlinks = mVocabDB.getGraph().getSourceLinks(folderID);
+		for( Link l : sourceLlinks){
+			mVocabDB.getGraph().remove(l.getID());
+		}
+		mVocabDB.getGraph().remove(folderID);
+		
 	}
 	
 	private void showAddDialog(int i) {
@@ -205,7 +243,10 @@ public class ConfigActivity extends Activity implements
 		if (mLayoutChanged) {
 			showConfirmBackDialog();
 		} else {
-			setResult(Activity.RESULT_OK);
+			Intent intent = new Intent();
+			intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
+
+			setResult(Activity.RESULT_OK, intent);
 			super.onBackPressed();
 		}
 	}

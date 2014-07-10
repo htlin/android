@@ -29,4 +29,11 @@
 	<string name="button_back">Back</string>
 	<string name="path_separator">▶</string>
 	
+	
+	<string name="testing_ask">Ask</string>
+	<string name="testing_request">Enter new text</string>
+	<string name="testing_result">Result</string>
+	
+	
+	
 </resources>

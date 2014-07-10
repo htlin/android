@@ -2,14 +2,13 @@ package org.easycomm.config;
 
 import java.util.List;
 import java.util.Map;
-
 import org.easycomm.R;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.CUtil;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -29,8 +29,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
+import android.widget.TextView;
 
-public class AddModifyVocabDialogFragment extends DialogFragment {
+public class AddModifyVocabDialogFragment extends DialogFragment 
+//implements RequestDialogListener 
+{
 
 	public interface AddVocabDialogListener {
 		public void onAddVocabDialogPositiveClick(AddModifyVocabDialogFragment dialog);
@@ -38,6 +41,8 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 	}
 
 	public static final String ARG_VOCAB_ID = "vocabID";
+	
+	private View dialogView;
 	
 	private AddVocabDialogListener mListener;
 	private String mSelectedVocabID;
@@ -59,7 +64,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 		
 		//Inflate view
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View dialogView = inflater.inflate(R.layout.dialog_vocab_add, null);
+		dialogView = inflater.inflate(R.layout.dialog_vocab_add, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(mSelectedVocabID == null ? R.string.dialog_vocab_add : R.string.dialog_vocab_modify)
 		.setView(dialogView)
@@ -77,7 +82,9 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 		//Attach listeners and adapters
 		EditText displayText = (EditText) dialogView.findViewById(R.id.display_text);
 		EditText speechText = (EditText) dialogView.findViewById(R.id.speech_text);
+		Button askButton = (Button) dialogView.findViewById(R.id.testing_button_ask);
 		ListView listView = (ListView) dialogView.findViewById(R.id.listview);
+		
 		
 		TextWatcher textWatcher = new TextWatcher() {
 			@Override
@@ -109,6 +116,14 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 			}
 		});
 		
+		askButton.setOnClickListener(new OnClickListener() {
+			@SuppressLint("NewApi")
+			@Override
+			public void onClick(View v) {
+				newDialog();
+			}
+		});
+		
 		//Populate content for Modify
 		AlertDialog dialog = builder.create();
 		dialog.show();
@@ -136,6 +151,17 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 		validate(dialog);
 		
 		return dialog;
+	}
+	
+	private void newDialog() {
+		DialogFragment requestFragment = new RequestNewTextDialogFragment();
+		requestFragment.setTargetFragment(this, 0);
+		requestFragment.show(getFragmentManager(), "Request");		
+	}
+	
+	public void receiveData(String result){
+		TextView resultView = (TextView) dialogView.findViewById(R.id.testing_textview_answer);
+		resultView.setText(result);
 	}
 
 	private SimpleAdapter getAdapter() {
@@ -205,5 +231,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 	
 }

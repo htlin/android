@@ -27,11 +27,34 @@
         android:id="@+id/speech_text"
         android:layout_width="@dimen/dialog_width"
         android:inputType="text" />
+    
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/testing_ask" />
+    
+    
+    <Button
+        android:id="@+id/testing_button_ask" 
+        android:layout_gravity="center_vertical"
+        android:text="@string/testing_ask" />
+    
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/testing_result" />
+    
+    <TextView
+        android:id="@+id/testing_textview_answer"
+		android:layout_width="@dimen/dialog_width"
+        android:layout_gravity="center_vertical" 
+        android:text="@string/speech_text" />
+     
 
     <TextView
         android:layout_column="0"
         android:layout_gravity="right"
-        android:text="@string/vocab_image" />
+        android:text="@string/vocab_image" />    
 
     <ListView
         android:id="@+id/listview"
@@ -40,5 +63,8 @@
         android:paddingBottom="@dimen/button_side_small"
         android:choiceMode="singleChoice"
         android:listSelector="@drawable/listview_selector" />
+    
+    
+    
 
 </GridLayout>

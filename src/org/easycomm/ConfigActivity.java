@@ -101,13 +101,8 @@ public class ConfigActivity extends Activity implements
 		
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (mLayoutChanged) {
-				showConfirmBackDialog();
-				return true;
-			} else {
-				return super.onOptionsItemSelected(item);
-			}
-			
+			onBackPressed();
+			return true;
 			
 		case R.id.action_add_vocab:
 			showAddDialog(1);

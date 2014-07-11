@@ -2,12 +2,14 @@ package org.easycomm.config;
 
 import java.util.List;
 import java.util.Map;
+
 import org.easycomm.R;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.CUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -81,10 +84,19 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		
 		//Attach listeners and adapters
 		EditText displayText = (EditText) dialogView.findViewById(R.id.display_text);
+		CheckBox speakCB = (CheckBox) dialogView.findViewById(R.id.speak_checkbox);
 		EditText speechText = (EditText) dialogView.findViewById(R.id.speech_text);
-		Button askButton = (Button) dialogView.findViewById(R.id.testing_button_ask);
-		ListView listView = (ListView) dialogView.findViewById(R.id.listview);
+		Button imageChooseButton = (Button) dialogView.findViewById(R.id.image_choose_button);
+		ImageView image = (ImageView) dialogView.findViewById(R.id.vocab_image_chosen);
 		
+		if( mSelectedVocabID != null ){
+			VocabDatabase vocabDB = VocabDatabase.getInstance(getResources().getAssets());
+			Vocab vocab = vocabDB.getVocab(mSelectedVocabID);
+			String text = vocab.getData().getDisplayText();
+			displayText.setText(text);
+			speechText.setText(text);
+			image.setImageDrawable(vocab.getData().getImage());
+		}
 		
 		TextWatcher textWatcher = new TextWatcher() {
 			@Override
@@ -103,24 +115,11 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		displayText.addTextChangedListener(textWatcher);
 		speechText.addTextChangedListener(textWatcher);
 		
-		SimpleAdapter adapter = getAdapter();
-		listView.setAdapter(adapter);
-		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				validate();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
-		
-		askButton.setOnClickListener(new OnClickListener() {
+		imageChooseButton.setOnClickListener(new OnClickListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
-				newDialog();
+				chooseImage();
 			}
 		});
 		
@@ -128,70 +127,33 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		AlertDialog dialog = builder.create();
 		dialog.show();
 		
-		if (mSelectedVocabID == null) {
-			listView.setSelection(0);
-			listView.setItemChecked(0, true);
-		} else {
-			VocabDatabase vocabDB = VocabDatabase.getInstance(getResources().getAssets());
-			Vocab vocab = vocabDB.getGraph().getVocab(mSelectedVocabID);
-			String text = vocab.getData().getDisplayText();			
-			displayText.setText(text);
-			speechText.setText(text);
-			
-			VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
-			int index = vocabReader.indexOf(mSelectedVocabID);
-			if (index < 0) {
-				System.err.println("Vocab not found: " + mSelectedVocabID);
-			} else {
-				listView.setSelection(index);
-				listView.setItemChecked(index, true);
-			}
-		}
+		
 		
 		validate(dialog);
 		
 		return dialog;
 	}
 	
-	private void newDialog() {
-		DialogFragment requestFragment = new RequestNewTextDialogFragment();
-		requestFragment.setTargetFragment(this, 0);
-		requestFragment.show(getFragmentManager(), "Request");		
+	private void chooseImage() {
+		DialogFragment chooseImageFragment = new ImageChooserDialogFragment();
+		chooseImageFragment.setTargetFragment(this, 0);
+		
+		Bundle args = new Bundle();
+		args.putString(ImageChooserDialogFragment.ARG_VOCAB_ID, mSelectedVocabID);
+		chooseImageFragment.setArguments(args);
+		
+		chooseImageFragment.show(getFragmentManager(), "ChooseImage");		
 	}
 	
-	public void receiveData(String result){
-		TextView resultView = (TextView) dialogView.findViewById(R.id.testing_textview_answer);
-		resultView.setText(result);
-	}
-
-	private SimpleAdapter getAdapter() {
-		VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
-		List<Map<String, Object>> aList = CUtil.makeList();
-		for (VocabData vocabData : vocabReader.getAllVocabData()) {
-			Map<String, Object> map = CUtil.makeMap();
-			map.put("name", vocabData.getFilename());
-			map.put("image", vocabData.getImage());
-			aList.add(map);
+	public void receiveData(Drawable image){
+		// not finish yet *****************************
+		if(image != null) {
+			ImageView iv = (ImageView) dialogView.findViewById(R.id.vocab_image_chosen);
+			iv.setImageDrawable(image);
 		}
-
-		String[] from = { "image", "name" };
-		int[] to = { R.id.vocab_image, R.id.vocab_name};
-
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), aList, R.layout.listview_layout, from, to);
-		adapter.setViewBinder(new ViewBinder() {
-			public boolean setViewValue(View view, Object data, String textRepresentation) {
-				if(view instanceof ImageView && data instanceof Drawable) {
-					ImageView iv = (ImageView) view;
-					iv.setImageDrawable((Drawable) data);
-					return true;
-				} else {
-					return false;
-				}
-			}
-		});
-
-		return adapter;
 	}
+
+	
 
 	private void validate() {
 		validate((AlertDialog) getDialog());

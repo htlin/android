@@ -17,6 +17,15 @@
         android:id="@+id/display_text"
         android:layout_width="@dimen/dialog_width"
         android:inputType="text" />
+    
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+        android:text="@string/speak_checkbox" />
+
+    <CheckBox
+        android:id="@+id/speak_checkbox"
+        android:checked="false"  />
 
     <TextView
         android:layout_column="0"
@@ -31,40 +40,25 @@
     <TextView
         android:layout_column="0"
         android:layout_gravity="right"
-        android:text="@string/testing_ask" />
+        android:text="@string/vocab_image" />
     
     
     <Button
-        android:id="@+id/testing_button_ask" 
+        android:id="@+id/image_choose_button" 
         android:layout_gravity="center_vertical"
-        android:text="@string/testing_ask" />
+        android:text="@string/image_choose" />
     
     <TextView
         android:layout_column="0"
-        android:layout_gravity="right"
-        android:text="@string/testing_result" />
-    
-    <TextView
-        android:id="@+id/testing_textview_answer"
-		android:layout_width="@dimen/dialog_width"
-        android:layout_gravity="center_vertical" 
-        android:text="@string/speech_text" />
-     
+        android:layout_gravity="right" />   
 
-    <TextView
-        android:layout_column="0"
-        android:layout_gravity="right"
-        android:text="@string/vocab_image" />    
-
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="@dimen/dialog_width"
-        android:layout_height="fill_parent"
-        android:paddingBottom="@dimen/button_side_small"
-        android:choiceMode="singleChoice"
-        android:listSelector="@drawable/listview_selector" />
-    
-    
+    <ImageView
+        android:id="@+id/vocab_image_chosen"
+        android:layout_width="@dimen/button_side_small"
+        android:layout_height="@dimen/button_side_small"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="10dp" /> 
     
 
 </GridLayout>

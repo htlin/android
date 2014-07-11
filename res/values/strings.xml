@@ -30,9 +30,8 @@
 	<string name="path_separator">▶</string>
 	
 	
-	<string name="testing_ask">Ask</string>
-	<string name="testing_request">Enter new text</string>
-	<string name="testing_result">Result</string>
+	<string name="speak_checkbox">Speak?</string>
+	<string name="image_choose">Choose Image</string>
 	
 	
 	

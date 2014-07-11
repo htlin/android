@@ -18,6 +18,7 @@
      
     <item
         android:id="@+id/action_open"
+        android:icon="@drawable/ic_action_play"
         android:showAsAction="always|withText"
         android:title="@string/action_open" />
 

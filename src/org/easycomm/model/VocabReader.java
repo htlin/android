@@ -74,14 +74,4 @@ public class VocabReader {
 		return -1;
 	}
 	
-	public VocabData getVocabData(int index) {
-		if( index < 0 || index >= mAllVocabs.size()){
-			return null;
-		}
-		else {
-			return mAllVocabs.get(index);
-		}
-		
-	}
-	
 }

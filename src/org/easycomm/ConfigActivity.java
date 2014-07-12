@@ -12,6 +12,7 @@ import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
 import org.easycomm.config.ViewSelector;
 import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
+import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Folder;
@@ -26,6 +27,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -271,6 +273,8 @@ public class ConfigActivity extends Activity implements
 		String displayText = dialog.getDisplayText();
 		String speechText = dialog.getSpeechText();
 		String vocabID = dialog.getVocabID();
+		boolean checked = dialog.getSpeakCheckBox();
+		Drawable iamge = dialog.getImage();
 		
 		String selectedID = mSelector.getSelectedID();
 		if (selectedID == null) {
@@ -283,8 +287,16 @@ public class ConfigActivity extends Activity implements
 			updateLayout();
 		} else {
 			//Modify
-			
+
+			VocabData vocab = mVocabDB.getVocab(mSelector.getSelectedID()).getData();
+			vocab.setDisplayText(displayText);
+			vocab.setSpeechText(speechText);
+			vocab.setImage(iamge);		
+		
 		}
+		
+		VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
+		vocabFrag.invalidate();
 	}
 
 	@Override

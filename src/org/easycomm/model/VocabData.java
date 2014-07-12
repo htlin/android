@@ -44,6 +44,10 @@ public class VocabData {
 	public void setSpeechText(String v) {
 		mSpeechText = v;
 	}
+	
+	public void setImage(Drawable image) {
+		mImage = image;
+	}
 
 	public VocabData clone() {
 		return new VocabData(mDisplayText, mSpeechText, mFilename, mImage);

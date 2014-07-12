@@ -20,11 +20,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
+import android.widget.TextView;
 
 public class ImageChooserDialogFragment extends DialogFragment {
 
@@ -32,6 +34,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 	
 	private AddModifyVocabDialogFragment mListener;
 	private int mSelectedVocabImageIndex;
+	private String mSelectedVocabImageName;
 	private String mSelectedVocabID;
 	private List<Map<String, Object>> aList;
 	
@@ -49,7 +52,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 		//
 		
 		mSelectedVocabID = getArguments().getString(ARG_VOCAB_ID);
-		mSelectedVocabImageIndex = -1;
+		mSelectedVocabImageName = null;
 		
 		//Inflate view
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -75,20 +78,19 @@ public class ImageChooserDialogFragment extends DialogFragment {
 		
 		SimpleAdapter adapter = getAdapter();
 		listView.setAdapter(adapter);
-		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				mSelectedVocabImageIndex = arg2;
-				System.out.println("arg2 =  " + arg2);
-				System.out.println("view =  " + arg1.toString());
-				
-			}
+		listView.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				TextView imageName = (TextView) view.findViewById(R.id.vocab_name);
+//				System.err.println("image name =  " + imageName.getText());
+				mSelectedVocabImageName = imageName.getText().toString();
 			}
+			
 		});
-		
+			
 		
 		//Populate content for Modify
 		AlertDialog dialog = builder.create();
@@ -105,7 +107,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 		aList = CUtil.makeList();
 		for (VocabData vocabData : vocabReader.getAllVocabData()) {
 			Map<String, Object> map = CUtil.makeMap();
-			map.put("name", vocabData.getFilename());
+			map.put("name", vocabData.getDisplayText());
 			map.put("image", vocabData.getImage());
 			aList.add(map);
 		}
@@ -130,15 +132,8 @@ public class ImageChooserDialogFragment extends DialogFragment {
 	}
 	
 	private void sendVocabImageIndex(){
-		//  Not finish yet ***************************
-		System.out.println("image select index =  " + mSelectedVocabImageIndex);
-		Drawable image = null;
-		if( mSelectedVocabImageIndex != -1){
-			VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
-			aList.get(mSelectedVocabImageIndex).values();
-			//image = vocabReader.getVocabData(mSelectedVocabImageIndex).getImage();
-		}
-		mListener.receiveData(image);
+		System.err.println("image select index =  " + mSelectedVocabImageIndex);
+		mListener.receiveData(mSelectedVocabImageName);
 		
 	}
 

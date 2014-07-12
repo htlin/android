@@ -145,9 +145,12 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		chooseImageFragment.show(getFragmentManager(), "ChooseImage");		
 	}
 	
-	public void receiveData(Drawable image){
+	public void receiveData(String  imageName){
 		// not finish yet *****************************
-		if(image != null) {
+		if(imageName != null) {
+			Drawable image = null;
+			VocabReader vocabReader = VocabReader.getInstance(getResources().getAssets());
+			image = vocabReader.getVocabData(imageName).getImage();
 			ImageView iv = (ImageView) dialogView.findViewById(R.id.vocab_image_chosen);
 			iv.setImageDrawable(image);
 		}
@@ -181,16 +184,29 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 	
 	public String getDisplayText() {
 		// TODO Auto-generated method stub
-		return null;
+		EditText displayText = (EditText) dialogView.findViewById(R.id.display_text); 
+		return displayText.getText().toString();
 	}
 
 	public String getSpeechText() {
 		// TODO Auto-generated method stub
-		return null;
+		EditText speechText = (EditText) dialogView.findViewById(R.id.speech_text);
+		return speechText.getText().toString();
+	}
+	
+	public boolean getSpeakCheckBox(){
+		CheckBox speakCB = (CheckBox) dialogView.findViewById(R.id.speak_checkbox);
+		return speakCB.isChecked();		
+	}
+	
+	public Drawable getImage(){
+		ImageView image = (ImageView) dialogView.findViewById(R.id.vocab_image_chosen);
+		return image.getDrawable();	
 	}
 
 	public String getVocabID() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	

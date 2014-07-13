@@ -40,7 +40,7 @@
     <TextView
         android:layout_column="0"
         android:layout_gravity="right"
-        android:text="@string/vocab_image" />
+         />
     
     
     <Button
@@ -54,6 +54,29 @@
 
     <ImageView
         android:id="@+id/vocab_image_chosen"
+        android:layout_width="@dimen/button_side_small"
+        android:layout_height="@dimen/button_side_small"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="10dp" /> 
+        
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right"
+         />
+    
+    
+    <Button
+        android:id="@+id/link_choose_button" 
+        android:layout_gravity="center_vertical"
+        android:text="@string/link_choose" />
+    
+    <TextView
+        android:layout_column="0"
+        android:layout_gravity="right" />   
+
+    <ImageView
+        android:id="@+id/folder_image_chosen"
         android:layout_width="@dimen/button_side_small"
         android:layout_height="@dimen/button_side_small"
         android:paddingTop="5dp"

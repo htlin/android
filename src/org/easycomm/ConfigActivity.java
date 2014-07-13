@@ -107,15 +107,15 @@ public class ConfigActivity extends Activity implements
 			return true;
 			
 		case R.id.action_add_vocab:
-			showAddDialog(1);
+			addItem(Constant.LEAF_TYPE, "Add a Vocab");
 			return true;
 			
 		case R.id.action_add_folder:
-			showAddDialog(2);
+			addItem(Constant.FOLDER_TYPE, "Add a Folder");
 			return true;
 			
 		case R.id.action_add_link:
-			showAddDialog(3);
+			addItem(Constant.LINK_TYPE, "Add a Link");
 			return true;
 			
 		case R.id.action_open:
@@ -123,8 +123,7 @@ public class ConfigActivity extends Activity implements
 			return true;
 			
 		case R.id.action_modify:
-			selectedID = mSelector.getSelectedID();
-			showAddModifyDialog(selectedID);
+			modifyItem();
 			return true;
 			
 		case R.id.action_remove:
@@ -196,12 +195,6 @@ public class ConfigActivity extends Activity implements
 		mVocabDB.getGraph().remove(folderID);
 		
 	}
-	
-	private void showAddDialog(int i) {
-		// TODO Auto-generated method stub
-		// to be implemented ...
-		
-	}
 
 	private void updateLayout() {
 		VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
@@ -224,15 +217,40 @@ public class ConfigActivity extends Activity implements
 		DialogFragment newFragment = new ConfirmBackDialogFragment();
 	    newFragment.show(getFragmentManager(), "confirm");
 	}
+	
+	private void addItem(int type, String title){
+		showAddModifyDialog(null, type,  null, title);
+	}
+	
+	private void modifyItem(){
+		String selectedID = mSelector.getSelectedID();
+		int selectedType = mSelector.getType();
+		String followupFOlderID = null;
+		if(selectedType == Constant.LINK_TYPE){
+			followupFOlderID = mSelector.getFollowupFolderID();
+		}
+		switch(selectedType){
+			case Constant.LEAF_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Vocab");
+									break;
+			case Constant.FOLDER_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Folder");
+									break;
+			case Constant.LINK_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Link");
+									break;						
+		}
+	}
 
-	private void showAddModifyDialog(String selectedID) {
+
+	private void showAddModifyDialog(String selectedID, int selectedType, String followupFolderID,
+			String title) {
 		DialogFragment newFragment = new AddModifyVocabDialogFragment();
 		Bundle args = new Bundle();
-		if (selectedID != null) {
-			args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
-		}
+		args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
+		args.putInt(AddModifyVocabDialogFragment.ARG_VOCAB_TYPE, selectedType);
+		args.putString(AddModifyVocabDialogFragment.ARG_FOLDER_ID, followupFolderID);
+		args.putString(AddModifyVocabDialogFragment.ARG_TITLE, title);
+		
 		newFragment.setArguments(args);
-	    newFragment.show(getFragmentManager(), "add");
+	    newFragment.show(getFragmentManager(), "add/modify");
 	}
 
 	@Override
@@ -269,38 +287,48 @@ public class ConfigActivity extends Activity implements
 	}
 
 	@Override
-	public void onAddVocabDialogPositiveClick(AddModifyVocabDialogFragment dialog) {
-		String displayText = dialog.getDisplayText();
-		String speechText = dialog.getSpeechText();
-		String vocabID = dialog.getVocabID();
-		boolean checked = dialog.getSpeakCheckBox();
-		Drawable iamge = dialog.getImage();
+	public void onAddVocabDialogPositiveClick(VocabData data, String followupFolderID) {
+//		boolean checked = dialog.getSpeakCheckBox();
 		
 		String selectedID = mSelector.getSelectedID();
+		int type = mSelector.getType();
 		if (selectedID == null) {
 			//Add
-			//TODO
-//			Vocab vocab = mVocabReader.getVocab(vocabID).copy();
-//			vocab.setDisplayText(displayText);
-//			vocab.setSpeechText(speechText);
-//			mVocabDB.getTree().add(vocab);
+			//  to be implemented ....  add a new Vocab
+			
+			if ( type == Constant.LINK_TYPE ) {
+				
+				
+				
+			}
 			updateLayout();
 		} else {
 			//Modify
 
 			VocabData vocab = mVocabDB.getVocab(mSelector.getSelectedID()).getData();
-			vocab.setDisplayText(displayText);
-			vocab.setSpeechText(speechText);
-			vocab.setImage(iamge);		
+			vocab.setDisplayText(data.getDisplayText());
+			vocab.setSpeechText(data.getSpeechText());
+			vocab.setFilename(data.getFilename());
+			vocab.setImage(data.getImage());
+			
+			if ( type == Constant.LINK_TYPE ) {
+				if(  followupFolderID != mSelector.getFollowupFolderID() ){
+					System.err.println(" followupFolder ID = " + followupFolderID);
+					Vocab folder = mVocabDB.getVocab(followupFolderID);
+					System.err.println(" followupFolder vocab name = " + folder.getData().getDisplayText());
+					//  to be implemented ....  change the edge from this link to followupFolderID
+					
+				}
+				else {
+					System.err.println(" Link folder unchange.");
+				}
+			}
+			updateLayout();
 		
 		}
 		
-		VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
-		vocabFrag.invalidate();
-	}
+		mSelector.deselect();
 
-	@Override
-	public void onAddVocabDialogNegativeClick(AddModifyVocabDialogFragment dialog) {
 	}
 	
 	
@@ -313,6 +341,8 @@ public class ConfigActivity extends Activity implements
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
 		mSelector.setFollowupFolderID(newID);
+		int vocabType = FolderChanger.INSTANCE.getType();
+		mSelector.setType(vocabType);
 		
 		if (changed) {
 			invalidateOptionsMenu();

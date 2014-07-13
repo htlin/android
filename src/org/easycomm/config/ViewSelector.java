@@ -7,6 +7,7 @@ public class ViewSelector {
 	private String mSelectedID;
 	private String mFollowupFolderID;
 	private View mSelectedView;
+	private int mVocabType;
 	
 	public boolean isSelected() {
 		return mSelectedID != null;
@@ -26,6 +27,14 @@ public class ViewSelector {
 	
 	public String getFollowupFolderID() {
 		return mFollowupFolderID;
+	}
+	
+	public int getType() {
+		return mVocabType;
+	}
+	
+	public void setType(int type) {
+		mVocabType = type;
 	}
 
 	public boolean select(String id, View v) {

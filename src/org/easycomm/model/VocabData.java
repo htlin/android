@@ -45,6 +45,10 @@ public class VocabData {
 		mSpeechText = v;
 	}
 	
+	public void setFilename(String filename) {
+		mFilename = filename;
+	}
+	
 	public void setImage(Drawable image) {
 		mImage = image;
 	}

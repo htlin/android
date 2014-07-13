@@ -32,7 +32,7 @@
 	
 	<string name="speak_checkbox">Speak?</string>
 	<string name="image_choose">Choose Image</string>
-	
+	<string name="link_choose">Choose Link</string>
 	
 	
 </resources>

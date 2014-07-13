@@ -12,7 +12,7 @@ import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.VocabVisitor;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,7 +36,7 @@ public class ButtonFactory {
 		
 		private void makeButton(Vocab v) {
 			mResult = new Button(mContext);
-			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
+			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize - 8, mSideSize - 8));
 			mResult.setText(v.getData().getDisplayText());
 			mResult.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
 			mResult.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);
@@ -46,20 +46,22 @@ public class ButtonFactory {
 		@Override
 		public void visit(Leaf v) {
 			makeButton(v);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_leaf);
+			mResult.setBackground(drawable);
 		}
 
 		@Override
 		public void visit(Folder v) {
 			makeButton(v);
-	        int folderColor = mContext.getResources().getColor(R.color.buttonFolderBackground);
-	        mResult.getBackground().setColorFilter(folderColor, PorterDuff.Mode.MULTIPLY);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_folder);
+			mResult.setBackground(drawable);
 		}
 
 		@Override
 		public void visit(Link v) {
 			makeButton(v);
-	        int folderColor = mContext.getResources().getColor(R.color.buttonFolderBackground);
-	        mResult.getBackground().setColorFilter(folderColor, PorterDuff.Mode.MULTIPLY);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_link);
+			mResult.setBackground(drawable);
 		}
 
 	}

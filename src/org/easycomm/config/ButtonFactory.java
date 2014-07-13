@@ -12,12 +12,11 @@ import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.VocabVisitor;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnLongClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 
 public class ButtonFactory {
@@ -30,15 +29,15 @@ public class ButtonFactory {
 	
 	private class ButtonRenderer implements VocabVisitor {
 
-		private Button mResult;
+		private DraggableButton mResult;
 
-		public Button getResult() {
+		public DraggableButton getResult() {
 			return mResult;
 		}
 		
 		private void makeButton(Vocab v) {
-			mResult = new Button(mContext);
-			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
+			mResult = new DraggableButton(mContext);
+			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize - 8, mSideSize - 8));
 			mResult.setText(v.getData().getDisplayText());
 			mResult.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
 			mResult.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);
@@ -48,20 +47,22 @@ public class ButtonFactory {
 		@Override
 		public void visit(Leaf v) {
 			makeButton(v);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_leaf);
+			mResult.setBackground(drawable);
 		}
 
 		@Override
 		public void visit(Folder v) {
 			makeButton(v);
-	        int folderColor = mContext.getResources().getColor(R.color.buttonFolderBackground);
-	        mResult.getBackground().setColorFilter(folderColor, PorterDuff.Mode.MULTIPLY);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_folder);
+			mResult.setBackground(drawable);
 		}
 
 		@Override
 		public void visit(Link v) {
 			makeButton(v);
-	        int folderColor = mContext.getResources().getColor(R.color.buttonFolderBackground);
-	        mResult.getBackground().setColorFilter(folderColor, PorterDuff.Mode.MULTIPLY);
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.btn_link);
+			mResult.setBackground(drawable);
 		}
 
 	}
@@ -99,15 +100,11 @@ public class ButtonFactory {
 	}
 	
 	public DraggableButton get(Vocab v, OnClickListener onClickListener, OnLongClickListener onLongClickListener, OnDragListener onDragListener) {
-		DraggableButton button = new DraggableButton(mContext);
-		button.setLayoutParams(new GridView.LayoutParams(mSideSize, mSideSize));
-    	button.setText(v.getData().getDisplayText());
-        button.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
-        button.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);
-        button.setOnClickListener(onClickListener);
+		v.accept(mRenderer);
+		DraggableButton button = mRenderer.getResult();
+		button.setOnClickListener(onClickListener);
         button.setOnLongClickListener(onLongClickListener);
         button.setOnDragListener(onDragListener);
-        button.setTag(v.getID());
 		return button;
 	}
 

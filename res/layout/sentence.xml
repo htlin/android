@@ -10,11 +10,13 @@
         android:id="@+id/sentence"
         android:layout_width="0dp"
         android:layout_height="@dimen/button_side"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:background="@color/sentenceBackground"
         android:clickable="true"
+        android:divider="@drawable/sentence_divider"
+        android:showDividers="beginning|middle"
         android:orientation="horizontal" >
-        
     </LinearLayout>
 
     <Button
@@ -23,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/button_delete" />
-    
+
     <Button
         android:id="@+id/delete_all"
         android:layout_width="wrap_content"

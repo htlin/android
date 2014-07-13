@@ -63,7 +63,7 @@ public class ConfigActivity extends Activity implements
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mButtonFactory.setCurrentFolder(getCurrentFolder());
-		mSelector = new ViewSelector(getResources());
+		mSelector = new ViewSelector();
 		
 		setContentView(R.layout.activity_vocab_config);
 		

@@ -120,7 +120,6 @@ public class SentenceFragment extends Fragment {
 	}
 	
 	protected void onDeleteAllClick(View v) {
-		// TODO Auto-generated method stub
 		deleteAll();
 	}
 

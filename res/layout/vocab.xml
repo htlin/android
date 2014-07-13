@@ -2,10 +2,10 @@
     android:id="@+id/vocab_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top"
-    android:orientation="vertical"
-    android:horizontalSpacing="1dp"
     android:columnWidth="@dimen/button_side"
+    android:gravity="center"
+    android:horizontalSpacing="0dp"
     android:numColumns="auto_fit"
+    android:orientation="vertical"
     android:stretchMode="none"
-    android:verticalSpacing="1dp" />
+    android:verticalSpacing="0dp" />

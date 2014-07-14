@@ -214,6 +214,11 @@ public class MainActivity extends Activity implements
 		}
 	}
 	
+	@Override
+	public void onOpenButtonClick() {
+		
+	}
+	
 	private void updateFolderPath() {
 		List<String> folderTexts = CUtil.makeList();
 		for (String id : mFolderPathIDs) {

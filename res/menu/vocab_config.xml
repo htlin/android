@@ -15,12 +15,6 @@
                   android:title="@string/action_add_link"/>
         </menu>
      </item>
-     
-    <item
-        android:id="@+id/action_open"
-        android:icon="@drawable/ic_action_play"
-        android:showAsAction="always|withText"
-        android:title="@string/action_open" />
 
     <item
         android:id="@+id/action_modify"

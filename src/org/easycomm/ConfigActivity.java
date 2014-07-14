@@ -16,6 +16,7 @@ import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Folder;
+import org.easycomm.model.graph.Leaf;
 import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
@@ -45,6 +46,7 @@ public class ConfigActivity extends Activity implements
 	private ViewSelector mSelector;
 	private boolean mLayoutChanged;
 	private ArrayList<String> mFolderPathIDs;
+	private int mSelectedType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,9 @@ public class ConfigActivity extends Activity implements
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean isSelected = mSelector.isSelected();
 		boolean hasFollowupFolder = mSelector.hasFollowupFolder();
-		menu.findItem(R.id.action_open).setEnabled(hasFollowupFolder);
+
+		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
+		navFrag.setOpenButtonState(hasFollowupFolder);
 		
         menu.findItem(R.id.action_modify).setEnabled(isSelected);
         menu.findItem(R.id.action_remove).setEnabled(isSelected);
@@ -116,10 +120,6 @@ public class ConfigActivity extends Activity implements
 			
 		case R.id.action_add_link:
 			addItem(Constant.LINK_TYPE, "Add a Link");
-			return true;
-			
-		case R.id.action_open:
-			openFolder();
 			return true;
 			
 		case R.id.action_modify:
@@ -169,7 +169,6 @@ public class ConfigActivity extends Activity implements
 			mVocabDB.getGraph().remove(selectedID);
 		}
 		
-		
 		mSelector.deselect();
 		updateLayout();
 	}
@@ -185,7 +184,6 @@ public class ConfigActivity extends Activity implements
 			else {
 				mVocabDB.getGraph().remove(v.getID());
 			}
-			
 		}
 		
 		List<Link> sourceLlinks = mVocabDB.getGraph().getSourceLinks(folderID);
@@ -219,22 +217,23 @@ public class ConfigActivity extends Activity implements
 	}
 	
 	private void addItem(int type, String title){
+		mSelectedType = type;
 		showAddModifyDialog(null, type,  null, title);
 	}
 	
 	private void modifyItem(){
 		String selectedID = mSelector.getSelectedID();
-		int selectedType = mSelector.getType();
+		mSelectedType = mSelector.getType();
 		String followupFOlderID = null;
-		if(selectedType == Constant.LINK_TYPE){
+		if(mSelectedType == Constant.LINK_TYPE){
 			followupFOlderID = mSelector.getFollowupFolderID();
 		}
-		switch(selectedType){
-			case Constant.LEAF_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Vocab");
+		switch(mSelectedType){
+			case Constant.LEAF_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Vocab");
 									break;
-			case Constant.FOLDER_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Folder");
+			case Constant.FOLDER_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Folder");
 									break;
-			case Constant.LINK_TYPE: showAddModifyDialog(selectedID, selectedType,  followupFOlderID, "Modify a Link");
+			case Constant.LINK_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Link");
 									break;						
 		}
 	}
@@ -288,20 +287,29 @@ public class ConfigActivity extends Activity implements
 
 	@Override
 	public void onAddVocabDialogPositiveClick(VocabData data, String followupFolderID) {
-//		boolean checked = dialog.getSpeakCheckBox();
-		
 		String selectedID = mSelector.getSelectedID();
-		int type = mSelector.getType();
-		if (selectedID == null) {
+		if ( selectedID == null) {
 			//Add
-			//  to be implemented ....  add a new Vocab
 			
-			if ( type == Constant.LINK_TYPE ) {
-				
-				
-				
+			switch( mSelectedType ){
+				case Constant.LEAF_TYPE:
+					Leaf leaf = mVocabDB.getGraph().makeLeaf(data);
+					mVocabDB.getGraph().addChild(getCurrentFolder(), leaf.getID());
+					break;
+				case Constant.FOLDER_TYPE:
+					Folder folder = mVocabDB.getGraph().makeFolder(data);
+					mVocabDB.getGraph().addChild(getCurrentFolder(), folder.getID());
+					System.err.println("new folder added.");
+					break;
+				case Constant.LINK_TYPE:
+					Link link = mVocabDB.getGraph().makeLink(data);
+					mVocabDB.getGraph().addChild(getCurrentFolder(), link.getID());
+					mVocabDB.getGraph().addChild(link.getID(), followupFolderID);
+					break;
 			}
+			
 			updateLayout();
+			
 		} else {
 			//Modify
 
@@ -311,20 +319,19 @@ public class ConfigActivity extends Activity implements
 			vocab.setFilename(data.getFilename());
 			vocab.setImage(data.getImage());
 			
-			if ( type == Constant.LINK_TYPE ) {
-				if(  followupFolderID != mSelector.getFollowupFolderID() ){
+			if ( mSelectedType == Constant.LINK_TYPE ) {
+				if( ! followupFolderID.equals(mSelector.getFollowupFolderID()) ){
 					System.err.println(" followupFolder ID = " + followupFolderID);
 					Vocab folder = mVocabDB.getVocab(followupFolderID);
-					System.err.println(" followupFolder vocab name = " + folder.getData().getDisplayText());
-					//  to be implemented ....  change the edge from this link to followupFolderID
-					
+					mVocabDB.getGraph().removeChild(selectedID, mSelector.getFollowupFolderID());
+					mVocabDB.getGraph().addChild(selectedID, followupFolderID);
 				}
 				else {
 					System.err.println(" Link folder unchange.");
 				}
 			}
+			
 			updateLayout();
-		
 		}
 		
 		mSelector.deselect();
@@ -377,6 +384,11 @@ public class ConfigActivity extends Activity implements
 			mFolderPathIDs.remove(mFolderPathIDs.size() - 1);
 			updateFolderPath();
 		}
+	}
+	
+	@Override
+	public void onOpenButtonClick() {
+		openFolder();
 	}
 	
 	private void updateFolderPath() {

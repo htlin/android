@@ -11,9 +11,6 @@
     <string name="action_add_folder">Folder</string>
     <string name="action_add_link">Link</string>
     
-    <string name="action_open">Open Folder</string>
-    
-    
     <string name="action_edit">Modify</string>
     <string name="action_remove">Remove</string>
     <string name="action_save">Save</string>
@@ -27,6 +24,7 @@
     <string name="vocab_image">Image:</string>
     <string name="button_home">Home</string>
 	<string name="button_back">Back</string>
+	<string name="button_open">Open</string>
 	<string name="path_separator">▶</string>
 	
 	

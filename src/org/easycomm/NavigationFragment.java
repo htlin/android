@@ -20,6 +20,7 @@ public class NavigationFragment extends Fragment {
 	public interface NavigationListener {
 		void onHomeButtonClick();
 		void onBackButtonClick();
+		void onOpenButtonClick();
 	}
 	
 	private NavigationListener mCallback;
@@ -54,6 +55,16 @@ public class NavigationFragment extends Fragment {
 				mCallback.onBackButtonClick();
 			}
 		});
+		
+		Button open = (Button) view.findViewById(R.id.open);
+		open.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCallback.onOpenButtonClick();
+			}
+		});
+		
+		open.setEnabled(false);
 		
 		return view;
 	}
@@ -92,6 +103,11 @@ public class NavigationFragment extends Fragment {
 		
 		TextView textview = (TextView) getView().findViewById(R.id.current_path);
 		textview.setText(s.toString());
+	}
+	
+	public void setOpenButtonState(boolean visible){
+		Button open = (Button) getView().findViewById(R.id.open);
+		open.setEnabled(visible);
 	}
 
 }

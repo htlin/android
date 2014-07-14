@@ -265,6 +265,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 				iv.setImageDrawable(image);
 			}
 		}
+		validate();
 	}	
 
 	private void validate() {
@@ -276,21 +277,24 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 			return;
 		}
 		
+		boolean enable = true;
+		
 		EditText displayText = (EditText) dialog.findViewById(R.id.display_text);
 		EditText speechText = (EditText) dialog.findViewById(R.id.speech_text);
 		CheckBox speakCB = (CheckBox) mDialogView.findViewById(R.id.speak_checkbox);
 		Button posButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 		if (displayText.getText().length() ==  0) {
-			posButton.setEnabled(false);
+			enable = enable && false;
 		}
-		else {
-			if( speakCB.isChecked() && speechText.getText().length() == 0  ){
-				posButton.setEnabled(false);
-			}
-			else {
-				posButton.setEnabled(true);
-			}
-		}		
+		if( speakCB.isChecked() && speechText.getText().length() == 0  ){
+			enable = enable && false;
+		}
+		if( mImageFilename == null) enable = enable && false;
+		if( mVocabType == Constant.LINK_TYPE && mNewFollowupFolderID == null) {
+			enable = enable && false;
+		}
+		
+		posButton.setEnabled(enable);
 	}
 	
 	

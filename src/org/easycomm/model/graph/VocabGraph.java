@@ -65,6 +65,14 @@ public class VocabGraph {
 		}	
 		return VocabSorter.INSTANCE.getLinks();
 	}
+	
+	public void removeChild(Vocab folder, Vocab child) {
+		removeChild(folder.getID(), child.getID());
+	}
+	
+	public void removeChild(String folderID, String childID) {
+		mGraph.removeEdge(folderID, childID);
+	}
 
 	public void addChild(Vocab folder, Vocab child) {
 		addChild(folder.getID(), child.getID());
@@ -73,6 +81,8 @@ public class VocabGraph {
 	public void addChild(String folderID, String childID) {
 		mGraph.addEdge(folderID, childID);
 	}
+	
+	
 	
 	public void remove(String id) {
 		mGraph.removeVertex(id);

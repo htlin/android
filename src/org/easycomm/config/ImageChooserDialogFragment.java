@@ -4,13 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.easycomm.R;
-import org.easycomm.model.VocabData;
-import org.easycomm.model.VocabDatabase;
-import org.easycomm.model.VocabReader;
-import org.easycomm.model.graph.Vocab;
-import org.easycomm.util.CUtil;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -21,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
-import android.widget.TextView;
 
 public class ImageChooserDialogFragment extends DialogFragment {
 
@@ -38,8 +30,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		try {
-			
+		try {			
 			mListener = (AddModifyVocabDialogFragment) getTargetFragment();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(getTargetFragment().toString() + " can not cast to AddModifyVocabDialogFragment");
@@ -51,7 +42,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View dialogView = inflater.inflate(R.layout.dialog_image_choose, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle( title ) 
+		builder.setTitle(title) 
 		.setView(dialogView)
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -59,8 +50,7 @@ public class ImageChooserDialogFragment extends DialogFragment {
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				
+			public void onClick(DialogInterface dialog, int id) {				
 			}
 		});
 		
@@ -70,12 +60,9 @@ public class ImageChooserDialogFragment extends DialogFragment {
 		
 		SimpleAdapter adapter = getAdapter();
 		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new OnItemClickListener(){
-
+		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				mSelectedIndex = position;
 			}
 		});

@@ -97,17 +97,25 @@ public class NavigationFragment extends Fragment {
 		s.append(PATH_SEPARATOR);
 		for (int i = 1; i < folderTexts.size(); i++) {
 			s.append(folderTexts.get(i))
-			 .append(PATH_SEPARATOR);
-			 
+			 .append(PATH_SEPARATOR);			 
 		}
 		
 		TextView textview = (TextView) getView().findViewById(R.id.current_path);
 		textview.setText(s.toString());
 	}
 	
-	public void setOpenButtonState(boolean visible){
+	public void setOpenButtonState(boolean enabled){
 		Button open = (Button) getView().findViewById(R.id.open);
-		open.setEnabled(visible);
+		open.setEnabled(enabled);
 	}
 
+	public void setOpenButtonVisibility(boolean visible){
+		Button open = (Button) getView().findViewById(R.id.open);
+		if (visible) {
+			open.setVisibility(View.VISIBLE);
+		} else {
+			open.setVisibility(View.GONE);
+		}
+	}
+	
 }

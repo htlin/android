@@ -28,7 +28,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,11 +54,9 @@ public class ConfigActivity extends Activity implements
 		if (savedInstanceState != null) {
 			mLayoutChanged = savedInstanceState.getBoolean(Constant.LAYOUT_CHANGED);
 			mFolderPathIDs = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
-		}
-		else {
+		} else {
 			mFolderPathIDs = getIntent().getStringArrayListExtra(Constant.FOLDER_PATH);
 		}
-		
 		
 		mVocabReader = VocabReader.getInstance(getResources().getAssets());
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
@@ -68,6 +65,9 @@ public class ConfigActivity extends Activity implements
 		mSelector = new ViewSelector();
 		
 		setContentView(R.layout.activity_vocab_config);
+		
+		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
+		navFrag.setOpenButtonVisibility(true);
 		
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
@@ -90,12 +90,7 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean isSelected = mSelector.isSelected();
-		boolean hasFollowupFolder = mSelector.hasFollowupFolder();
-
-		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
-		navFrag.setOpenButtonState(hasFollowupFolder);
-		
-        menu.findItem(R.id.action_modify).setEnabled(isSelected);
+		menu.findItem(R.id.action_modify).setEnabled(isSelected);
         menu.findItem(R.id.action_remove).setEnabled(isSelected);
         menu.findItem(R.id.action_save).setEnabled(mLayoutChanged);
 	    return true;
@@ -103,8 +98,6 @@ public class ConfigActivity extends Activity implements
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		String selectedID;
-		
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
@@ -153,8 +146,7 @@ public class ConfigActivity extends Activity implements
 		
 	}
 	
-	private void removeVocab(){
-		
+	private void removeVocab() {		
 		// check whether the selected item is a folder or not 
 		Vocab vocab = mVocabDB.getVocab(mSelector.getSelectedID());
 		if (vocab instanceof Folder) {
@@ -173,8 +165,7 @@ public class ConfigActivity extends Activity implements
 		updateLayout();
 	}
 	
-	private void removeFolder(String folderID){
-		
+	private void removeFolder(String folderID) {		
 		List<Vocab> children = mVocabDB.getGraph().getChildren(folderID);
 		for( Vocab v : children){
 			if(v instanceof Folder){
@@ -221,14 +212,14 @@ public class ConfigActivity extends Activity implements
 		showAddModifyDialog(null, type,  null, title);
 	}
 	
-	private void modifyItem(){
+	private void modifyItem() {
 		String selectedID = mSelector.getSelectedID();
 		mSelectedType = mSelector.getType();
 		String followupFOlderID = null;
 		if(mSelectedType == Constant.LINK_TYPE){
 			followupFOlderID = mSelector.getFollowupFolderID();
 		}
-		switch(mSelectedType){
+		switch(mSelectedType) {
 			case Constant.LEAF_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Vocab");
 									break;
 			case Constant.FOLDER_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Folder");
@@ -239,8 +230,7 @@ public class ConfigActivity extends Activity implements
 	}
 
 
-	private void showAddModifyDialog(String selectedID, int selectedType, String followupFolderID,
-			String title) {
+	private void showAddModifyDialog(String selectedID, int selectedType, String followupFolderID, String title) {
 		DialogFragment newFragment = new AddModifyVocabDialogFragment();
 		Bundle args = new Bundle();
 		args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
@@ -322,7 +312,6 @@ public class ConfigActivity extends Activity implements
 			if ( mSelectedType == Constant.LINK_TYPE ) {
 				if( ! followupFolderID.equals(mSelector.getFollowupFolderID()) ){
 					System.err.println(" followupFolder ID = " + followupFolderID);
-					Vocab folder = mVocabDB.getVocab(followupFolderID);
 					mVocabDB.getGraph().removeChild(selectedID, mSelector.getFollowupFolderID());
 					mVocabDB.getGraph().addChild(selectedID, followupFolderID);
 				}
@@ -344,12 +333,14 @@ public class ConfigActivity extends Activity implements
 		boolean changed = mSelector.select(id, v);
 		String selectedID = mSelector.getSelectedID();
 		Vocab vocab = mVocabDB.getVocab(selectedID);
-		FolderChanger.INSTANCE.init(mVocabDB);
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
 		mSelector.setFollowupFolderID(newID);
 		int vocabType = FolderChanger.INSTANCE.getType();
 		mSelector.setType(vocabType);
+		
+		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
+		navFrag.setOpenButtonState(mSelector.hasFollowupFolder());
 		
 		if (changed) {
 			invalidateOptionsMenu();

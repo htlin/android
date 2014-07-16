@@ -8,7 +8,6 @@ import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Folder;
-import org.easycomm.model.graph.Vocab;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.Constant;
 
@@ -25,20 +24,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleAdapter.ViewBinder;
-import android.widget.TextView;
 
-public class AddModifyVocabDialogFragment extends DialogFragment 
-
-{
+public class AddModifyVocabDialogFragment extends DialogFragment {
 
 	public interface AddVocabDialogListener {
 		public void onAddVocabDialogPositiveClick(VocabData data, String followupFolderID);
@@ -54,7 +45,6 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 	private String mFollowupFolderID;
 	
 	public static final String ARG_TITLE = "title";
-	private String title;
 	
 	private VocabReader mVocabReader;
 	private VocabDatabase mVocabDB;
@@ -103,8 +93,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				
+			public void onClick(DialogInterface dialog, int id) {				
 			}
 		});
 		
@@ -117,29 +106,26 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		Button linkChooseButton = (Button) mDialogView.findViewById(R.id.link_choose_button);
 		ImageView imageLink = (ImageView) mDialogView.findViewById(R.id.folder_image_chosen);
 		
-		if( mSelectedVocabID != null ){
+		if (mSelectedVocabID != null) {
 			// Modify ...
 			VocabData vocabData = mVocabDB.getVocab(mSelectedVocabID).getData();
 			displayText.setText(vocabData.getDisplayText());
 			speakCB.setChecked(true);
 			speechText.setText(vocabData.getSpeechText());
 			image.setImageDrawable(vocabData.getImage());
-			if( mVocabType == Constant.LINK_TYPE  ){
+			if (mVocabType == Constant.LINK_TYPE) {
 				VocabData linkFolderData = mVocabDB.getVocab(mFollowupFolderID).getData();
 				imageLink.setImageDrawable(linkFolderData.getImage());
 				mNewFollowupFolderID = mFollowupFolderID;
-			}
-			else {
+			} else {
 				linkChooseButton.setVisibility(View.GONE);
 				imageLink.setVisibility(View.GONE);
 			}
-		}
-		else {
+		} else {
 			// Add ...
-			if( mVocabType == Constant.LINK_TYPE  ){
+			if (mVocabType == Constant.LINK_TYPE) {
 				
-			}
-			else {
+			} else {
 				linkChooseButton.setVisibility(View.GONE);
 				imageLink.setVisibility(View.GONE);
 			}
@@ -165,15 +151,10 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		speakCB.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (((CheckBox) v).isChecked()) {
-					speechText.setEnabled(true);
-				}
-				else {
-					speechText.setEnabled(false);
-				}
+				boolean checked = ((CheckBox) v).isChecked();
+				speechText.setEnabled(checked);
 				validate();
-			}
-			
+			}			
 		});
 		
 		imageChooseButton.setOnClickListener(new OnClickListener() {
@@ -218,7 +199,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment
 		Bundle args = new Bundle();
 		args.putString(ImageChooserDialogFragment.ARG_TITLE, title);
 		chooseImageFragment.setArguments(args);
-		
+
 		chooseImageFragment.show(getFragmentManager(), "Choose");		
 	}	
 	

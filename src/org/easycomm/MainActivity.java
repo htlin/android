@@ -12,7 +12,6 @@ import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
-import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
@@ -54,6 +53,7 @@ public class MainActivity extends Activity implements
 		
 		mTTS = new TextToSpeech(this, this);
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
+		FolderChanger.INSTANCE.init(mVocabDB);
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mButtonFactory.setCurrentFolder(getCurrentFolder());
 		setContentView(R.layout.activity_main);
@@ -86,12 +86,6 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onResume(){
 		super.onResume();
-		/*
-		Folder root = mVocabDB.getGraph().getRoot();
-		List<Vocab> list = mVocabDB.getGraph().getChildren(root.getID());
-		Vocab v = list.get(list.size()-1);
-		mVocabDB.getGraph().remove(v.getID());
-		*/
 	}
 	
 	@Override
@@ -169,7 +163,6 @@ public class MainActivity extends Activity implements
 			sentenseFrag.addButton(id);
 		}
 		
-		FolderChanger.INSTANCE.init(mVocabDB);
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
 		if (newID != null) {
@@ -215,8 +208,7 @@ public class MainActivity extends Activity implements
 	}
 	
 	@Override
-	public void onOpenButtonClick() {
-		
+	public void onOpenButtonClick() {		
 	}
 	
 	private void updateFolderPath() {

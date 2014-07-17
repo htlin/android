@@ -2,6 +2,7 @@ package org.easycomm.model.graph;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.easycomm.model.VocabData;
@@ -40,8 +41,11 @@ public class VocabGraph {
 	
 	public List<Folder> getAllFolders() {
 		VocabSorter.INSTANCE.clear();
-		for (Vocab v : mMap.values()) {
-			v.accept(VocabSorter.INSTANCE);
+		for (Entry<String, Vocab> entry : mMap.entrySet()) {
+			String id = entry.getKey();
+			if (ROOT_ID.equals(id)) continue;
+			
+			entry.getValue().accept(VocabSorter.INSTANCE);
 		}
 		return VocabSorter.INSTANCE.getFolders();
 	}

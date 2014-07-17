@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.easycomm.NavigationFragment.NavigationListener;
+import org.easycomm.fragment.NavigationFragment;
+import org.easycomm.fragment.NavigationFragment.NavigationListener;
 import org.easycomm.main.ButtonFactory;
 import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;

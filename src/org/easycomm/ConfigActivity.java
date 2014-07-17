@@ -3,7 +3,6 @@ package org.easycomm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easycomm.NavigationFragment.NavigationListener;
 import org.easycomm.config.AddModifyVocabDialogFragment;
 import org.easycomm.config.AddModifyVocabDialogFragment.AddVocabDialogListener;
 import org.easycomm.config.ButtonFactory;
@@ -12,6 +11,8 @@ import org.easycomm.config.ConfirmBackDialogFragment.ConfirmBackDialogListener;
 import org.easycomm.config.ViewSelector;
 import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
+import org.easycomm.fragment.NavigationFragment;
+import org.easycomm.fragment.NavigationFragment.NavigationListener;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;

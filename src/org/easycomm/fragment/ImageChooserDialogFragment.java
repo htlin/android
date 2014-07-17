@@ -1,4 +1,4 @@
-package org.easycomm.config;
+package org.easycomm.fragment;
 
 import java.util.List;
 import java.util.Map;
@@ -15,74 +15,61 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 
-public class ImageChooserDialogFragment extends DialogFragment {
+public abstract class ImageChooserDialogFragment extends DialogFragment {
 
-	public static final String ARG_TITLE = "title";
-	private String title;	
-	private AddModifyVocabDialogFragment mListener;
-	private int mSelectedIndex;	
-	private List<Map<String, Object>> aList;
-	
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		try {			
-			mListener = (AddModifyVocabDialogFragment) getTargetFragment();
-		} catch (ClassCastException e) {
-			throw new ClassCastException(getTargetFragment().toString() + " can not cast to AddModifyVocabDialogFragment");
-		}
-
-		title = getArguments().getString(ARG_TITLE);
-
+	public Dialog onCreateDialog(Bundle savedInstanceState) {		
 		//Inflate view
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View dialogView = inflater.inflate(R.layout.dialog_image_choose, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(title) 
+		builder.setTitle(getTitle()) 
 		.setView(dialogView)
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				sendVocabImageIndex();
+				onPositiveClick();
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {				
+			public void onClick(DialogInterface dialog, int id) {
+				onNegativeClick();
 			}
 		});
-		
-		
+
+
 		//Attach listeners and adapters
 		ListView listView = (ListView) dialogView.findViewById(R.id.listview);
-		
+
 		SimpleAdapter adapter = getAdapter();
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mSelectedIndex = position;
+				validate();
 			}
 		});
 
 		//Populate content for Modify
 		AlertDialog dialog = builder.create();
 		dialog.show();
-		
+
 		validate(dialog);		
 		return dialog;
 	}
-	
-	
+
 	private SimpleAdapter getAdapter() {
-		aList = mListener.getListviewData();
-		
+		List<Map<String, Object>> data = getListviewData();
+
 		String[] from = { "image", "name" };
 		int[] to = { R.id.vocab_image, R.id.vocab_name};
 
-		SimpleAdapter adapter = new SimpleAdapter(getActivity(), aList, R.layout.listview_layout, from, to);
+		SimpleAdapter adapter = new SimpleAdapter(getActivity(), data, R.layout.listview_layout, from, to);
 		adapter.setViewBinder(new ViewBinder() {
 			public boolean setViewValue(View view, Object data, String textRepresentation) {
 				if(view instanceof ImageView && data instanceof Drawable) {
@@ -97,19 +84,35 @@ public class ImageChooserDialogFragment extends DialogFragment {
 
 		return adapter;
 	}
-	
-	private void sendVocabImageIndex(){
-		mListener.setSelecetedIndex(mSelectedIndex);		
-	}
 
 	private void validate() {
 		validate((AlertDialog) getDialog());
 	}
-	
+
 	private void validate(AlertDialog dialog) {
-		if (dialog == null) {
-			return;
+		if (dialog == null) return;
+
+		Button posButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+		if (getSelectedItemPosition(dialog) == AdapterView.INVALID_POSITION) {
+			posButton.setEnabled(false);
+		} else {
+			posButton.setEnabled(true);
 		}
 	}
+
+	protected int getSelectedItemPosition() {
+		return getSelectedItemPosition(getDialog());
+	}
+	
+	protected int getSelectedItemPosition(Dialog dialog) {
+		ListView listView = (ListView) dialog.findViewById(R.id.listview);
+		return listView.getCheckedItemPosition();
+	}
+	
+	
+	protected abstract String getTitle();
+	protected abstract void onPositiveClick();
+	protected abstract void onNegativeClick();
+	protected abstract List<Map<String, Object>> getListviewData();
 
 }

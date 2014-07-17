@@ -1,4 +1,4 @@
-package org.easycomm;
+package org.easycomm.fragment;
 
 import java.util.List;
 

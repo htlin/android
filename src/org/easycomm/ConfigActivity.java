@@ -1,6 +1,5 @@
 package org.easycomm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.easycomm.config.AddModifyVocabDialogFragment;
@@ -20,11 +19,9 @@ import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
 import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
-import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
 import org.easycomm.model.visitor.VocabVisitor;
 import org.easycomm.model.visitor.VocabVisitorAdapter;
-import org.easycomm.util.CUtil;
 import org.easycomm.util.Constant;
 
 import android.app.ActionBar;
@@ -49,23 +46,24 @@ public class ConfigActivity extends Activity implements
 	
 	//Instance states
 	private boolean mLayoutChanged;
-	private ArrayList<String> mFolderPathIDs;
+	private FolderNavigator mFolderNavigator;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		
+		mFolderNavigator = new FolderNavigator();
 		if (savedInstanceState != null) {
 			mLayoutChanged = savedInstanceState.getBoolean(Constant.LAYOUT_CHANGED);
-			mFolderPathIDs = savedInstanceState.getStringArrayList(Constant.FOLDER_PATH);
+			mFolderNavigator.load(savedInstanceState);
 		} else {
-			mFolderPathIDs = getIntent().getStringArrayListExtra(Constant.FOLDER_PATH);
+			mFolderNavigator.load(getIntent());
 		}
 		
 		mVocabReader = VocabReader.getInstance(getResources().getAssets());
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
-		mButtonFactory.setCurrentFolder(getCurrentFolder());
+		mButtonFactory.setCurrentFolder(mFolderNavigator.getCurrentFolder());
 		mSelector = new ViewSelector();
 		
 		setContentView(R.layout.activity_vocab_config);
@@ -81,7 +79,7 @@ public class ConfigActivity extends Activity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(Constant.LAYOUT_CHANGED, mLayoutChanged);
-		outState.putStringArrayList(Constant.FOLDER_PATH, mFolderPathIDs);
+		mFolderNavigator.save(outState);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -141,8 +139,7 @@ public class ConfigActivity extends Activity implements
 	}
 	
 	private void openFolder() {
-		String folderID = mSelector.getFollowupFolderID();
-		mFolderPathIDs.add(folderID);
+		mFolderNavigator.moveDown(mSelector.getFollowupFolderID());
 		updateFolderPath();
 		
 		mSelector.deselect();
@@ -201,12 +198,6 @@ public class ConfigActivity extends Activity implements
 		return mButtonFactory;
 	}
 	
-	public String getCurrentFolder(){
-		int count = mFolderPathIDs.size();
-		if (count == 0) return null;
-		else return mFolderPathIDs.get(count - 1);		
-	}
-
 	private void showConfirmBackDialog() {
 		DialogFragment newFragment = new ConfirmBackDialogFragment();
 	    newFragment.show(getFragmentManager(), "confirm");
@@ -227,8 +218,7 @@ public class ConfigActivity extends Activity implements
 			showConfirmBackDialog();
 		} else {
 			Intent intent = new Intent();
-			intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
-
+			mFolderNavigator.save(intent);
 			setResult(Activity.RESULT_OK, intent);
 			super.onBackPressed();
 		}
@@ -238,8 +228,7 @@ public class ConfigActivity extends Activity implements
 	public void onConfirmBackDialogPositiveClick(DialogFragment dialog) {
 		mVocabDB.save();
 		Intent intent = new Intent();
-		intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
-
+		mFolderNavigator.save(intent);
 		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
@@ -248,8 +237,7 @@ public class ConfigActivity extends Activity implements
 	public void onConfirmBackDialogNegativeClick(DialogFragment dialog) {
 		mVocabDB.revert();
 		Intent intent = new Intent();
-		intent.putStringArrayListExtra(Constant.FOLDER_PATH, mFolderPathIDs);
-
+		mFolderNavigator.save(intent);
 		setResult(Activity.RESULT_OK, intent);
 		finish();
 	}
@@ -262,19 +250,19 @@ public class ConfigActivity extends Activity implements
 				@Override
 				public void visit(Leaf v) {
 					Leaf leaf = mVocabDB.getGraph().makeLeaf(data);
-					mVocabDB.getGraph().addChild(getCurrentFolder(), leaf.getID());
+					mVocabDB.getGraph().addChild(mFolderNavigator.getCurrentFolder(), leaf.getID());
 				}
 
 				@Override
 				public void visit(Folder v) {
 					Folder folder = mVocabDB.getGraph().makeFolder(data);
-					mVocabDB.getGraph().addChild(getCurrentFolder(), folder.getID());
+					mVocabDB.getGraph().addChild(mFolderNavigator.getCurrentFolder(), folder.getID());
 				}
 
 				@Override
 				public void visit(Link v) {
 					Link link = mVocabDB.getGraph().makeLink(data);
-					mVocabDB.getGraph().addChild(getCurrentFolder(), link.getID());
+					mVocabDB.getGraph().addChild(mFolderNavigator.getCurrentFolder(), link.getID());
 					mVocabDB.getGraph().addChild(link.getID(), followupFolderID);
 				}				
 			});
@@ -318,8 +306,7 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public void onVocabDragDrop(String sourceID, String targetID) {
 		if (!sourceID.equals(targetID)) {
-			String lastFolderID = mFolderPathIDs.get(mFolderPathIDs.size() - 1);
-			mVocabDB.getGraph().move(lastFolderID, sourceID, targetID);
+			mVocabDB.getGraph().move(mFolderNavigator.getCurrentFolder(), sourceID, targetID);
 			updateLayout();
 		}
 		
@@ -327,20 +314,16 @@ public class ConfigActivity extends Activity implements
 		invalidateOptionsMenu();
 	}
 	
-	
 	@Override
 	public void onHomeButtonClick() {
-		if (mFolderPathIDs.size() > 1) {
-			mFolderPathIDs.clear();
-			mFolderPathIDs.add(VocabGraph.ROOT_ID);
+		if (mFolderNavigator.reset()) {
 			updateFolderPath();
 		}
 	}
 	
 	@Override
 	public void onBackButtonClick() {
-		if (mFolderPathIDs.size() > 1) {
-			mFolderPathIDs.remove(mFolderPathIDs.size() - 1);
+		if (mFolderNavigator.moveUp()) {
 			updateFolderPath();
 		}
 	}
@@ -351,17 +334,12 @@ public class ConfigActivity extends Activity implements
 	}
 	
 	private void updateFolderPath() {
-		List<String> folderTexts = CUtil.makeList();
-		for (String id : mFolderPathIDs) {
-			String text = mVocabDB.getVocabData(id).getDisplayText();
-			folderTexts.add(text);
-		}
+		List<String> folderTexts = mFolderNavigator.getTexts(mVocabDB);
 		
 		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
 		navFrag.setCurrentPath(folderTexts);
 		
-		String currentFolder = mFolderPathIDs.get(mFolderPathIDs.size() - 1);
-		mButtonFactory.setCurrentFolder(currentFolder);
+		mButtonFactory.setCurrentFolder(mFolderNavigator.getCurrentFolder());
 		
 		VocabFragment vocabFrag = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocabFrag.invalidate();

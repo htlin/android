@@ -1,18 +1,27 @@
 package org.easycomm.model;
 
+import java.util.Map;
+
 import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
 import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
+import org.easycomm.util.CUtil;
 
 import android.content.res.AssetManager;
 
 public class VocabDatabase {
 
+	public static final String PROTOTYPE_LEAF_ID = "pro_leaf";
+	public static final String PROTOTYPE_FOLDER_ID = "pro_folder";
+	public static final String PROTOTYPE_LINK_ID = "pro_link";
+	
 	private static VocabDatabase Singleton; 
 	
 	private VocabGraph mVocabGraph;
+	
+	private Map<String, Vocab> mPrototypes;
 	
 	public static VocabDatabase getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -21,8 +30,16 @@ public class VocabDatabase {
 		
 		return Singleton;
 	}
-		
+	
+	private void makePrototypes() {
+		mPrototypes = CUtil.makeMap();
+		mPrototypes.put(PROTOTYPE_LEAF_ID, new Leaf(PROTOTYPE_LEAF_ID, null));
+		mPrototypes.put(PROTOTYPE_FOLDER_ID, new Folder(PROTOTYPE_FOLDER_ID, null));
+		mPrototypes.put(PROTOTYPE_LINK_ID, new Link(PROTOTYPE_LINK_ID, null));
+	}
+	
 	private VocabDatabase(AssetManager assets) {
+		makePrototypes();
 		mVocabGraph = new VocabGraph();
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
@@ -87,13 +104,26 @@ public class VocabDatabase {
 	public VocabGraph getGraph() {
 		return mVocabGraph;
 	}
+
+	public boolean isPrototype(String id) {
+		return mPrototypes.containsKey(id);
+	}
+
+	public Vocab getPrototype(String id) {
+		return mPrototypes.get(id);
+	}
 	
 	public Vocab getVocab(String id) {
-		return mVocabGraph.getVocab(id);
+		Vocab p = getPrototype(id);
+		if (p == null) {
+			return mVocabGraph.getVocab(id);
+		} else {
+			return p;
+		}
 	}
 	
 	public VocabData getVocabData(String id) {
-		return mVocabGraph.getVocab(id).getData();
+		return getVocab(id).getData();
 	}
 	
 	public void save() {

@@ -6,7 +6,10 @@ import org.easycomm.config.VocabChooserDialogFragment.VocabChooserDialogListener
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.graph.Folder;
-import org.easycomm.util.Constant;
+import org.easycomm.model.graph.Leaf;
+import org.easycomm.model.graph.Link;
+import org.easycomm.model.graph.Vocab;
+import org.easycomm.model.visitor.VocabVisitor;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,32 +29,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 public class AddModifyVocabDialogFragment extends DialogFragment implements
-VocabChooserDialogListener,
-LinkChooserDialogListener {
+		VocabChooserDialogListener,
+		LinkChooserDialogListener {
 
 	public interface AddVocabDialogListener {
-		public void onAddVocabDialogPositiveClick(VocabData data, String followupFolderID);
+		public void onAddVocabDialogPositiveClick(String id, VocabData data, String followupFolderID);
 	}
 
 	public static final String ARG_VOCAB_ID = "vocabID";
 	private String mSelectedVocabID;
 
-	public static final String ARG_VOCAB_TYPE = "vocabType";
-	private int mVocabType;
-
 	public static final String ARG_FOLDER_ID = "folderID";
 	private String mFollowupFolderID;
 
-	public static final String ARG_TITLE = "title";
-
 	private VocabDatabase mVocabDB;
-
-	private View mDialogView;
-
 	private AddVocabDialogListener mListener;
+	
+	//Instance states
 	private String mNewFollowupFolderID;
 	private String mImageFilename;
-
+	private boolean mRequireFollowupFolderID;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -69,16 +66,13 @@ LinkChooserDialogListener {
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 
 		mSelectedVocabID = getArguments().getString(ARG_VOCAB_ID);
-		mVocabType = getArguments().getInt(ARG_VOCAB_TYPE);
 		mFollowupFolderID = getArguments().getString(ARG_FOLDER_ID);
-		String title = getArguments().getString(ARG_TITLE);
 
 		//Inflate view
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		mDialogView = inflater.inflate(R.layout.dialog_vocab_add, null);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(title)
-		.setView(mDialogView)
+		View view = inflater.inflate(R.layout.dialog_vocab_add, null);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setView(view)
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				sendbackVocabData();
@@ -90,38 +84,56 @@ LinkChooserDialogListener {
 		});
 
 		//Attach listeners and adapters
-		EditText displayText = (EditText) mDialogView.findViewById(R.id.display_text);
-		CheckBox speakCB = (CheckBox) mDialogView.findViewById(R.id.speak_checkbox);
-		final EditText speechText = (EditText) mDialogView.findViewById(R.id.speech_text);
-		Button imageChooseButton = (Button) mDialogView.findViewById(R.id.image_choose_button);
-		ImageView image = (ImageView) mDialogView.findViewById(R.id.vocab_image_chosen);
-		Button linkChooseButton = (Button) mDialogView.findViewById(R.id.link_choose_button);
-		ImageView imageLink = (ImageView) mDialogView.findViewById(R.id.folder_image_chosen);
+		EditText displayText = (EditText) view.findViewById(R.id.display_text);
+		CheckBox speakCB = (CheckBox) view.findViewById(R.id.speak_checkbox);
+		final EditText speechText = (EditText) view.findViewById(R.id.speech_text);
+		final Button imageChooseButton = (Button) view.findViewById(R.id.image_choose_button);
+		ImageView image = (ImageView) view.findViewById(R.id.vocab_image_chosen);
+		final Button linkChooseButton = (Button) view.findViewById(R.id.link_choose_button);
+		final ImageView imageLink = (ImageView) view.findViewById(R.id.folder_image_chosen);
 
-		if (mSelectedVocabID != null) {
-			// Modify ...
-			VocabData vocabData = mVocabDB.getVocab(mSelectedVocabID).getData();
-			displayText.setText(vocabData.getDisplayText());
-			speakCB.setChecked(true);
-			speechText.setText(vocabData.getSpeechText());
-			image.setImageDrawable(vocabData.getImage());
-			if (mVocabType == Constant.LINK_TYPE) {
-				VocabData linkFolderData = mVocabDB.getVocab(mFollowupFolderID).getData();
-				imageLink.setImageDrawable(linkFolderData.getImage());
-				mNewFollowupFolderID = mFollowupFolderID;
+		Vocab selectedVocab = mVocabDB.getVocab(mSelectedVocabID);
+		VocabData selectedVocabData = selectedVocab.getData();
+		if (selectedVocabData != null) {
+			displayText.setText(selectedVocabData.getDisplayText());
+			String speechTextStr = selectedVocabData.getSpeechText();
+			if (speechTextStr == null) {
+				speakCB.setChecked(false);
 			} else {
-				linkChooseButton.setVisibility(View.GONE);
-				imageLink.setVisibility(View.GONE);
+				speakCB.setChecked(true);
+				speechText.setText(speechTextStr);
 			}
-		} else {
-			// Add ...
-			if (mVocabType == Constant.LINK_TYPE) {
-
-			} else {
-				linkChooseButton.setVisibility(View.GONE);
-				imageLink.setVisibility(View.GONE);
-			}
+			image.setImageDrawable(selectedVocabData.getImage());
+			mImageFilename = selectedVocabData.getFilename();
 		}
+		
+		if (mFollowupFolderID != null) {
+			VocabData linkFolderData = mVocabDB.getVocab(mFollowupFolderID).getData();
+			imageLink.setImageDrawable(linkFolderData.getImage());
+			mNewFollowupFolderID = mFollowupFolderID;
+		}
+
+		selectedVocab.accept(new VocabVisitor() {
+			@Override
+			public void visit(Leaf v) {
+				builder.setTitle("Add/Modify a Vocab");
+				linkChooseButton.setVisibility(View.GONE);
+				imageLink.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void visit(Folder v) {
+				builder.setTitle("Add/Modify a Folder");
+				linkChooseButton.setVisibility(View.GONE);
+				imageLink.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void visit(Link v) {
+				builder.setTitle("Add/Modify a Link");
+				mRequireFollowupFolderID = true;
+			}			
+		});
 
 		TextWatcher textWatcher = new TextWatcher() {
 			@Override
@@ -177,7 +189,7 @@ LinkChooserDialogListener {
 	@Override
 	public void onLinkChooserDialogPositiveClick(Folder folder) {
 		Drawable image = folder.getData().getImage();
-		ImageView iv = (ImageView) mDialogView.findViewById(R.id.folder_image_chosen);
+		ImageView iv = (ImageView) getDialog().findViewById(R.id.folder_image_chosen);
 		iv.setImageDrawable(image);
 		mNewFollowupFolderID = folder.getID();
 		validate();
@@ -187,7 +199,7 @@ LinkChooserDialogListener {
 	public void onVocabChooserDialogPositiveClick(VocabData data) {
 		mImageFilename = data.getFilename();
 		Drawable image = data.getImage();
-		ImageView iv = (ImageView) mDialogView.findViewById(R.id.vocab_image_chosen);
+		ImageView iv = (ImageView) getDialog().findViewById(R.id.vocab_image_chosen);
 		iv.setImageDrawable(image);
 		validate();
 	}	
@@ -205,42 +217,45 @@ LinkChooserDialogListener {
 
 		EditText displayText = (EditText) dialog.findViewById(R.id.display_text);
 		EditText speechText = (EditText) dialog.findViewById(R.id.speech_text);
-		CheckBox speakCB = (CheckBox) mDialogView.findViewById(R.id.speak_checkbox);
+		CheckBox speakCB = (CheckBox) dialog.findViewById(R.id.speak_checkbox);
 		Button posButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 		if (displayText.getText().length() ==  0) {
-			enable = enable && false;
+			enable = false;
 		}
-		if( speakCB.isChecked() && speechText.getText().length() == 0  ){
-			enable = enable && false;
+		if (speakCB.isChecked() && speechText.getText().length() == 0) {
+			enable = false;
 		}
-		if( mImageFilename == null) enable = enable && false;
-		if( mVocabType == Constant.LINK_TYPE && mNewFollowupFolderID == null) {
-			enable = enable && false;
+		if (mImageFilename == null) {
+			enable = false;
+		}
+		
+		if (mRequireFollowupFolderID && mNewFollowupFolderID == null) {
+			enable = false;
 		}
 
 		posButton.setEnabled(enable);
 	}
 
 
-	private void sendbackVocabData(){
+	private void sendbackVocabData() {
 		VocabData data = setupVocabData();		
-		mListener.onAddVocabDialogPositiveClick(data, mNewFollowupFolderID);
+		mListener.onAddVocabDialogPositiveClick(mSelectedVocabID, data, mNewFollowupFolderID);
 	}
 
-	private VocabData setupVocabData(){
-		EditText displayTextView = (EditText) mDialogView.findViewById(R.id.display_text);
+	private VocabData setupVocabData() {
+		EditText displayTextView = (EditText) getDialog().findViewById(R.id.display_text);
 		String displayText = displayTextView.getText().toString();
 		String speechText = null;
-		CheckBox speakCB = (CheckBox) mDialogView.findViewById(R.id.speak_checkbox);
-		if( speakCB.isChecked() ) {
-			EditText speechTextView = (EditText) mDialogView.findViewById(R.id.speech_text);
+		CheckBox speakCB = (CheckBox) getDialog().findViewById(R.id.speak_checkbox);
+		if (speakCB.isChecked()) {
+			EditText speechTextView = (EditText) getDialog().findViewById(R.id.speech_text);
 			speechText = speechTextView.getText().toString();
 		}
 
-		ImageView voacbImageView = (ImageView) mDialogView.findViewById(R.id.vocab_image_chosen);
-		Drawable vocabImage = voacbImageView.getDrawable();
+		ImageView vocabImageView = (ImageView) getDialog().findViewById(R.id.vocab_image_chosen);
+		Drawable vocabImage = vocabImageView.getDrawable();
 
-		return new VocabData(displayText, speechText, mImageFilename,  vocabImage);
+		return new VocabData(displayText, speechText, mImageFilename, vocabImage);
 	}
 
 

@@ -22,6 +22,8 @@ import org.easycomm.model.graph.Link;
 import org.easycomm.model.graph.Vocab;
 import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.model.visitor.FolderChanger;
+import org.easycomm.model.visitor.VocabVisitor;
+import org.easycomm.model.visitor.VocabVisitorAdapter;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.Constant;
 
@@ -44,9 +46,10 @@ public class ConfigActivity extends Activity implements
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
 	private ViewSelector mSelector;
+	
+	//Instance states
 	private boolean mLayoutChanged;
 	private ArrayList<String> mFolderPathIDs;
-	private int mSelectedType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,19 +108,21 @@ public class ConfigActivity extends Activity implements
 			return true;
 			
 		case R.id.action_add_vocab:
-			addItem(Constant.LEAF_TYPE, "Add a Vocab");
+			showAddModifyDialog(VocabDatabase.PROTOTYPE_LEAF_ID, null);
 			return true;
 			
 		case R.id.action_add_folder:
-			addItem(Constant.FOLDER_TYPE, "Add a Folder");
+			showAddModifyDialog(VocabDatabase.PROTOTYPE_FOLDER_ID, null);
 			return true;
 			
 		case R.id.action_add_link:
-			addItem(Constant.LINK_TYPE, "Add a Link");
+			showAddModifyDialog(VocabDatabase.PROTOTYPE_LINK_ID, null);
 			return true;
 			
 		case R.id.action_modify:
-			modifyItem();
+			String selectedID = mSelector.getSelectedID();
+			String followupFolderID = mSelector.getFollowupFolderID();
+			showAddModifyDialog(selectedID, followupFolderID);
 			return true;
 			
 		case R.id.action_remove:
@@ -143,8 +148,7 @@ public class ConfigActivity extends Activity implements
 		mSelector.deselect();
 		VocabFragment vocabFragment = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocabFragment.invalidate();
-		invalidateOptionsMenu();
-		
+		invalidateOptionsMenu();		
 	}
 	
 	private void removeVocab() {		
@@ -199,46 +203,20 @@ public class ConfigActivity extends Activity implements
 	
 	public String getCurrentFolder(){
 		int count = mFolderPathIDs.size();
-		if(count == 0) return null;
-		else return mFolderPathIDs.get(count-1);		
+		if (count == 0) return null;
+		else return mFolderPathIDs.get(count - 1);		
 	}
 
 	private void showConfirmBackDialog() {
 		DialogFragment newFragment = new ConfirmBackDialogFragment();
 	    newFragment.show(getFragmentManager(), "confirm");
 	}
-	
-	private void addItem(int type, String title){
-		mSelectedType = type;
-		showAddModifyDialog(null, type,  null, title);
-	}
-	
-	private void modifyItem() {
-		String selectedID = mSelector.getSelectedID();
-		mSelectedType = mSelector.getType();
-		String followupFOlderID = null;
-		if(mSelectedType == Constant.LINK_TYPE){
-			followupFOlderID = mSelector.getFollowupFolderID();
-		}
-		switch(mSelectedType) {
-			case Constant.LEAF_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Vocab");
-									break;
-			case Constant.FOLDER_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Folder");
-									break;
-			case Constant.LINK_TYPE: showAddModifyDialog(selectedID, mSelectedType,  followupFOlderID, "Modify a Link");
-									break;						
-		}
-	}
-
-
-	private void showAddModifyDialog(String selectedID, int selectedType, String followupFolderID, String title) {
+		
+	private void showAddModifyDialog(String selectedID, String followupFolderID) {
 		DialogFragment newFragment = new AddModifyVocabDialogFragment();
 		Bundle args = new Bundle();
 		args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
-		args.putInt(AddModifyVocabDialogFragment.ARG_VOCAB_TYPE, selectedType);
-		args.putString(AddModifyVocabDialogFragment.ARG_FOLDER_ID, followupFolderID);
-		args.putString(AddModifyVocabDialogFragment.ARG_TITLE, title);
-		
+		args.putString(AddModifyVocabDialogFragment.ARG_FOLDER_ID, followupFolderID);		
 		newFragment.setArguments(args);
 	    newFragment.show(getFragmentManager(), "add/modify");
 	}
@@ -277,57 +255,48 @@ public class ConfigActivity extends Activity implements
 	}
 
 	@Override
-	public void onAddVocabDialogPositiveClick(VocabData data, String followupFolderID) {
-		String selectedID = mSelector.getSelectedID();
-		if ( selectedID == null) {
-			//Add
-			
-			switch( mSelectedType ){
-				case Constant.LEAF_TYPE:
+	public void onAddVocabDialogPositiveClick(final String id, final VocabData data, final String followupFolderID) {
+		Vocab selectedVocab = mVocabDB.getVocab(id);
+		if (mVocabDB.isPrototype(id)) {
+			selectedVocab.accept(new VocabVisitor() {
+				@Override
+				public void visit(Leaf v) {
 					Leaf leaf = mVocabDB.getGraph().makeLeaf(data);
 					mVocabDB.getGraph().addChild(getCurrentFolder(), leaf.getID());
-					break;
-				case Constant.FOLDER_TYPE:
+				}
+
+				@Override
+				public void visit(Folder v) {
 					Folder folder = mVocabDB.getGraph().makeFolder(data);
 					mVocabDB.getGraph().addChild(getCurrentFolder(), folder.getID());
-					System.err.println("new folder added.");
-					break;
-				case Constant.LINK_TYPE:
+				}
+
+				@Override
+				public void visit(Link v) {
 					Link link = mVocabDB.getGraph().makeLink(data);
 					mVocabDB.getGraph().addChild(getCurrentFolder(), link.getID());
 					mVocabDB.getGraph().addChild(link.getID(), followupFolderID);
-					break;
-			}
-			
-			updateLayout();
-			
+				}				
+			});
 		} else {
-			//Modify
-
-			VocabData vocab = mVocabDB.getVocab(mSelector.getSelectedID()).getData();
+			VocabData vocab = selectedVocab.getData();
 			vocab.setDisplayText(data.getDisplayText());
 			vocab.setSpeechText(data.getSpeechText());
 			vocab.setFilename(data.getFilename());
 			vocab.setImage(data.getImage());
 			
-			if ( mSelectedType == Constant.LINK_TYPE ) {
-				if( ! followupFolderID.equals(mSelector.getFollowupFolderID()) ){
-					System.err.println(" followupFolder ID = " + followupFolderID);
-					mVocabDB.getGraph().removeChild(selectedID, mSelector.getFollowupFolderID());
-					mVocabDB.getGraph().addChild(selectedID, followupFolderID);
-				}
-				else {
-					System.err.println(" Link folder unchange.");
-				}
-			}
-			
-			updateLayout();
+			selectedVocab.accept(new VocabVisitorAdapter() {
+				@Override
+				public void visit(Link v) {
+					mVocabDB.getGraph().removeChild(id, mSelector.getFollowupFolderID());
+					mVocabDB.getGraph().addChild(id, followupFolderID);
+				}				
+			});
 		}
 		
+		updateLayout();
 		mSelector.deselect();
-
 	}
-	
 	
 	@Override
 	public void onVocabButtonClick(String id, View v) {
@@ -337,8 +306,6 @@ public class ConfigActivity extends Activity implements
 		vocab.accept(FolderChanger.INSTANCE);
 		String newID = FolderChanger.INSTANCE.getResult();
 		mSelector.setFollowupFolderID(newID);
-		int vocabType = FolderChanger.INSTANCE.getType();
-		mSelector.setType(vocabType);
 		
 		NavigationFragment navFrag = (NavigationFragment) getFragmentManager().findFragmentById(R.id.frag_config_navigation);
 		navFrag.setOpenButtonState(mSelector.hasFollowupFolder());

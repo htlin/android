@@ -146,8 +146,8 @@ public class MainActivity extends Activity implements
 	
 	public String getCurrentFolder(){
 		int count = mFolderPathIDs.size();
-		if(count == 0) return null;
-		else return mFolderPathIDs.get(count-1);		
+		if (count == 0) return null;
+		else return mFolderPathIDs.get(count - 1);		
 	}
 
 	private void speak(String text) {

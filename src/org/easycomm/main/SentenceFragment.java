@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 public class SentenceFragment extends Fragment {
@@ -62,11 +63,27 @@ public class SentenceFragment extends Fragment {
 			}
 		});
 		
+		
+		HorizontalScrollView hsv = (HorizontalScrollView) view.findViewById(R.id.scrollview);
+		hsv.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackgroundClick();
+			}
+		});
+
 		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentence);
 		ll.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onBackgroundClick(v);
+				onBackgroundClick();
+			}
+		});
+		
+		view.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackgroundClick();
 			}
 		});
 				
@@ -117,10 +134,22 @@ public class SentenceFragment extends Fragment {
 		if (size > 0) {
 			ll.removeViewAt(size - 1);
 		}
+		updateScrollView();
 	}
 	
 	protected void onDeleteAllClick(View v) {
 		deleteAll();
+	}
+	
+	private void deleteAll() {
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
+		ll.removeAllViews();
+		updateScrollView();
+	}
+	
+	private void updateScrollView(){
+		HorizontalScrollView hsv = (HorizontalScrollView) getView().findViewById(R.id.scrollview);
+		hsv.invalidate();
 	}
 
 	private void onVocabClick(View v) {
@@ -129,10 +158,15 @@ public class SentenceFragment extends Fragment {
 		mCallback.onSentenceButtonClick(id);
 	}
 	
-	private void onBackgroundClick(View v) {
-		LinearLayout ll = (LinearLayout) v;
+	private void onBackgroundClick() {
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		List<String> ids = getButtonIDs(ll);
 		mCallback.onSentenceBarClick(ids);
+	}
+	
+	public List<String> getSentence(){		
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
+		return getButtonIDs(ll);		
 	}
 	
 	private List<String> getButtonIDs(LinearLayout ll) {
@@ -145,10 +179,7 @@ public class SentenceFragment extends Fragment {
 		return ids;
 	}
 
-	private void deleteAll() {
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
-		ll.removeAllViews();
-	}
+	
 
 	public void invalidate() {
 		deleteAll();

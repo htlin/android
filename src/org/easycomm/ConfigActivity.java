@@ -12,6 +12,7 @@ import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
 import org.easycomm.fragment.NavigationFragment;
 import org.easycomm.fragment.NavigationFragment.NavigationListener;
+import org.easycomm.main.SentenceFragment;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.VocabReader;
@@ -331,6 +332,10 @@ public class ConfigActivity extends Activity implements
 	@Override
 	public void onOpenButtonClick() {
 		openFolder();
+	}
+	
+	@Override
+	public void onNavigationBarClick() {
 	}
 	
 	private void updateFolderPath() {

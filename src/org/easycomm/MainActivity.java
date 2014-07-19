@@ -166,6 +166,13 @@ public class MainActivity extends Activity implements
 	public void onSentenceBarClick(List<String> ids) {
 		speak(getSentense(ids));
 	}
+	
+	@Override
+	public void onNavigationBarClick() {
+		SentenceFragment sentence = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
+		List<String> ids = sentence.getSentence();
+		speak(getSentense(ids));
+	}
 
 	private String getSentense(List<String> ids) {
 		StringBuffer buf = new StringBuffer();

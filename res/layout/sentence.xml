@@ -6,18 +6,35 @@
     android:clickable="true"
     android:orientation="horizontal" >
 
-    <LinearLayout
-        android:id="@+id/sentence"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_side"
+    <HorizontalScrollView
+        android:id="@+id/scrollview"
+    	android:layout_width="0dp"
+        android:layout_height="@dimen/scroll_view_height"
+        android:scrollbarSize="@dimen/scroll_bas_size"    
+        android:scrollbarAlwaysDrawHorizontalTrack="true"  
+        android:fadeScrollbars="false"   
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
+        android:layout_weight="1"  
         android:background="@color/sentenceBackground"
-        android:clickable="true"
-        android:divider="@drawable/sentence_divider"
-        android:showDividers="beginning|middle"
-        android:orientation="horizontal" >
-    </LinearLayout>
+    	android:baselineAligned="false"
+    	android:clickable="true"  >
+           
+        <LinearLayout
+        	android:id="@+id/sentence"
+        	android:layout_width="0dp"
+        	android:layout_height="@dimen/button_side"
+        	android:layout_gravity="center_vertical"
+        	android:layout_weight="1"
+        	android:background="@color/sentenceBackground"
+        	android:clickable="true"
+        	android:divider="@drawable/sentence_divider"
+        	android:showDividers="beginning|middle"
+        	android:orientation="horizontal" >
+    	</LinearLayout>
+        
+    </HorizontalScrollView>
+    
+    
 
     <Button
         android:id="@+id/delete"

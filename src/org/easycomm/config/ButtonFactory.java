@@ -37,7 +37,7 @@ public class ButtonFactory {
 		
 		private void makeButton(Vocab v) {
 			mResult = new DraggableButton(mContext);
-			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize - 8, mSideSize - 8));
+			mResult.setLayoutParams(new GridView.LayoutParams(mSideSize - 6, mSideSize - 6));
 			mResult.setText(v.getData().getDisplayText());
 			mResult.setGravity(Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM);
 			mResult.setCompoundDrawablesWithIntrinsicBounds(null, v.getData().getImage(), null, null);

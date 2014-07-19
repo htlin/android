@@ -21,16 +21,16 @@
     <string name="dialog_vocab_modify">Modify Vocab</string>
     <string name="display_text">Display Text:</string>
     <string name="speech_text">Speech Text:</string>
+    <string name="image_text">Image:</string>
+    <string name="link_text">Link to folder:</string>
     <string name="vocab_image">Image:</string>
     <string name="button_home">Home</string>
 	<string name="button_back">Back</string>
 	<string name="button_open">Open</string>
 	<string name="path_separator">▶</string>
 	
-	
 	<string name="speak_checkbox">Speak?</string>
-	<string name="image_choose">Choose Image</string>
-	<string name="link_choose">Choose Link</string>
+	<string name="select">Select</string>
 	
 	
 </resources>

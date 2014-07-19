@@ -20,7 +20,7 @@ public class VocabReader {
 	private static VocabReader Singleton; 
 	
 	private List<VocabData> mAllVocabs;
-	private Map<String, VocabData> mAllVocabMap;
+	private Map<String, VocabData> mFileVocabMap;
 	
 	public static VocabReader getInstance(AssetManager assets) {
 		if (Singleton == null) {
@@ -50,9 +50,9 @@ public class VocabReader {
 			}
 		});
 		
-		mAllVocabMap = CUtil.makeMap();
+		mFileVocabMap = CUtil.makeMap();
 		for (VocabData v : mAllVocabs) {
-			mAllVocabMap.put(v.getDisplayText(), v);
+			mFileVocabMap.put(v.getFilename(), v);
 		}
 	}
 	
@@ -60,18 +60,8 @@ public class VocabReader {
 		return mAllVocabs;
 	}
 
-	public VocabData getVocabData(String text) {
-		return mAllVocabMap.get(text);
-	}
-	
-	public int indexOf(String text) {
-		for (int i = 0; i < mAllVocabs.size(); i++) {
-			if (mAllVocabs.get(i).getDisplayText().equals(text)) {
-				return i;
-			}
-		}
-		
-		return -1;
+	public VocabData getVocabData(String filename) {
+		return mFileVocabMap.get(filename);
 	}
 	
 }

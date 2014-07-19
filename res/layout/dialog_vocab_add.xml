@@ -1,5 +1,5 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:alignmentMode="alignMargins"
+    android:alignmentMode="alignBounds"
     android:columnCount="2"
     android:columnOrderPreserved="false"
     android:paddingBottom="10dp"
@@ -17,7 +17,7 @@
         android:id="@+id/display_text"
         android:layout_width="@dimen/dialog_width"
         android:inputType="text" />
-    
+
     <TextView
         android:layout_column="0"
         android:layout_gravity="right"
@@ -25,7 +25,7 @@
 
     <CheckBox
         android:id="@+id/speak_checkbox"
-        android:checked="false"  />
+        android:checked="false" />
 
     <TextView
         android:layout_column="0"
@@ -36,52 +36,57 @@
         android:id="@+id/speech_text"
         android:layout_width="@dimen/dialog_width"
         android:inputType="text" />
-    
-    <TextView
-        android:layout_column="0"
-        android:layout_gravity="right"
-         />
-    
-    
-    <Button
-        android:id="@+id/image_choose_button" 
-        android:layout_gravity="center_vertical"
-        android:text="@string/image_choose" />
-    
-    <TextView
-        android:layout_column="0"
-        android:layout_gravity="right" />   
 
-    <ImageView
-        android:id="@+id/vocab_image_chosen"
-        android:layout_width="@dimen/button_side_small"
-        android:layout_height="@dimen/button_side_small"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="10dp" /> 
-        
     <TextView
         android:layout_column="0"
-        android:layout_gravity="right"
-         />
-    
-    
-    <Button
-        android:id="@+id/link_choose_button" 
-        android:layout_gravity="center_vertical"
-        android:text="@string/link_choose" />
-    
-    <TextView
-        android:layout_column="0"
-        android:layout_gravity="right" />   
+        android:layout_gravity="right|center_vertical"
+        android:text="@string/image_text" />
 
-    <ImageView
-        android:id="@+id/folder_image_chosen"
-        android:layout_width="@dimen/button_side_small"
-        android:layout_height="@dimen/button_side_small"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="10dp" /> 
-    
+    <LinearLayout
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/vocab_image_chosen"
+            android:layout_width="@dimen/button_side_small"
+            android:layout_height="@dimen/button_side_small"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/blank" />
+
+        <Button
+            android:id="@+id/image_choose_button"
+            android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="@string/select" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/link_label"
+        android:layout_column="0"
+        android:layout_gravity="right|center_vertical"
+        android:text="@string/link_text" />
+
+    <LinearLayout
+        android:id="@+id/link_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/folder_image_chosen"
+            android:layout_width="@dimen/button_side_small"
+            android:layout_height="@dimen/button_side_small"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/blank" />
+
+        <Button
+            android:id="@+id/link_choose_button"
+            android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="@string/select" />
+    </LinearLayout>
 
 </GridLayout>

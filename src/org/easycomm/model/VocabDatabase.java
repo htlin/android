@@ -44,17 +44,17 @@ public class VocabDatabase {
 		
 		VocabReader vocabReader = VocabReader.getInstance(assets);
 		
-		VocabData whereData = vocabReader.getVocabData("go").clone();
+		VocabData whereData = vocabReader.getVocabData("go.png").clone();
 		whereData.setDisplayText("Go to");
 		whereData.setSpeechText("Go to");
 		Folder where = mVocabGraph.makeFolder(whereData);
 		
-		VocabData arrowData = vocabReader.getVocabData("up").clone();
+		VocabData arrowData = vocabReader.getVocabData("up.png").clone();
 		arrowData.setDisplayText("Arrow");
 		arrowData.setSpeechText(null);
 		Folder arrow = mVocabGraph.makeFolder(arrowData);
 
-		VocabData animalData = vocabReader.getVocabData("bird").clone();
+		VocabData animalData = vocabReader.getVocabData("bird.png").clone();
 		animalData.setDisplayText("Animal");
 		animalData.setSpeechText(null);
 		Folder animal = mVocabGraph.makeFolder(animalData);
@@ -63,34 +63,34 @@ public class VocabDatabase {
 		mVocabGraph.addChild(mVocabGraph.getRoot(), animal);
 		mVocabGraph.addChild(mVocabGraph.getRoot(), arrow);
 		addToFolder(mVocabGraph.getRoot(),
-				vocabReader.getVocabData("eat"),
-				vocabReader.getVocabData("drink"),
-				vocabReader.getVocabData("yes"),
-				vocabReader.getVocabData("no")
+				vocabReader.getVocabData("eat.png"),
+				vocabReader.getVocabData("drink.png"),
+				vocabReader.getVocabData("yes.png"),
+				vocabReader.getVocabData("no.png")
 			);
 		
-		VocabData dirData = vocabReader.getVocabData("up").clone();
+		VocabData dirData = vocabReader.getVocabData("up.png").clone();
 		dirData.setDisplayText("Direction");
 		dirData.setSpeechText(null);
 		Link dir = mVocabGraph.makeLink(dirData);
 		mVocabGraph.addChild(where, dir);
 		mVocabGraph.addChild(dir, arrow);
 		addToFolder(where,
-				vocabReader.getVocabData("home"),
-				vocabReader.getVocabData("toilet"),
-				vocabReader.getVocabData("tree"),
-				vocabReader.getVocabData("window")
+				vocabReader.getVocabData("home.png"),
+				vocabReader.getVocabData("toilet.png"),
+				vocabReader.getVocabData("tree.png"),
+				vocabReader.getVocabData("window.png")
 			);
 		addToFolder(arrow,
-				vocabReader.getVocabData("left"),
-				vocabReader.getVocabData("right"),
-				vocabReader.getVocabData("up"),
-				vocabReader.getVocabData("down")
+				vocabReader.getVocabData("left.png"),
+				vocabReader.getVocabData("right.png"),
+				vocabReader.getVocabData("up.png"),
+				vocabReader.getVocabData("down.png")
 			);
 		addToFolder(animal,
-				vocabReader.getVocabData("bird"),
-				vocabReader.getVocabData("cat"),
-				vocabReader.getVocabData("dog")
+				vocabReader.getVocabData("bird.png"),
+				vocabReader.getVocabData("cat.png"),
+				vocabReader.getVocabData("dog.png")
 			);
 	}
 	

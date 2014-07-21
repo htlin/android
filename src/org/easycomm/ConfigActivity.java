@@ -174,8 +174,9 @@ public class ConfigActivity extends Activity implements
 		args.putString(AddModifyVocabDialogFragment.ARG_VOCAB_ID, selectedID);
 		args.putString(AddModifyVocabDialogFragment.ARG_FOLDER_ID, followupFolderID);		
 		newFragment.setArguments(args);
-		mSelector.deselect();
 		newFragment.show(getFragmentManager(), "add/modify");
+		mSelector.deselect();
+		invalidateOptionsMenu();
 	}
 
 	@Override
@@ -249,7 +250,6 @@ public class ConfigActivity extends Activity implements
 		}
 		
 		updateLayout();
-		mSelector.deselect();
 	}
 	
 	@Override

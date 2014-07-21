@@ -51,6 +51,10 @@ public class ViewSelector {
 	}
 
 	public void deselect() {
+		if (mSelectedView != null) {
+			updateView(mSelectedView, false);
+		}
+		
 		mSelectedID = null;
 		mSelectedView = null;
 		mFollowupFolderID = null;

@@ -63,6 +63,29 @@ public class SentenceFragment extends Fragment {
 			}
 		});
 
+		HorizontalScrollView hsv = (HorizontalScrollView) view.findViewById(R.id.scrollview);
+		hsv.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackgroundClick();
+			}
+		});
+
+		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentence);
+		ll.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackgroundClick();
+			}
+		});
+		
+		view.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackgroundClick();
+			}
+		});
+		
 		return view;
 	}
 

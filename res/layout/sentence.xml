@@ -4,9 +4,7 @@
     android:background="@color/sentenceBackground"
     android:baselineAligned="false"
     android:clickable="true"
-    android:onClick="onBackgroundClick"
-    android:orientation="horizontal" 
-    android:descendantFocusability="blocksDescendants" >
+    android:orientation="horizontal" >
 
     <HorizontalScrollView
         android:id="@+id/scrollview"
@@ -16,8 +14,7 @@
         android:layout_height="@dimen/scroll_view_height"
         android:scrollbarSize="@dimen/scroll_bas_size"      
         android:layout_gravity="center_vertical" 
-    	android:clickable="true" 
-    	android:onClick="onBackgroundClick" >
+    	android:clickable="true" >
            
         <LinearLayout
         	android:id="@+id/sentence"
@@ -26,7 +23,6 @@
         	android:layout_gravity="center_vertical"
         	android:background="@color/sentenceBackground"
         	android:clickable="true"
-        	android:onClick="onBackgroundClick"
         	android:divider="@drawable/sentence_divider"
         	android:showDividers="beginning|middle"
         	android:orientation="horizontal" >

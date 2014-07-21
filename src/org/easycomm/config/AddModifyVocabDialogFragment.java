@@ -65,6 +65,9 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 	
 	public static final String REQUIRE_FOLLOWUP_FOLDER_ID = "requireFollowupFolderID";
 	private boolean mRequireFollowupFolderID;
+	
+	public static final String DITTO = "ditto";
+	private boolean mDitto;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -85,6 +88,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 		outState.putString(NEW_IMAGE_FILENAME, mNewImageFilename);
 		outState.putString(NEW_FOLLOWUP_FOLDER_ID, mNewFollowupFolderID);
 		outState.putBoolean(REQUIRE_FOLLOWUP_FOLDER_ID, mRequireFollowupFolderID);
+		outState.putBoolean(DITTO, mDitto);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -104,6 +108,7 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 			mNewImageFilename        = savedInstanceState.getString(NEW_IMAGE_FILENAME);
 			mNewFollowupFolderID     = savedInstanceState.getString(NEW_FOLLOWUP_FOLDER_ID);
 			mRequireFollowupFolderID = savedInstanceState.getBoolean(REQUIRE_FOLLOWUP_FOLDER_ID);
+			mDitto                   = savedInstanceState.getBoolean(DITTO);
 		} else {
 			Vocab selectedVocab = mVocabDB.getVocab(mSelectedVocabID);
 			VocabData selectedVocabData = selectedVocab.getData();
@@ -123,6 +128,8 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 				mNewFollowupFolderID = mFollowupFolderID;
 				mRequireFollowupFolderID = true;
 			}
+			
+			mDitto = true;
 		}
 		
 
@@ -142,8 +149,8 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 		});
 
 		//Attach listeners and adapters
-		EditText displayText = (EditText) view.findViewById(R.id.display_text);
-		CheckBox speakCB = (CheckBox) view.findViewById(R.id.speak_checkbox);
+		final EditText displayText = (EditText) view.findViewById(R.id.display_text);
+		final CheckBox speakCB = (CheckBox) view.findViewById(R.id.speak_checkbox);
 		final EditText speechText = (EditText) view.findViewById(R.id.speech_text);
 		Button imageChooseButton = (Button) view.findViewById(R.id.image_choose_button);
 		ImageView image = (ImageView) view.findViewById(R.id.vocab_image_chosen);
@@ -189,9 +196,13 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 			}			
 		});
 		
-		TextWatcher textWatcher = new TextWatcher() {
+		TextWatcher displayTextWatcher = new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable s) {
+				if(speakCB.isChecked() && mDitto){
+					speechText.setText(s.toString());
+				}				
+				
 				validate();
 			}
 
@@ -203,14 +214,41 @@ public class AddModifyVocabDialogFragment extends DialogFragment implements
 			public void onTextChanged(CharSequence s, int start, int before, int count) {	
 			}			
 		};
-		displayText.addTextChangedListener(textWatcher);
-		speechText.addTextChangedListener(textWatcher);
+		
+		TextWatcher speechTextWatcher = new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable s) {
+				String displayStr = displayText.getText().toString();
+				String speechStr = speechText.getText().toString();
+				if (!speechStr.equals(displayStr)) {
+					mDitto = false;
+				}
+				
+				validate();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}			
+		};
+		
+		
+		displayText.addTextChangedListener(displayTextWatcher);
+		speechText.addTextChangedListener(speechTextWatcher);
 
 		speakCB.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				boolean checked = ((CheckBox) v).isChecked();
 				speechText.setEnabled(checked);
+				if(!checked) {
+					speechText.setText("");
+				}
+				
 				validate();
 			}			
 		});

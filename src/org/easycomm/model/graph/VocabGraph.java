@@ -3,10 +3,10 @@ package org.easycomm.model.graph;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.easycomm.model.VocabData;
 import org.easycomm.model.visitor.VocabSorter;
+import org.easycomm.model.visitor.VocabVisitor;
 import org.easycomm.util.CUtil;
 import org.easycomm.util.DirectedOrderedGraph;
 
@@ -38,16 +38,16 @@ public class VocabGraph {
 	public Vocab getVocab(String id) {
 		return mMap.get(id);
 	}
-	
+
 	public List<Folder> getAllFolders() {
-		VocabSorter.INSTANCE.clear();
+		VocabSorter visit = new VocabSorter();
 		for (Entry<String, Vocab> entry : mMap.entrySet()) {
 			String id = entry.getKey();
 			if (ROOT_ID.equals(id)) continue;
 			
-			entry.getValue().accept(VocabSorter.INSTANCE);
+			entry.getValue().accept(visit);
 		}
-		return VocabSorter.INSTANCE.getFolders();
+		return visit.getFolders();
 	}
 
 	public List<Vocab> getChildren(String folderID) {
@@ -60,16 +60,21 @@ public class VocabGraph {
 		return result;
 	}
 	
-	public List<Link> getSourceLinks(String folderID) {
-		VocabSorter.INSTANCE.clear();
-		Set<String> fromNodes = mGraph.getIncomingEdgesOf(folderID);
-		for (String from : fromNodes) {
-			Vocab v = mMap.get(from);
-			v.accept(VocabSorter.INSTANCE);
-		}	
-		return VocabSorter.INSTANCE.getLinks();
+	public void traverseDescendants(String id, VocabVisitor visit) {
+		Vocab v = getVocab(id);
+		v.accept(visit);
+		for (String child : mGraph.getOutgoingEdgesOf(id)) {
+			traverseDescendants(child, visit);
+		}
 	}
 	
+	public void traverseParents(String id, VocabVisitor visit) {
+		for (String parent : mGraph.getIncomingEdgesOf(id)) {
+			Vocab v = getVocab(parent);
+			v.accept(visit);
+		}
+	}
+
 	public void removeChild(Vocab folder, Vocab child) {
 		removeChild(folder.getID(), child.getID());
 	}
@@ -89,6 +94,27 @@ public class VocabGraph {
 	
 	
 	public void remove(String id) {
+		List<Vocab> allVocabs = CUtil.makeList();
+		
+		VocabSorter visit = new VocabSorter();
+		traverseDescendants(id, visit);
+		List<Folder> folders = visit.getFolders();
+		allVocabs.addAll(folders);
+		allVocabs.addAll(visit.getLeaves());
+		allVocabs.addAll(visit.getLinks());
+		
+		visit = new VocabSorter();
+		for (Folder f : folders) {
+			traverseParents(f.getID(), visit);
+		}
+		allVocabs.addAll(visit.getLinks());
+		
+		for (Vocab v : allVocabs) {
+			removeVertex(v.getID());
+		}
+	}
+	
+	private void removeVertex(String id) {
 		mGraph.removeVertex(id);
 		mMap.remove(id);
 	}

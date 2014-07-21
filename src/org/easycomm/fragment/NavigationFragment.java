@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NavigationFragment extends Fragment {
@@ -69,13 +68,11 @@ public class NavigationFragment extends Fragment {
 		view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onBackgroundClick(v);
+				mCallback.onNavigationBarClick();
 			}
 		});
-		
-		
+				
 		open.setEnabled(false);
-		
 		return view;
 	}
 	
@@ -126,10 +123,6 @@ public class NavigationFragment extends Fragment {
 		} else {
 			open.setVisibility(View.GONE);
 		}
-	}
-	
-	private void onBackgroundClick(View v) {
-		mCallback.onNavigationBarClick();
 	}
 	
 }

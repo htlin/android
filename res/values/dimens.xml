@@ -6,7 +6,7 @@
     <dimen name="button_side">130dp</dimen>
     <dimen name="button_side_small">90dp</dimen>
     <dimen name="dialog_width">400dp</dimen>
-    <dimen name="scroll_view_height">160dp</dimen>
+    <dimen name="scroll_view_height">140dp</dimen>
     <dimen name="scroll_bas_size">30dp</dimen>
 
 </resources>

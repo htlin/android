@@ -12,10 +12,8 @@ import org.easycomm.config.VocabFragment;
 import org.easycomm.config.VocabFragment.VocabActionListener;
 import org.easycomm.fragment.NavigationFragment;
 import org.easycomm.fragment.NavigationFragment.NavigationListener;
-import org.easycomm.main.SentenceFragment;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
-import org.easycomm.model.VocabReader;
 import org.easycomm.model.graph.Folder;
 import org.easycomm.model.graph.Leaf;
 import org.easycomm.model.graph.Link;
@@ -40,7 +38,6 @@ public class ConfigActivity extends Activity implements
 		VocabActionListener ,
 		NavigationListener {
 
-	private VocabReader mVocabReader;
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
 	private ViewSelector mSelector;
@@ -61,7 +58,6 @@ public class ConfigActivity extends Activity implements
 			mFolderNavigator.load(getIntent());
 		}
 		
-		mVocabReader = VocabReader.getInstance(getResources().getAssets());
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mButtonFactory.setCurrentFolder(mFolderNavigator.getCurrentFolder());
@@ -149,45 +145,13 @@ public class ConfigActivity extends Activity implements
 		invalidateOptionsMenu();		
 	}
 	
-	private void removeVocab() {		
-		// check whether the selected item is a folder or not 
-		Vocab vocab = mVocabDB.getVocab(mSelector.getSelectedID());
-		if (vocab instanceof Folder) {
-			// folder selected
-			String folderID = mSelector.getFollowupFolderID();
-			removeFolder( folderID );
-		
-		}
-		else {
-			// leaf or link selected
-			String selectedID = mSelector.getSelectedID();
-			mVocabDB.getGraph().remove(selectedID);
-		}
-		
+	private void removeVocab() {
+		String selectedID = mSelector.getSelectedID();
+		mVocabDB.getGraph().remove(selectedID);
 		mSelector.deselect();
 		updateLayout();
 	}
 	
-	private void removeFolder(String folderID) {		
-		List<Vocab> children = mVocabDB.getGraph().getChildren(folderID);
-		for( Vocab v : children){
-			if(v instanceof Folder){
-				removeFolder(v.getID());
-				mVocabDB.getGraph().remove(v.getID());
-			}
-			else {
-				mVocabDB.getGraph().remove(v.getID());
-			}
-		}
-		
-		List<Link> sourceLlinks = mVocabDB.getGraph().getSourceLinks(folderID);
-		for( Link l : sourceLlinks){
-			mVocabDB.getGraph().remove(l.getID());
-		}
-		mVocabDB.getGraph().remove(folderID);
-		
-	}
-
 	private void updateLayout() {
 		VocabFragment vocab = (VocabFragment) getFragmentManager().findFragmentById(R.id.frag_config_vocab);
 		vocab.invalidate();

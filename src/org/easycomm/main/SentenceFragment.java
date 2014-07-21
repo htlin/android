@@ -34,10 +34,10 @@ public class SentenceFragment extends Fragment {
 		super.onAttach(activity);
 
 		try {
-            mCallback = (SentenceActionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity + " must implement SentenseActionListener");
-        }
+			mCallback = (SentenceActionListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity + " must implement SentenseActionListener");
+		}
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class SentenceFragment extends Fragment {
 
 		MainActivity activity = (MainActivity) getActivity();
 		mButtonFactory = activity.getButtonFactory();
-		
+
 		Button delete = (Button) view.findViewById(R.id.delete);
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
@@ -54,7 +54,7 @@ public class SentenceFragment extends Fragment {
 				onDeleteClick(v);
 			}
 		});
-		
+
 		Button deleteAll = (Button) view.findViewById(R.id.delete_all);
 		deleteAll.setOnClickListener(new OnClickListener() {
 			@Override
@@ -62,45 +62,14 @@ public class SentenceFragment extends Fragment {
 				onDeleteAllClick(v);
 			}
 		});
-		
-/*		
-		HorizontalScrollView hsv = (HorizontalScrollView) view.findViewById(R.id.scrollview);
-		hsv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				System.err.println("hsv");
-				onBackgroundClick();
-			}
-		});
-*/		
-		
 
-		LinearLayout ll = (LinearLayout) view.findViewById(R.id.sentence);
-		ll.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				System.err.println("ll");
-				onBackgroundClick();
-			}
-		});
-		
-		view.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				System.err.println("view");
-				onBackgroundClick();
-			}
-		});
-				
 		return view;
 	}
-	
-	
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		if (savedInstanceState != null) {
 			ArrayList<String> buttonIDs = savedInstanceState.getStringArrayList(Constant.BUTTON_IDS);
 			if (buttonIDs != null) {
@@ -110,17 +79,17 @@ public class SentenceFragment extends Fragment {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
-		
+
 		ArrayList<String> buttonIDs = (ArrayList<String>) getButtonIDs(ll);
 		outState.putStringArrayList(Constant.BUTTON_IDS, buttonIDs);
-		
+
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	public void addButton(String key) {
 		final LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		Button button = mButtonFactory.get(key, new OnClickListener() {
@@ -129,20 +98,11 @@ public class SentenceFragment extends Fragment {
 				onVocabClick(v);
 			}
 		});
-		
-		ll.addView(button);
 
-		// since the new added child may not inserted immediately,
-		//		let the scrollbar updatee for a slight moment later
-		final HorizontalScrollView hsv = (HorizontalScrollView) getView().findViewById(R.id.scrollview);
-		hsv.postDelayed(new Runnable() {
-		    public void run() {
-		        hsv.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-		    }
-		}, 100L);
-		
+		ll.addView(button);
+		updateScrollView();
 	}
-	
+
 	private void onDeleteClick(View v) {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		int size = ll.getChildCount();
@@ -151,20 +111,27 @@ public class SentenceFragment extends Fragment {
 		}
 		updateScrollView();
 	}
-	
+
 	protected void onDeleteAllClick(View v) {
 		deleteAll();
 	}
-	
+
 	private void deleteAll() {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		ll.removeAllViews();
 		updateScrollView();
 	}
-	
-	private void updateScrollView(){
-		HorizontalScrollView hsv = (HorizontalScrollView) getView().findViewById(R.id.scrollview);
+
+	private void updateScrollView() {
+		final HorizontalScrollView hsv = (HorizontalScrollView) getView().findViewById(R.id.scrollview);
 		hsv.invalidate();
+		//Since the new child may not be added immediately,
+		//let the scrollbar update for a slight moment later
+		hsv.postDelayed(new Runnable() {
+			public void run() {
+				hsv.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+			}
+		}, 100L);
 	}
 
 	private void onVocabClick(View v) {
@@ -172,18 +139,18 @@ public class SentenceFragment extends Fragment {
 		String id = (String) button.getTag();
 		mCallback.onSentenceButtonClick(id);
 	}
-	
+
 	public void onBackgroundClick() {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		List<String> ids = getButtonIDs(ll);
 		mCallback.onSentenceBarClick(ids);
 	}
-	
-	public List<String> getSentence(){		
+
+	public List<String> getSentence() {		
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.sentence);
 		return getButtonIDs(ll);		
 	}
-	
+
 	private List<String> getButtonIDs(LinearLayout ll) {
 		List<String> ids = CUtil.makeList();
 		for (int i = 0; i < ll.getChildCount(); i++) {
@@ -193,8 +160,6 @@ public class SentenceFragment extends Fragment {
 		}
 		return ids;
 	}
-
-	
 
 	public void invalidate() {
 		deleteAll();

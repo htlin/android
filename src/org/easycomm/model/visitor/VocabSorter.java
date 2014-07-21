@@ -9,22 +9,14 @@ import org.easycomm.util.CUtil;
 
 public class VocabSorter implements VocabVisitor {
 
-	public static final VocabSorter INSTANCE = new VocabSorter();
-	
 	private List<Leaf> mLeaves;
 	private List<Folder> mFolders;
 	private List<Link> mLinks;
 	
-	private VocabSorter() {
+	public VocabSorter() {
 		mLeaves = CUtil.makeList();
 		mFolders = CUtil.makeList();
 		mLinks = CUtil.makeList();
-	}
-	
-	public void clear() {
-		mLeaves.clear();
-		mFolders.clear();
-		mLinks.clear();
 	}
 	
 	public List<Leaf> getLeaves() {

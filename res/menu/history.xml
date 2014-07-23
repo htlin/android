@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+  
+     
+     
+    <item android:title="@string/Filter_Option"
+    	  android:id="@+id/filter_option"
+    	  android:showAsAction="always|withText"  >
+            
+        <menu>
+            <group android:checkableBehavior="single">
+		        <item android:id="@+id/filter_1"
+		              android:title="@string/filter_1"
+		              android:checkable="true"       	              
+		              android:checked="true" />
+		        <item android:id="@+id/filter_2"
+		              android:title="@string/filter_2"
+		              android:checkable="true" 
+		              android:checked="false" />
+		        <item android:id="@+id/filter_3"
+		              android:title="@string/filter_3"
+		              android:checkable="true" 
+		              android:checked="false" />
+		    </group>
+            
+        </menu>
+	    
+    </item>
+    
+    
+   <item
+        android:id="@+id/action_clear"
+        android:icon="@drawable/ic_action_edit"
+        android:showAsAction="always|withText"
+        android:title="@string/action_clear" />
+
+</menu>

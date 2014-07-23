@@ -27,6 +27,11 @@
             android:label="@string/action_config"
             android:parentActivityName="org.easycomm.MainActivity" >
         </activity>
+        <activity
+            android:name="org.easycomm.HistoryActivity"
+            android:label="@string/action_history"
+            android:parentActivityName="org.easycomm.MainActivity" >
+        </activity>
     </application>
 
 </manifest>

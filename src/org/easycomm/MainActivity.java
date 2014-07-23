@@ -1,5 +1,7 @@
 package org.easycomm;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -10,6 +12,8 @@ import org.easycomm.main.SentenceFragment;
 import org.easycomm.main.SentenceFragment.SentenceActionListener;
 import org.easycomm.main.VocabFragment;
 import org.easycomm.main.VocabFragment.VocabActionListener;
+import org.easycomm.model.HistoryData;
+import org.easycomm.model.HistoryDatabase;
 import org.easycomm.model.VocabData;
 import org.easycomm.model.VocabDatabase;
 import org.easycomm.model.graph.Vocab;
@@ -33,6 +37,9 @@ public class MainActivity extends Activity implements
 	private TextToSpeech mTTS;
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
+	private HistoryDatabase mHistoryBD;
+	
+//	private static DateFormat mDateFormat;
 	
 	//Instance states
 	private FolderNavigator mFolderNavigator;
@@ -46,6 +53,10 @@ public class MainActivity extends Activity implements
 		
 		mTTS = new TextToSpeech(this, this);
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
+		
+		mHistoryBD = HistoryDatabase.getInstance(getResources().getAssets());
+//		mDateFormat = DateFormat.getDateInstance();
+		
 		FolderChanger.INSTANCE.init(mVocabDB);
 		mButtonFactory = new ButtonFactory(this, mVocabDB);
 		mButtonFactory.setCurrentFolder(mFolderNavigator.getCurrentFolder());
@@ -113,6 +124,9 @@ public class MainActivity extends Activity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_history:
+            startHistory();
+            return true;
         case R.id.action_config:
             startConfig();
             return true;
@@ -126,9 +140,20 @@ public class MainActivity extends Activity implements
 		mFolderNavigator.save(intent);
 		startActivityForResult(intent, Constant.STATIC_INTEGER_VALUE);
 	}
+	
+	private void startHistory() {
+
+		Intent intent = new Intent(this, HistoryActivity.class);
+		startActivity(intent);
+
+	}
 
 	public VocabDatabase getVocabDatabase() {
 		return mVocabDB;
+	}
+	
+	public HistoryDatabase getHistoryDatabase() {
+		return mHistoryBD;
 	}
 	
 	public ButtonFactory getButtonFactory() {
@@ -137,6 +162,11 @@ public class MainActivity extends Activity implements
 	
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+		
+		String date = DateFormat.getDateInstance().format(new Date());
+		HistoryData data = new HistoryData(date, text);
+		mHistoryBD.append(data);
+		
 	}
 
 	@Override

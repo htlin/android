@@ -1,6 +1,6 @@
 package org.easycomm;
 
-import java.text.DateFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +27,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.text.format.DateFormat;
 
 public class MainActivity extends Activity implements
 		TextToSpeech.OnInitListener,
@@ -38,6 +39,7 @@ public class MainActivity extends Activity implements
 	private VocabDatabase mVocabDB;
 	private ButtonFactory mButtonFactory;
 	private HistoryDatabase mHistoryBD;
+	private int mHistoryOption;
 	
 //	private static DateFormat mDateFormat;
 	
@@ -55,6 +57,7 @@ public class MainActivity extends Activity implements
 		mVocabDB = VocabDatabase.getInstance(getResources().getAssets());
 		
 		mHistoryBD = HistoryDatabase.getInstance(getResources().getAssets());
+		mHistoryOption = 1;
 //		mDateFormat = DateFormat.getDateInstance();
 		
 		FolderChanger.INSTANCE.init(mVocabDB);
@@ -73,14 +76,22 @@ public class MainActivity extends Activity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch(requestCode) { 
-		case (Constant.STATIC_INTEGER_VALUE):
-			if (resultCode == Activity.RESULT_OK) { 
-				mFolderNavigator.load(data);
-				updateFolderPath();
-				SentenceFragment sentence = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
-				sentence.invalidate();
-			} 
-			break;
+			case (Constant.STATIC_CONFIG_INTEGER_VALUE):
+				if (resultCode == Activity.RESULT_OK) { 
+					mFolderNavigator.load(data);
+					updateFolderPath();
+					SentenceFragment sentence = (SentenceFragment) getFragmentManager().findFragmentById(R.id.frag_sentence);
+					sentence.invalidate();
+				} 
+				break;
+			case (Constant.STATIC_HISTORY_INTEGER_VALUE):
+				System.err.println("in main onActivityResult STATIC_HISTORY_INTEGER_VALUE");
+				if (resultCode == Activity.RESULT_OK) { 
+					mHistoryOption = data.getIntExtra(HistoryActivity.ARG_HISTORY_OPTION, 3);
+					System.err.println("in main onActivityResult "+mHistoryOption);
+
+				} 
+				break;
 			
 		default:
 		} 
@@ -138,13 +149,15 @@ public class MainActivity extends Activity implements
 	private void startConfig() {
 		Intent intent = new Intent(this, ConfigActivity.class);
 		mFolderNavigator.save(intent);
-		startActivityForResult(intent, Constant.STATIC_INTEGER_VALUE);
+		startActivityForResult(intent, Constant.STATIC_CONFIG_INTEGER_VALUE);
 	}
 	
 	private void startHistory() {
 
 		Intent intent = new Intent(this, HistoryActivity.class);
-		startActivity(intent);
+		intent.putExtra(HistoryActivity.ARG_HISTORY_OPTION, mHistoryOption);
+		startActivityForResult(intent, Constant.STATIC_HISTORY_INTEGER_VALUE);
+		//startActivity(intent);
 
 	}
 
@@ -162,8 +175,8 @@ public class MainActivity extends Activity implements
 	
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-		
-		String date = DateFormat.getDateInstance().format(new Date());
+		String date = DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date()).toString();
+		//String date = DateFormat.getDateInstance().format("yyyy-MM-dd hh:mm:ss", new Date());
 		HistoryData data = new HistoryData(date, text);
 		mHistoryBD.append(data);
 		

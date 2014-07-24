@@ -3,22 +3,22 @@
   
      
      
-    <item android:title="@string/Filter_Option"
-    	  android:id="@+id/filter_option"
+    <item android:title="@string/history_option"
+    	  android:id="@+id/history_option"
     	  android:showAsAction="always|withText"  >
             
         <menu>
             <group android:checkableBehavior="single">
-		        <item android:id="@+id/filter_1"
-		              android:title="@string/filter_1"
+		        <item android:id="@+id/never"
+		              android:title="@string/never"
 		              android:checkable="true"       	              
 		              android:checked="true" />
-		        <item android:id="@+id/filter_2"
-		              android:title="@string/filter_2"
+		        <item android:id="@+id/sevenDays"
+		              android:title="@string/sevenDays"
 		              android:checkable="true" 
 		              android:checked="false" />
-		        <item android:id="@+id/filter_3"
-		              android:title="@string/filter_3"
+		        <item android:id="@+id/forever"
+		              android:title="@string/forever"
 		              android:checkable="true" 
 		              android:checked="false" />
 		    </group>

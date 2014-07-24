@@ -9,32 +9,45 @@ import org.easycomm.util.CUtil;
 import org.easycomm.util.Constant;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.SimpleAdapter.ViewBinder;
 
 public class HistoryActivity extends Activity {
 	
 
+	public static final String ARG_HISTORY_OPTION = "historyOption"; 
 	private HistoryDatabase mHistoryDB;
+	private int mHistoryOption;
+	private HistoryListviewAdapter mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
+		mHistoryOption = getIntent().getIntExtra(ARG_HISTORY_OPTION, 3);
+		System.err.println("in HistoryActivity mHistoryOption = "+mHistoryOption);
 		mHistoryDB = HistoryDatabase.getInstance(getResources().getAssets());
 		
 		setContentView(R.layout.activity_history);
 		
 		//Attach adapters
 		ListView listView = (ListView) findViewById(R.id.history_listview);
-		
-		SimpleAdapter adapter = getAdapter();
-		listView.setAdapter(adapter);
+		View header=getLayoutInflater().inflate(R.layout.history_listview_header, null);
+		listView.addHeaderView(header);
+		mAdapter = new HistoryListviewAdapter();
+		mAdapter.setList(mHistoryDB.getHistory());
+		listView.setAdapter(mAdapter);
 	}
 	
 	@Override
@@ -48,24 +61,28 @@ public class HistoryActivity extends Activity {
 		return true;
 	}
 	
-	private SimpleAdapter getAdapter() {
-
-		List<HistoryData> historyData = mHistoryDB.getHistory();
-		List<Map<String, Object>> list = CUtil.makeList();
-		for (HistoryData data : historyData) {
-			Map<String, Object> map = CUtil.makeMap();
-			map.put("date", data.getDate());
-			map.put("text", data.getDisplayText());
-			list.add(map);
-		}	
-				
-		String[] from = { "date", "text" };
-		int[] to = { R.id.history_date, R.id.history_display};
-
-		SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.history_listview_layout, from, to);
-
-		return adapter;
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem menuNever = menu.findItem(R.id.never); 
+		MenuItem menu7Days = menu.findItem(R.id.sevenDays); 
+		MenuItem menuForever = menu.findItem(R.id.forever); 
+		
+		switch(mHistoryOption){
+			case 1:
+				menuNever.setChecked(true);menu7Days.setChecked(false);menuForever.setChecked(false);
+				break;
+			case 2:
+				menuNever.setChecked(false);menu7Days.setChecked(true);menuForever.setChecked(false);
+				break;
+			case 3:
+				menuNever.setChecked(false);menu7Days.setChecked(false);menuForever.setChecked(true);
+				break;
+			
+		}     
+	    return true;
 	}
+	
+
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,17 +95,19 @@ public class HistoryActivity extends Activity {
 			clearHistory();
 			return true;
 			
-		case R.id.filter_1:
-			
-			filter_1();
+		case R.id.never:
+			mHistoryOption = 1;
+			invalidateOptionsMenu();
 			return true;
 			
-		case R.id.filter_2:
-			filter_2();
+		case R.id.sevenDays:
+			mHistoryOption = 2;
+			invalidateOptionsMenu();
 			return true;
 			
-		case R.id.filter_3:
-			filter_3();
+		case R.id.forever:
+			mHistoryOption = 3;
+			invalidateOptionsMenu();
 			return true;
 			
 			
@@ -98,24 +117,64 @@ public class HistoryActivity extends Activity {
 	}
 	
 	private void clearHistory(){
-		mHistoryDB.clear();
-		ListView listView = (ListView) findViewById(R.id.history_listview);
-		listView.invalidate();
+		System.err.println("clearHistory");
+		mHistoryDB.clear();		
+		mAdapter.setList(mHistoryDB.getHistory());
+		mAdapter.notifyDataSetChanged();
 	}
 	
-	private void filter_1(){
-		System.err.println("filter_1");
+	@Override
+	public void onBackPressed() {		
+			Intent intent = new Intent();
+			intent.putExtra(ARG_HISTORY_OPTION, mHistoryOption);
+			setResult(Activity.RESULT_OK, intent);
+			super.onBackPressed();
+	}
+	
+	class HistoryListviewAdapter extends BaseAdapter {
+		
+		private List<HistoryData> mHistory;
+		
+		public void setList(List<HistoryData> list){
+			mHistory = list;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mHistory.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			HistoryData data = mHistory.get(position);
+			LayoutInflater inflater = getLayoutInflater();
+	        View row;
+	        row = inflater.inflate(R.layout.history_listview_layout, parent, false);
+	        TextView dateTextview, displayTextview;
+
+	        dateTextview = (TextView) row.findViewById(R.id.history_date);
+	        displayTextview = (TextView) row.findViewById(R.id.history_display);
+	        dateTextview.setText(data.getDate());
+	        displayTextview.setText(data.getDisplayText());
+
+	        return (row);
+			
+		}
 
 	}
 	
-	private void filter_2(){
-		System.err.println("filter_2");
-		
-	}
-	
-	private void filter_3(){
-		System.err.println("filter_3");
-		
-	}
-
 }

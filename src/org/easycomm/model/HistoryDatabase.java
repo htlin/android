@@ -34,7 +34,7 @@ public class HistoryDatabase {
 	}
 	
 	public void clear(){
-		mHistory.clear();
+		mHistory = CUtil.makeList();
 	}
 
 }

@@ -1,35 +1,35 @@
 package org.easycomm.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class HistoryData {
 	
-	private String mDate;
-	private String mTime;
+	private Date mDate;
 	private String mDisplayText;
 	
-	public HistoryData(String date, String time, String displayText) {
+	public HistoryData(Date date, String displayText) {
 		mDate = date;
-		mTime = time;
 		mDisplayText = displayText;
 	}
 	
-	public String getDate() {
-		return mDate;
+	public String getDateString() {
+		SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+		return sdf_date.format(mDate);
 	}
 	
-	public String getTime() {
-		return mTime;
+	public String getTimeString() {
+		SimpleDateFormat sdf_time = new SimpleDateFormat("hh:mm", Locale.US);		
+		return sdf_time.format(mDate);
 	}
 	
 	public String getDisplayText() {
 		return mDisplayText;
 	}
 	
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		mDate = date;
-	}
-	
-	public void setTime(String time) {
-		mTime = time;
 	}
 	
 	public void setDisplayText(String displayText) {

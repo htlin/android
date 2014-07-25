@@ -1,10 +1,6 @@
 package org.easycomm.fragment;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.easycomm.R;
 import org.easycomm.model.HistoryData;
@@ -40,10 +36,7 @@ public class HistoryListviewFragment extends Fragment {
 		listView.setAdapter(mAdapter);
 				
 		return view;
-	}
-	
-	
-	
+	}	
 	
 	public void clearHistory(){
 		System.err.println("in HistoryListviewFragment clearHistory");
@@ -58,10 +51,9 @@ public class HistoryListviewFragment extends Fragment {
 		
 		List<HistoryData> allData = mHistoryDB.getHistory();
 		List<HistoryData> data = CUtil.makeList();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		for(HistoryData record : allData){
-			String[] date = record.getDate().split("-");
-			if(Integer.parseInt(date[0]) == year && Integer.parseInt(date[1]) == month 
+			String[] date = record.getDateString().split("-");
+			if(Integer.parseInt(date[0]) == year && Integer.parseInt(date[1]) == (month+1) 
 					&& Integer.parseInt(date[2]) == day) {
 				data.add(record);
 			}
@@ -111,7 +103,7 @@ public class HistoryListviewFragment extends Fragment {
 
 	        dateTextview = (TextView) row.findViewById(R.id.history_date);
 	        displayTextview = (TextView) row.findViewById(R.id.history_display);
-	        String date = data.getDate() + " " + data.getTime();
+	        String date = data.getDateString() + " " + data.getTimeString();
 	        dateTextview.setText(date);
 	        displayTextview.setText(data.getDisplayText());
 

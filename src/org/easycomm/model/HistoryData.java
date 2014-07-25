@@ -1,19 +1,23 @@
 package org.easycomm.model;
 
-import android.graphics.drawable.Drawable;
-
 public class HistoryData {
 	
 	private String mDate;
+	private String mTime;
 	private String mDisplayText;
 	
-	public HistoryData(String date, String displayText) {
+	public HistoryData(String date, String time, String displayText) {
 		mDate = date;
+		mTime = time;
 		mDisplayText = displayText;
 	}
 	
 	public String getDate() {
 		return mDate;
+	}
+	
+	public String getTime() {
+		return mTime;
 	}
 	
 	public String getDisplayText() {
@@ -22,6 +26,10 @@ public class HistoryData {
 	
 	public void setDate(String date) {
 		mDate = date;
+	}
+	
+	public void setTime(String time) {
+		mTime = time;
 	}
 	
 	public void setDisplayText(String displayText) {

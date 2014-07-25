@@ -3,6 +3,7 @@ package org.easycomm;
 import java.util.List;
 import java.util.Map;
 
+import org.easycomm.fragment.HistoryListviewFragment;
 import org.easycomm.model.HistoryData;
 import org.easycomm.model.HistoryDatabase;
 import org.easycomm.util.CUtil;
@@ -18,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CalendarView;
+import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -27,9 +30,8 @@ public class HistoryActivity extends Activity {
 	
 
 	public static final String ARG_HISTORY_OPTION = "historyOption"; 
-	private HistoryDatabase mHistoryDB;
 	private int mHistoryOption;
-	private HistoryListviewAdapter mAdapter;
+	private CalendarView mCalendar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -37,18 +39,23 @@ public class HistoryActivity extends Activity {
 		
 		mHistoryOption = getIntent().getIntExtra(ARG_HISTORY_OPTION, 3);
 		System.err.println("in HistoryActivity mHistoryOption = "+mHistoryOption);
-		mHistoryDB = HistoryDatabase.getInstance(getResources().getAssets());
 		
 		setContentView(R.layout.activity_history);
 		
-		//Attach adapters
-		ListView listView = (ListView) findViewById(R.id.history_listview);
-		View header=getLayoutInflater().inflate(R.layout.history_listview_header, null);
-		listView.addHeaderView(header);
-		mAdapter = new HistoryListviewAdapter();
-		mAdapter.setList(mHistoryDB.getHistory());
-		listView.setAdapter(mAdapter);
+		HistoryListviewFragment historyFrag = (HistoryListviewFragment) getFragmentManager().findFragmentById(R.id.frag_history_listview);
+		mCalendar = (CalendarView) findViewById(R.id.calendar_view);
+		mCalendar.setOnDateChangeListener(new OnDateChangeListener() {
+			
+			@Override
+			public void onSelectedDayChange(CalendarView view, int year, int month,
+					int dayOfMonth) {
+				// TODO Auto-generated method stub
+				selectDate(year, month, dayOfMonth);
+			}
+		});
 	}
+	
+	
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -117,10 +124,17 @@ public class HistoryActivity extends Activity {
 	}
 	
 	private void clearHistory(){
-		System.err.println("clearHistory");
-		mHistoryDB.clear();		
-		mAdapter.setList(mHistoryDB.getHistory());
-		mAdapter.notifyDataSetChanged();
+		
+		HistoryListviewFragment historyFrag = (HistoryListviewFragment) getFragmentManager().findFragmentById(R.id.frag_history_listview);
+		historyFrag.clearHistory();
+		
+		
+	}
+	
+	private void selectDate(int y, int m, int d){
+		
+		HistoryListviewFragment historyFrag = (HistoryListviewFragment) getFragmentManager().findFragmentById(R.id.frag_history_listview);
+		historyFrag.showByDate(y, m, d);
 	}
 	
 	@Override
@@ -131,50 +145,6 @@ public class HistoryActivity extends Activity {
 			super.onBackPressed();
 	}
 	
-	class HistoryListviewAdapter extends BaseAdapter {
-		
-		private List<HistoryData> mHistory;
-		
-		public void setList(List<HistoryData> list){
-			mHistory = list;
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return mHistory.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			HistoryData data = mHistory.get(position);
-			LayoutInflater inflater = getLayoutInflater();
-	        View row;
-	        row = inflater.inflate(R.layout.history_listview_layout, parent, false);
-	        TextView dateTextview, displayTextview;
-
-	        dateTextview = (TextView) row.findViewById(R.id.history_date);
-	        displayTextview = (TextView) row.findViewById(R.id.history_display);
-	        dateTextview.setText(data.getDate());
-	        displayTextview.setText(data.getDisplayText());
-
-	        return (row);
-			
-		}
-
-	}
+	
 	
 }

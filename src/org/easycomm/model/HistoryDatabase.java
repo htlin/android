@@ -1,6 +1,5 @@
 package org.easycomm.model;
 
-import org.easycomm.model.graph.VocabGraph;
 import org.easycomm.util.CUtil;
 
 import android.content.res.AssetManager;

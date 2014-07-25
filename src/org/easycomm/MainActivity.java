@@ -1,6 +1,7 @@
 package org.easycomm;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -175,9 +176,15 @@ public class MainActivity extends Activity implements
 	
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-		String date = DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date()).toString();
+		SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+		SimpleDateFormat sdf_time = new SimpleDateFormat("hh:mm:ss", Locale.US);
+
+		//String date = DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date()).toString();
+		Date now = new Date();
+		String date = sdf_date.format(now);
+		String time = sdf_time.format(now);
 		//String date = DateFormat.getDateInstance().format("yyyy-MM-dd hh:mm:ss", new Date());
-		HistoryData data = new HistoryData(date, text);
+		HistoryData data = new HistoryData(date, time, text);
 		mHistoryBD.append(data);
 		
 	}

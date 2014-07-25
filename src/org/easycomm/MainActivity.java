@@ -41,8 +41,6 @@ public class MainActivity extends Activity implements
 	private HistoryDatabase mHistoryBD;
 	private int mHistoryOption;
 	
-//	private static DateFormat mDateFormat;
-	
 	//Instance states
 	private FolderNavigator mFolderNavigator;
 	

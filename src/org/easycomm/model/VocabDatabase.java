@@ -92,6 +92,14 @@ public class VocabDatabase {
 				vocabReader.getVocabData("cat.png"),
 				vocabReader.getVocabData("dog.png")
 			);
+		// Mass producing vocab
+		for(int i=0; i<100; i++){
+			addToFolder(animal,
+					vocabReader.getVocabData("bird.png"),
+					vocabReader.getVocabData("cat.png"),
+					vocabReader.getVocabData("dog.png")
+				);
+		}
 	}
 	
 	private void addToFolder(Folder folder, VocabData ... data) {

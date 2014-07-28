@@ -1,7 +1,7 @@
 package org.easycomm;
 
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -170,7 +170,7 @@ public class MainActivity extends Activity implements
 	private void speak(String text) {
 		mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
 
-		HistoryData data = new HistoryData(new Date(), text);
+		HistoryData data = new HistoryData(Calendar.getInstance(), text);
 		mHistoryBD.append(data);
 	}
 

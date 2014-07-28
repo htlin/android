@@ -37,8 +37,12 @@ public class HistoryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		
-		mHistoryOption = getIntent().getIntExtra(ARG_HISTORY_OPTION, 3);
-		System.err.println("in HistoryActivity mHistoryOption = "+mHistoryOption);
+		if (savedInstanceState != null) {
+			mHistoryOption = savedInstanceState.getInt(Constant.HISTORY_OPTION);
+		}
+		else {
+			mHistoryOption = getIntent().getIntExtra(ARG_HISTORY_OPTION, 3);
+		}
 		
 		setContentView(R.layout.activity_history);
 		
@@ -53,15 +57,14 @@ public class HistoryActivity extends Activity {
 				selectDate(year, month, dayOfMonth);
 			}
 		});
-	}
-	
-	
+	}	
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(Constant.HISTORY_OPTION, mHistoryOption);
 		super.onSaveInstanceState(outState);
 	}
-	
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.history, menu);
@@ -88,9 +91,7 @@ public class HistoryActivity extends Activity {
 		}     
 	    return true;
 	}
-	
-
-	
+		
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -123,16 +124,12 @@ public class HistoryActivity extends Activity {
 		}
 	}
 	
-	private void clearHistory(){
-		
+	private void clearHistory(){		
 		HistoryListviewFragment historyFrag = (HistoryListviewFragment) getFragmentManager().findFragmentById(R.id.frag_history_listview);
-		historyFrag.clearHistory();
-		
-		
+		historyFrag.clearHistory();		
 	}
 	
-	private void selectDate(int y, int m, int d){
-		
+	private void selectDate(int y, int m, int d){		
 		HistoryListviewFragment historyFrag = (HistoryListviewFragment) getFragmentManager().findFragmentById(R.id.frag_history_listview);
 		historyFrag.showByDate(y, m, d);
 	}
